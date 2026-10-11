@@ -697,8 +697,19 @@ async function haeVerkko(nimi) {
     piirra();
     kerro(verkonTiedot);
   } catch (e) {
-    if (oma === token) { verkko = { kevyt: [], muu: [] }; piirra();
-      $('#knote').innerHTML = `<b>Linkkiverkkoa ei saatu:</b> ${e.message}`; }
+    if (oma !== token) return;
+    // Kaikki kolme kenttaa: piirra() lukee verkko.alikulku, joten vajaa olio
+    // kaataisi piirron juuri silloin kun artefakti puuttuu.
+    verkko = { kevyt: [], muu: [], alikulku: [] }; verkonKunta = null;
+    piirra();
+    $('#knote').innerHTML =
+      `<b>Linkkiverkkoa ei saatu.</b> Kartalla näkyvät kohteet mutta ei väyliä.
+       <br><br>Julkaistulla sivulla tämä on odotettua: verkko luetaan 293 MB:n
+       L0-artefaktista, jota ei ole repossa — se rakennetaan paikallisesti
+       <code>tools/build.mjs</code>:llä 590 MB:n raakadatasta. Vertailu, luvut ja
+       kohteiden sijainnit tulevat <code>kaupungit.json</code>-tiedostosta eivätkä
+       tarvitse artefaktia.
+       <br><br><span class="k">${e.message}</span>`;
   }
 }
 
