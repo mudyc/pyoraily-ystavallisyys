@@ -154,6 +154,7 @@ import { installBuffer } from './buffer-shim.js';
 installBuffer();
 const { Reader } = await import('../src/read/reader.js');
 const { HttpTransport } = await import('../src/transport/http.js');
+const { ChunkedHttpTransport } = await import('../src/transport/chunked-http.js');
 const { decodeParts } = await import('../src/geom.js');
 
 const $ = s => document.querySelector(s);
@@ -163,9 +164,28 @@ const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).
 const D = await (await fetch('kaupungit.json')).json();
 /* Artefakti avataan laiskasti: vertailusivu ei tarvitse sita lainkaan, vaan
    vasta kaupunkinakyma, joka piirtaa linkkiverkon. */
+/* ABSOLUUTTINEN osoite. ChunkedHttpTransport tekee osien osoitteet
+   `new URL(m.name, manifestUrl)`:lla, ja se heittaa TypeErrorin jos kanta on
+   suhteellinen. Paljas '../data/...' siis kaatoi paloitellun kuljetuksen aina. */
+const ART = new URL('../data/pyoratiet.l0', location.href).href;
 let lukija = null;
-const avaa = async () => lukija ??= await new Reader(
-  new HttpTransport('../data/pyoratiet.l0'), { cacheLimit: 256e6 }).open();
+
+/* Paloiteltu artefakti ensin: GitHub Pages ei tarjoile 293 MB:n tiedostoa,
+   mutta 45 MiB:n osat kylla. Paikallisesti kokonainen tiedosto on olemassa,
+   joten manifestin puuttuessa pudotaan tavalliseen HTTP Rangeen. */
+async function kuljetus() {
+  try {
+    return await new ChunkedHttpTransport(ART + '.json').open();
+  } catch (e) {
+    // Vain puuttuva manifesti on odotettu syy pudota varalle. Muut virheet
+    // kertovat omasta bugista, ja ne pitaa nakya eika naamioitua "artefakti
+    // puuttuu" -viestiksi - juuri niin kavi kun kanta oli suhteellinen.
+    if (!/HTTP 40\d/.test(e.message)) console.warn('paloiteltu kuljetus:', e);
+    return new HttpTransport(ART);
+  }
+}
+const avaa = async () => lukija ??= await new Reader(await kuljetus(),
+  { cacheLimit: 256e6 }).open();
 
 /* Kaupunkinakyma seuraa valittua vertailua: jokaisella mittarilla on omat
    kohteensa, oma luokitus ja oma vihje. Nain lista ja kartta nayttavat sita
@@ -704,11 +724,10 @@ async function haeVerkko(nimi) {
     piirra();
     $('#knote').innerHTML =
       `<b>Linkkiverkkoa ei saatu.</b> Kartalla näkyvät kohteet mutta ei väyliä.
-       <br><br>Julkaistulla sivulla tämä on odotettua: verkko luetaan 293 MB:n
-       L0-artefaktista, jota ei ole repossa — se rakennetaan paikallisesti
-       <code>tools/build.mjs</code>:llä 590 MB:n raakadatasta. Vertailu, luvut ja
-       kohteiden sijainnit tulevat <code>kaupungit.json</code>-tiedostosta eivätkä
-       tarvitse artefaktia.
+       <br><br>Verkko luetaan 293 MB:n L0-artefaktista, joka on repossa seitsemänä
+       45 MiB:n osana. Vertailu, luvut ja kohteiden sijainnit tulevat
+       <code>kaupungit.json</code>-tiedostosta eivätkä tarvitse artefaktia, joten
+       sivun muu sisältö on oikein.
        <br><br><span class="k">${e.message}</span>`;
   }
 }

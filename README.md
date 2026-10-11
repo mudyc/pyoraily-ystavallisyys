@@ -75,6 +75,7 @@ siitä mitä tapahtui kun ne eivät olleet.
 python3 tools/fetch.py 20     # Digiroad OGC API -> data/kunnat/ (~590 MB)
 node tools/ingest.mjs         # (kutsutaan build.mjs:stä)
 node tools/build.mjs          # -> data/pyoratiet.l0  (293 MB, 1 063 463 dokumenttia)
+node tools/split-artifact.js data/pyoratiet.l0   # -> 7 osaa a 45 MiB, nama ovat repossa
 node tools/pisteet.mjs        # -> viz/kaupungit.json
 node tools/matkavastus.mjs    # liittää matkavastuksen samaan
 node tools/pysakit.mjs        # liittää pysäkkisijainnin samaan
@@ -85,6 +86,12 @@ Rajapinnan `offset` ei toimi — se palauttaa aina saman sivun — joten koko ku
 haetaan yhdellä isolla `limit`-arvolla. Siksi kuntaraja on jakoperuste.
 
 ## Artefakti
+
+Artefakti on repossa **paloiteltuna**: kokonainen tiedosto on 293 MB eikä GitHub
+tarjoile yli 100 MiB:n tiedostoja, mutta seitsemän 45 MiB:n osaa kyllä.
+`ChunkedHttpTransport` kuvaa globaalin tavuvälin osille, joten lukija näkee yhden
+yhtenäisen tiedoston eikä formaatissa muutu mitään. Paikallisesti kokonainen
+tiedosto riittää, jolloin pudotaan tavalliseen `HttpTransport`iin.
 
 Linkit ja risteykset ovat samassa L0-artefaktissa. Risteykset lasketaan
 rakennusaikana solmuasteesta, koska sen johtaminen kyselyhetkellä vaatisi koko

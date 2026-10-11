@@ -4,13 +4,22 @@ node_modules/
 *.pem
 *.key
 
-# Raakadata ja artefakti: haettavissa uudelleen tools/fetch.py:lla ja
-# rakennettavissa tools/build.mjs:lla, yhteensa ~590 MB.
-data/
+# Raakadata haetaan uudelleen tools/fetch.py:lla (~590 MB)
+data/kunnat/
+data/valot/
+data/pysakit/
 
-# Hoitoluokkakokeilun aineisto. Kokeilu johti kielteiseen tulokseen
-# (ks. README) eika sita ajeta uudelleen, joten 4 MB ei kuulu repoon.
+# Kokonainen artefakti ei kuulu versionhallintaan, mutta PALOITELLUT OSAT
+# kuuluvat: GitHub Pages tarjoilee ne, ja ilman niita kaupunkinakyman
+# linkkiverkko ei piirry. Yksi osa on 45 MiB eli alle GitHubin 100 MiB:n
+# rajan ja alle 50 MiB:n varoituksen.
+data/pyoratiet.l0
+
+# Valilaskennat, syntyvat tools/-skripteista
+data/katalogi.json
+data/matkavastus.json
+data/nakemat2.json
+data/pysakit.json
+
+# Hoitoluokkakokeilun aineisto; kokeilu johti kielteiseen tulokseen (README)
 viz/hoitoluokat-jkl.json
-
-# viz/kaupungit.json EI ole taalla: se on sivun ainoa aineisto ja 2,9 MB,
-# ja ilman sita sivu ei toimi lainkaan.
