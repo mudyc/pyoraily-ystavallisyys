@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+*.env
+*.pem
+*.key
+
+# Raakadata ja artefakti: haettavissa uudelleen tools/fetch.py:lla ja
+# rakennettavissa tools/build.mjs:lla, yhteensa ~590 MB.
+data/
+
+# Hoitoluokkakokeilun aineisto. Kokeilu johti kielteiseen tulokseen
+# (ks. README) eika sita ajeta uudelleen, joten 4 MB ei kuulu repoon.
+viz/hoitoluokat-jkl.json
+
+# viz/kaupungit.json EI ole taalla: se on sivun ainoa aineisto ja 2,9 MB,
+# ja ilman sita sivu ei toimi lainkaan.

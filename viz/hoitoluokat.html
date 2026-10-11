@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jyväskylän merkatut hoitoluokat</title>
+<style>
+:root{--surface-0:#faf9f6;--surface-1:#fff;--surface-2:#f3f1ec;
+  --ink-1:#0b0b0b;--ink-2:#52514e;--ink-3:#85837c;--rule:#dedbd4;
+  --tie:#dcd9d2;--kevyt:#b9b6ad;--l9:#2a78d6;--l10:#e07b39}
+@media (prefers-color-scheme:dark){:root{--surface-0:#15150f;--surface-1:#1c1c17;--surface-2:#232320;
+  --ink-1:#fff;--ink-2:#c3c2b7;--ink-3:#8f8e85;--rule:#33332f;
+  --tie:#2e2e2a;--kevyt:#4a4941;--l9:#4a90e2;--l10:#f0945a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--ink-1);
+  font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 50px}
+h1{font-size:22px;margin:0 0 6px}
+p.sub{color:var(--ink-2);margin:0 0 14px;max-width:72ch;font-size:14px}
+.stats{display:flex;gap:26px;flex-wrap:wrap;margin:14px 0}
+.stats div b{display:block;font-size:20px}.stats div span{font-size:12px;color:var(--ink-3)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--ink-2);margin:10px 0}
+.legend i{width:26px;height:3px;display:inline-block;vertical-align:3px;margin-right:6px;border-radius:2px}
+canvas{width:100%;height:660px;display:block;background:var(--surface-1);
+  border:1px solid var(--rule);border-radius:12px;cursor:grab}
+.note{background:var(--surface-2);border-radius:10px;padding:14px 16px;font-size:13.5px;
+  line-height:1.62;color:var(--ink-2);margin:16px 0}.note b{color:var(--ink-1)}
+</style>
+<div class="wrap">
+  <h1>Jyväskylän merkatut hoitoluokat</h1>
+  <p class="sub">Kysymys: onko se 10 % kevytverkosta, jolle hoitoluokka on kirjattu, sattumanvarainen
+     otos vai kaupungin pääverkko? Jos se on pääverkko, puuttuva luokittelu ei ole aukko vaan valinta.</p>
+  <div class="stats" id="stats"></div>
+  <div class="legend" id="legend"></div>
+  <canvas id="c"></canvas>
+  <div class="note" id="note"></div>
+</div>
+<script type="module">
+const $ = s => document.querySelector(s);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const D = await (await fetch('hoitoluokat-jkl.json')).json();
+
+const kaikki = [...D.tiet, ...D.kevyt, ...D.luokiteltu.map(x => x.c)];
+// Silmukka eika Math.min(...xs): levitys kaatuu satoihin tuhansiin argumentteihin
+// (Maximum call stack size exceeded).
+let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+for (const c of kaikki) for (const [x, y] of c) {
+  if (x < x0) x0 = x; if (x > x1) x1 = x;
+  if (y < y0) y0 = y; if (y > y1) y1 = y;
+}
+const C = $('#c');
+const W = () => C.clientWidth, H = () => C.clientHeight;
+let cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, mpp = 1, drag = null;
+const sx = x => (x - cx) / mpp + W() / 2;
+const sy = y => H() / 2 - (y - cy) / mpp;
+const inv = (px, py) => [cx + (px - W() / 2) * mpp, cy - (py - H() / 2) * mpp];
+
+function piirra() {
+  const dpr = devicePixelRatio || 1;
+  if (C.width !== W() * dpr) { C.width = W() * dpr; C.height = H() * dpr; }
+  const g = C.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W(), H());
+  const k = Math.max(0.4, Math.min(2.4, 6 / mpp));
+  const veda = (lista, vari, lev, alfa = 1) => {
+    g.globalAlpha = alfa; g.strokeStyle = vari; g.lineWidth = lev * k;
+    g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath();
+    for (const c of lista) {
+      const px = sx(c[0][0]), py = sy(c[0][1]);
+      if (px < -300 || px > W() + 300 || py < -300 || py > H() + 300) continue;
+      g.moveTo(px, py);
+      for (let i = 1; i < c.length; i++) g.lineTo(sx(c[i][0]), sy(c[i][1]));
+    }
+    g.stroke(); g.globalAlpha = 1;
+  };
+  // tausta vaimeana, luokiteltu paalle ja kirkkaana
+  veda(D.tiet, css('--tie'), 1.6, 0.55);
+  veda(D.kevyt, css('--kevyt'), 1.2, 0.7);
+  veda(D.luokiteltu.filter(x => x.a === 9).map(x => x.c), css('--l9'), 3.2);
+  veda(D.luokiteltu.filter(x => x.a === 10).map(x => x.c), css('--l10'), 3.2);
+}
+C.onmousedown = e => { const b = C.getBoundingClientRect();
+  drag = { x: e.clientX - b.left, y: e.clientY - b.top, cx, cy }; C.style.cursor = 'grabbing'; };
+addEventListener('mouseup', () => { drag = null; C.style.cursor = ''; });
+C.onmousemove = e => { if (!drag) return; const b = C.getBoundingClientRect();
+  cx = drag.cx - (e.clientX - b.left - drag.x) * mpp;
+  cy = drag.cy + (e.clientY - b.top - drag.y) * mpp; piirra(); };
+C.onwheel = e => { e.preventDefault();
+  const b = C.getBoundingClientRect(), mx = e.clientX - b.left, my = e.clientY - b.top;
+  const [wx, wy] = inv(mx, my);
+  const yks = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+  const perPx = e.ctrlKey ? 0.010 : Math.log(1.3) / 100;      // nipistys tarvitsee isomman kertoimen
+  let kk = Math.exp(e.deltaY * yks * perPx);
+  kk = Math.min(1.4, Math.max(1 / 1.4, kk));
+  mpp = Math.max(0.3, Math.min(200, mpp * kk));
+  cx = wx - (mx - W() / 2) * mpp; cy = wy + (my - H() / 2) * mpp; piirra(); };
+addEventListener('resize', piirra);
+
+const n9 = D.luokiteltu.filter(x => x.a === 9).length;
+$('#stats').innerHTML = [
+  [D.luokiteltu.length, 'luokiteltua linkkiä'], [n9, 'arvo 9'], [D.luokiteltu.length - n9, 'arvo 10'],
+  [D.kevyt.length, 'luokittelematta'], ['10 %', 'osuus pituudesta'],
+].map(([b, s]) => `<div><b>${b}</b><span>${s}</span></div>`).join('');
+$('#legend').innerHTML =
+  `<span><i style="background:${css('--l9')};height:4px"></i>hoitoluokka 9</span>` +
+  `<span><i style="background:${css('--l10')};height:4px"></i>hoitoluokka 10</span>` +
+  `<span><i style="background:${css('--kevyt')}"></i>kevytväylä ilman luokkaa</span>` +
+  `<span><i style="background:${css('--tie')}"></i>kadut (toiminn_lk ≤ 4)</span>` +
+  `<span style="color:var(--ink-3)">· rulla tai nipistys zoomaa, raahaus siirtää</span>`;
+$('#note').innerHTML =
+  `<b>Mitä katsoa.</b> Jos luokiteltu osuus on pääverkko, sen pitäisi muodostaa <i>yhtenäinen
+   reitistö</i> keskustasta ulospäin — ei hajanaisia pätkiä. Katso erityisesti jatkuuko sininen
+   viiva katkeamatta ja seuraako se pääkatuja.
+   <br><br><b>Varaus.</b> Hoitoluokka on kirjattu linkin osuudelle (<code>alku_m</code>–<code>loppu_m</code>),
+   mutta tässä on väritetty koko linkki. Lyhyillä linkeillä ero on olematon, pitkillä se liioittelee
+   kattavuutta. Myös 9 ja 10 ovat tässä vain numeroita: en ole vielä vahvistanut dokumentaatiosta
+   kumpi on K1 ja kumpi K2.`;
+mpp = Math.max((x1 - x0) / (W() - 60), (y1 - y0) / (H() - 60));
+piirra();
+</script>

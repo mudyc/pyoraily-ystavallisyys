@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="fi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pyöräily-ystävällisyys</title>
+<style>
+:root{
+  --surface-0:#faf9f6; --surface-1:#ffffff; --surface-2:#f3f1ec;
+  --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#85837c; --rule:#dedbd4;
+  /* Yksi sävy, vaalea -> tumma. Hyvä väistyy, huono nousee esiin.
+     Luokat ovat järjestettyjä, joten sekvenssi on oikea muoto; selite
+     nimeää jokaisen ja listassa on lukuarvo, joten väri ei kanna yksin. */
+  --l1:#fde3cf; --l2:#f9b384; --l3:#ef7f3d; --l4:#c2410c;
+  --acc:#2a78d6; --tie:#4a4843; --kevyt:#26251f;
+  /* kokonaisarvion osat; jarjestys on kiintea, joten paikka kantaa
+     tunnistetta varin rinnalla */
+  --o1:#2a78d6; --o2:#e07b39; --o3:#3f7d66;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --surface-0:#15150f; --surface-1:#1c1c17; --surface-2:#232320;
+  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
+  --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
+  --tie:#8d8a81; --kevyt:#c9c6bb;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c;
+}}
+:root[data-theme="dark"]{
+  --surface-0:#15150f; --surface-1:#1c1c17; --surface-2:#232320;
+  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
+  --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
+  --tie:#8d8a81; --kevyt:#c9c6bb;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--ink-1);
+  font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helsinki Grotesk,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 20px 60px}
+h1{font-size:24px;margin:0 0 6px;letter-spacing:-.01em}
+h2{font-size:17px;margin:26px 0 4px}
+p.sub{color:var(--ink-2);margin:0 0 14px;max-width:70ch;font-size:14px}
+.stats{display:flex;gap:26px;flex-wrap:wrap;margin:16px 0 20px}
+.stats div b{display:block;font-size:20px;line-height:1.2}
+.stats div span{font-size:12px;color:var(--ink-3)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:inherit;font-size:13px;padding:6px 13px;border:0;border-left:1px solid var(--rule);
+  background:var(--surface-1);color:var(--ink-2);cursor:pointer}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--ink-1);color:var(--surface-1);font-weight:600}
+.ctl{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:12px 0 18px}
+.ctl label{font-size:12px;color:var(--ink-2)}
+.fig{background:var(--surface-1);border:1px solid var(--rule);border-radius:12px;padding:14px;margin:12px 0}
+.rank{display:grid;grid-template-columns:22px 1fr;gap:3px 10px;align-items:center}
+.rank .n{font-size:12px;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
+.row{display:grid;grid-template-columns:120px 1fr 92px;gap:10px;align-items:center;
+  padding:3px 6px;border-radius:6px;cursor:pointer}
+.row:hover{background:var(--surface-2)}
+.row .nm{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar{height:15px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;background:var(--acc)}
+.bar.osina{display:flex;gap:2px}
+.bar.osina i{border-radius:3px;flex:none}
+.bar.osina i.puuttuu{background:repeating-linear-gradient(45deg,
+  var(--rule) 0 4px,transparent 4px 8px);outline:1px solid var(--rule);outline-offset:-1px}
+.row .v{font-size:12.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+.kaksi{display:grid;grid-template-columns:330px 1fr;gap:14px}
+#yhteenveto{background:var(--surface-1);border:1px solid var(--rule);border-radius:12px;padding:6px 16px 16px}
+.osa{display:grid;grid-template-columns:150px 70px 1fr 150px;gap:12px;align-items:center;
+  padding:14px 0;border-bottom:1px solid var(--rule);cursor:pointer}
+.osa:last-child{border-bottom:0}
+.osa:hover{background:var(--surface-2)}
+.osa .nimi{font-size:14px;font-weight:600}
+.osa .nimi small{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3)}
+.osa .luku{font-size:19px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.osa .mitta{position:relative;height:17px;background:var(--surface-2);border-radius:5px}
+.osa .mitta i{display:block;height:100%;border-radius:5px}
+.osa .mitta u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink-1)}
+.osa .ero{font-size:12px;color:var(--ink-2);text-align:right;line-height:1.35}
+.osa .ero b{display:block;font-size:13px}
+@media(max-width:860px){.kaksi{grid-template-columns:1fr}}
+#lista{background:var(--surface-1);border:1px solid var(--rule);border-radius:12px;
+  max-height:600px;overflow:auto}
+#lista .k{display:grid;grid-template-columns:12px 1fr 62px;gap:9px;align-items:center;
+  padding:6px 11px;border-bottom:1px solid var(--rule);cursor:pointer;font-size:12.5px}
+#lista .k:hover,#lista .k.on{background:var(--surface-2)}
+#lista .k.on{outline:2px solid var(--acc);outline-offset:-2px}
+#lista .sw{width:12px;height:12px;border-radius:50%}
+#lista .id{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:ui-monospace,Menlo,monospace;font-size:11px}
+#lista .m{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+#kartta{width:100%;height:600px;display:block;background:var(--surface-1);
+  border:1px solid var(--rule);border-radius:12px;cursor:crosshair}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;color:var(--ink-2);margin:10px 0}
+.legend .s{width:11px;height:11px;border-radius:50%;display:inline-block;vertical-align:-1px;margin-right:6px}
+.legend .v{width:26px;height:3px;display:inline-block;vertical-align:3px;margin-right:6px;border-radius:2px}
+.legend .v.raita{background:none!important;height:3px;
+  background-image:repeating-linear-gradient(90deg,var(--kevyt) 0 5px,transparent 5px 9px)!important}
+.note{background:var(--surface-2);border-radius:10px;padding:14px 16px;font-size:13.5px;
+  line-height:1.62;color:var(--ink-2);margin:16px 0}
+.note b{color:var(--ink-1)}
+button.back{font:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--rule);
+  border-radius:7px;background:var(--surface-1);color:var(--ink-2);cursor:pointer}
+#tip{position:fixed;pointer-events:none;opacity:0;background:var(--ink-1);color:var(--surface-1);
+  font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:7px;transition:opacity .1s;z-index:50}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink-3)}
+a{color:var(--acc)}
+.hide{display:none}
+</style>
+
+<div class="wrap">
+  <h1>Pyöräily-ystävällisyys: kaupunkien vertailu</h1>
+
+  <div class="ctl" style="margin:14px 0 18px">
+    <label>Vertailu</label>
+    <span class="seg" id="mittari"></span>
+  </div>
+
+  <p class="sub" id="johdanto"></p>
+  <div class="stats" id="stats"></div>
+
+  <div id="vertailu">
+    <div class="legend" id="osaselite"></div>
+    <div class="fig"><div class="rank" id="rank"></div></div>
+  </div>
+
+  <div id="kaupunki" class="hide">
+    <div class="ctl">
+      <button class="back" id="back">← kaikki kaupungit</button>
+      <h2 id="knimi" style="margin:0"></h2>
+    </div>
+    <p class="sub" id="ksub"></p>
+    <div class="legend" id="klegend"></div>
+    <div class="legend" id="vlegend"></div>
+    <div id="yhteenveto" class="hide"></div>
+    <div class="kaksi" id="kartta-ja-lista">
+      <div id="lista"></div>
+      <canvas id="kartta"></canvas>
+    </div>
+    <div class="note" id="knote"></div>
+  </div>
+
+  <div class="note" id="vnote"></div>
+
+  <footer>
+    Aineisto: <a href="https://vayla.fi/vaylista/aineistot/digiroad/aineisto">Digiroad</a>,
+    Väylävirasto (ylläpito siirtynyt Fintrafficille, avoin rajapinta jäädytetty kevääseen 2026).
+    Väestö: Tilastokeskus.
+    Laskenta: <a href="https://github.com/mudyc/serverless_index">serverless_index</a>.
+    <br><span id="ohjelahde"></span>
+  </footer>
+</div>
+<div id="tip"></div>
+
+<script type="module">
+import { installBuffer } from './buffer-shim.js';
+installBuffer();
+const { Reader } = await import('../src/read/reader.js');
+const { HttpTransport } = await import('../src/transport/http.js');
+const { decodeParts } = await import('../src/geom.js');
+
+const $ = s => document.querySelector(s);
+const fi = new Intl.NumberFormat('fi-FI');
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+const D = await (await fetch('kaupungit.json')).json();
+/* Artefakti avataan laiskasti: vertailusivu ei tarvitse sita lainkaan, vaan
+   vasta kaupunkinakyma, joka piirtaa linkkiverkon. */
+let lukija = null;
+const avaa = async () => lukija ??= await new Reader(
+  new HttpTransport('../data/pyoratiet.l0'), { cacheLimit: 256e6 }).open();
+
+/* Kaupunkinakyma seuraa valittua vertailua: jokaisella mittarilla on omat
+   kohteensa, oma luokitus ja oma vihje. Nain lista ja kartta nayttavat sita
+   mita ylhaalta valittiin eivatka aina alikulkuja. */
+const NAKYMAT = {
+  nakema: {
+    otsikko: 'Alikulkujen suuaukot',
+    kohteet: k => [...k.kohteet].sort((a, b) => a.m - b.m),
+    luokat: [
+      { nimi: 'suositeltava, ≥ 20 m', v: '--l1', test: o => o.m >= 20 },
+      { nimi: 'tyydyttävä, 15–20 m',  v: '--l2', test: o => o.m >= 15 },
+      { nimi: 'minimi, 12–15 m',      v: '--l3', test: o => o.m >= 12 },
+      { nimi: 'alle minimin, < 12 m', v: '--l4', test: () => true },
+    ],
+    koonSelite: 'pylpyrän koko = näkemän pituus',
+    koko: o => 4 + Math.min(9, o.m / 5),
+    arvo: o => o.m.toFixed(1) + ' m',
+    tunnus: o => `${o.nimi ? o.nimi + ' ' : ''}${o.id.slice(0, 8)}…${o.suu ? ' B' : ' A'}`,
+    vihje: o => `<b>${o.m.toFixed(1)} m</b> lähimpään risteykseen<br>` +
+      `<span style="color:#999">${o.id}<br>risteyksessä ${o.aste} haaraa, niistä ${o.kevyita} kevyttä</span>`,
+    patka: o => verkko?.alikulku.find(a => a.id === o.id)?.c ?? null,
+    tiivis: k => { const n = k.suuaukot, e = k.kohteet.filter(o => o.m < 20).length;
+      return `${fi.format(k.alikulut)} alikulkua, ${fi.format(n)} suuaukkoa. <b>${fi.format(e)}</b> ` +
+        `niistä (${Math.round(e / n * 100)} %) ei täytä suositeltavaa 20 metrin näkemäaluetta. ` +
+        `Mediaani ${k.mediaani} m.`; },
+  },
+  matkavastus: {
+    otsikko: 'Raskaat nousut, S ≥ 0,2',
+    kohteet: k => k.nousut.filter(o => o.S >= 0.2).sort((a, b) => b.S - a.S),
+    luokat: [
+      { nimi: 'erittäin raskas, S ≥ 1,0', v: '--l4', test: o => o.S >= 1 },
+      { nimi: 'raskas, S 0,5–1,0',        v: '--l3', test: o => o.S >= 0.5 },
+      { nimi: 'tavoitteen yli, S 0,2–0,5',v: '--l2', test: o => o.S >= 0.2 },
+      { nimi: 'tavoitteessa, S < 0,2',    v: '--l1', test: () => true },
+    ],
+    koonSelite: 'pylpyrän koko = noustava korkeusero',
+    koko: o => 4 + Math.min(10, o.H),
+    arvo: o => 'S ' + o.S.toFixed(2),
+    tunnus: o => `${o.H.toFixed(1)} m / ${o.L} m` + (o.v <= 25 ? ' · valo' : ''),
+    vihje: o => `<b>S = ${o.S.toFixed(2)}</b> (tavoite alle 0,2)<br>nousu ${o.H.toFixed(1)} m ` +
+      `matkalla ${o.L} m = ${(o.H / o.L * 100).toFixed(1)} %<br>` +
+      `<span style="color:#999">risteys ${o.r > 900 ? '—' : o.r + ' m'}, ` +
+      `valo ${o.v > 900 ? '—' : o.v + ' m'} harjasta</span>`,
+    patka: o => o.g ?? null,
+    tiivis: k => `${fi.format(k.verkkoKm)} km kevytverkkoa. <b>${k.raskasOsuus} %</b> sen ` +
+      `pituudesta kuluu nousuihin joiden matkavastus ylittää tavoitteen 0,2. ` +
+      `Yli 4 %:n kaltevuudessa ${k.yli4} %, yli 8 %:n ${k.yli8} %.`,
+  },
+  /* pysahdys-nakyma pois kaytosta yhdessa mittarin kanssa, ks. perustelu ylla.
+    pysahdys: {
+    otsikko: 'Nousut joiden harjalla on valoristeys',
+    kohteet: k => k.nousut.filter(o => o.v <= 25).sort((a, b) => b.H - a.H),
+    luokat: [
+      { nimi: 'menetetty nousu ≥ 10 m', v: '--l4', test: o => o.H >= 10 },
+      { nimi: '6–10 m',                 v: '--l3', test: o => o.H >= 6 },
+      { nimi: '3–6 m',                  v: '--l2', test: o => o.H >= 3 },
+      { nimi: 'alle 3 m',               v: '--l1', test: () => true },
+    ],
+    koonSelite: 'pylpyrän koko = menetetty nousu',
+    koko: o => 4 + Math.min(10, o.H),
+    arvo: o => o.H.toFixed(1) + ' m',
+    tunnus: o => `valo ${o.v} m · ${o.L} m nousua`,
+    vihje: o => `<b>${o.H.toFixed(1)} m</b> noustu, valo ${o.v} m harjasta<br>` +
+      `matka ${o.L} m = ${(o.H / o.L * 100).toFixed(1)} %<br>` +
+      `<span style="color:#999">matkavastus S = ${o.S.toFixed(2)}</span>`,
+    patka: o => o.g ?? null,
+    tiivis: k => `${fi.format(k.merkNousuja)} merkittävää nousua (≥ 2 m). ` +
+      `<b>${k.valoHarjalla}</b> niistä (${k.valoOsuus} %) päättyy valoristeykseen 25 metrin ` +
+      `sisällä harjasta. Risteykseen ylipäätään ${k.risteysHarjalla} (${k.risteysOsuus} %).`,
+  },
+  */
+  pysakki: {
+    otsikko: 'Katolliset pysäkit pyörätien varrella',
+    kohteet: k => k.pysakit ?? [],
+    luokat: [
+      { nimi: 'väärin, katos yli 3 m pyörätien takana', v: '--l4', test: o => o.ero > 3 },
+      { nimi: 'väärin',                                 v: '--l3', test: o => !o.ok },
+      { nimi: 'oikein, ero alle 3 m',                   v: '--l2', test: o => o.ero > -3 },
+      { nimi: 'oikein',                                 v: '--l1', test: () => true },
+    ],
+    koonSelite: 'pylpyrän koko = etäisyys ajoradasta',
+    koko: o => 4 + Math.min(9, o.kat / 2),
+    arvo: o => (o.ok ? '' : '+') + o.ero.toFixed(1) + ' m',
+    tunnus: o => o.nimi ?? ('pysäkki ' + o.id),
+    vihje: o => `<b>${o.nimi ?? 'pysäkki ' + o.id}</b><br>` +
+      `katos ${o.kat.toFixed(1)} m ajoradasta, pyörätie ${o.pyo.toFixed(1)} m<br>` +
+      `<span style="color:#999">${o.ok ? 'katos on ajoradan puolella — ohjeen mukainen'
+        : 'pyörätie kulkee katoksen ja ajoradan välistä'}` +
+      `${o.telin ? '<br>pyöräteline' : ''}</span>`,
+    tiivis: k => `${fi.format(k.katoksia)} katosta joilla on mitattu sijainti. ` +
+      `${fi.format(k.pysArvioitavia)} niistä on pyörätien varrella ja arvioitavissa; ` +
+      `<b>${fi.format(k.pysVaarin)}</b> (${k.pysakkiOsuus} %) on väärällä puolella.`,
+  },
+};
+NAKYMAT.kok = null;   // kokonaisarviolla ei ole omia kohteita
+const nakyma = () => NAKYMAT[mittari] ?? NAKYMAT.nakema;
+const luokka = (N, o) => N.luokat.find(l => l.test(o));
+
+const MITTARIT = {
+  kok:     { nimi: 'Kokonaisarvio', arvo: k => kokArvo(k), muoto: v => v.toFixed(0) + ' %',
+             selite: `<b>Kolmen vaatimustäyttymisen keskiarvo: näkemät, pysäkkisijainti ja
+               matkavastus.</b> Jokainen osa on jo osuus joka täyttää ohjeen, joten
+               <b>100 % on tavoite</b> — luku ei ole "paras aineistossa" vaan "ohjeen mukaan".
+               Palkki on jaettu osiin ja <b>segmentin leveys on sen osuus lopputuloksesta</b>,
+               joten näkee suoraan mikä kaupunkia painaa.
+               <br><br><b>Puuttuva vertailu jätetään huomiotta.</b> Keskiarvo lasketaan
+               niistä osista jotka ovat, eikä kaupunkia eroteta omaan ryhmäänsä. Seuraus on
+               syytä tietää: puuttuva osa on lähes aina pysäkkisijainti, joka on useimmilla
+               alin osa — joten sen pois jääminen <i>nostaa</i> keskiarvoa. Oulu on kolmas
+               kahdella osalla kolmesta. Palkista sen näkee: vajaassa on kaksi segmenttiä.
+               <br><br><b>Osat painavat yhtä paljon,</b> koska mikään ei kerro niiden
+               keskinäisestä tärkeydestä. Matkavastus mittaa osin maastoa eikä suunnittelua —
+               Seinäjoki ja Pori ovat tasaisia — joten sen osuus kannattaa lukea varauksella.
+               Leveys, esterakennelmat ja talvihoito ovat Digiroadissa omina kokoelminaan,
+               mutta niitä ei ole vielä haettu.` },
+
+  // Kaikki mittarit palauttavat prosentin 0-100, koska palkki skaalataan
+  // absoluuttisesti. nakema20 on tallessa murtolukuna, joten se kerrotaan tassa.
+  nakema:  { nimi: 'Näkemät', arvo: k => k.nakema20 * 100, muoto: v => v.toFixed(0) + ' %',
+             selite: `<b>Osuus alikulkujen suuaukoista, joilla lähin risteys on vähintään 20 metrin päässä</b>
+               — eli Helsingin suunnitteluohjeen suositeltava näkemäalue. Tämä on sivun ainoa
+               mittari, jonka suunta ei ole tulkinnanvarainen: pidempi näkemä on aina parempi.` },
+  pysakki: { nimi: 'Pysäkkisijainti', arvo: k => k.pysakkiOsuus == null ? null : 100 - k.pysakkiOsuus,
+             muoto: v => v.toFixed(0) + ' %',
+             selite: `<b>Osuus arvioitavista katoksista, jotka ovat ohjeen mukaisella puolella.</b>
+               Helsingin ohje sijoittaa katoksen odotustilaan <i>pyörätien ja ajoradan väliin</i>,
+               vähintään 0,3 m pyörätien reunasta — jolloin pyöräliikenne kulkee odotustilan takaa.
+               Jos pyörätie on katoksen ja ajoradan välissä, pyöräilijät ajavat odotustilan läpi.
+               <br><br><b>Tämä mittaa yhtä asiaa viidestä.</b> Ohje vaatii myös suojakaiteen
+               (6 m ennen katosta, 3 m jälkeen), 1,5 m odotustilan ja vähintään 1,25 m pyörätien
+               pysäkin kohdalla. Kaidetta ja odotustilaa ei ole aineistossa lainkaan, ja
+               <code>dr_leveys</code> kattaa kevytväylistä <b>0,8 %</b> — se on käytännössä
+               ajoneuvoverkon aineisto. Mittasin myös pyörätien kääntymiskulman pysäkin kohdalla
+               (ohje: 10°, enintään 20°), mutta se ei erottunut taustasta lainkaan: rikastuma
+               0,78× ja 1,02×, eli pysäkin kohdalla väylä taittuu jyrkästi harvemmin kuin
+               satunnaisessa kohdassa verkkoa.
+               <br><br><b>Tämä ei ole kaupunkien paremmuusjärjestys.</b> Mukaan kelpaavat vain
+               katokset joilla on mitattu maastokoordinaatti, ja sen kattavuus vaihtelee
+               kunnittain 0 %:sta 94 %:iin — se kertoo maastokäyntien historiasta eikä
+               pyöräilystä. Turku, Salo, Kouvola ja Vaasa puuttuvat kokonaan. Vertailukelpoisin
+               ryhmä on Lahti, Helsinki, Espoo ja Vantaa, joilla kattavuus on yli 90 %.` },
+  matkavastus: { nimi: 'Matkavastus', arvo: k => 100 - k.raskasOsuus, muoto: v => v.toFixed(1) + ' %',
+             selite: `<b>Osuus kevyen liikenteen verkon pituudesta, joka EI kulu nousuihin joiden
+               matkavastus ylittää tavoitteen 0,2.</b> Helsingin ohje määrittelee matkavastuksen
+               <i>S = H² / L</i>, missä H on noustava korkeusero ja L osuuden pituus, ja pitää
+               alle 0,2 jäävää arvoa erityisen tavoiteltavana baanoilla ja pääreiteillä.
+               Suure on kumulatiivinen: neljän prosentin nousu on tavoitteessa 125 metriin asti,
+               sen jälkeen ei enää.
+               <br><br><b>Tämä mittaa maastoa yhtä paljon kuin suunnittelua.</b> Seinäjoki, Pori
+               ja Oulu ovat kärjessä koska ne ovat tasaisia, ei koska ne olisivat suunnitelleet
+               paremmin. Lue tämä reitin raskautena, ei arvosanana.
+               <br><br>Laskettu Digiroadin Z-koordinaateista segmenteittäin, ei linkeittäin:
+               pää&shy;päähän mitattuna nousu ja lasku kumoavat toisensa ja yli 250 m linkkien
+               mediaani putoaa 1,08 %:iin. Alle 2 m segmentit on jätetty pois, koska lyhyt
+               segmentti suurentaa Z:n virheen — alle 5 m linkeistä 3 % näyttäisi yli 20 %
+               kaltevuutta. <b>Sivukaltevuutta ei voi laskea lainkaan</b>: se on kohtisuorassa
+               väylää vastaan eikä aineistossa ole leveyttä, vain keskilinja.` },
+  /* POIS KAYTOSTA — mittaus ei kestanyt tarkistusta.
+   *
+   * Mittari oli "osuus nousuista joiden harjalla on valoristeys". Kaksi
+   * ongelmaa, joista jalkimmainen on ratkaiseva:
+   *
+   * 1. Se mittaa kolmesta pysahdystyypista lievinta. Harjalla saavut hitaasti
+   *    juuri siksi etta asken kiipesit, joten menetettava liike-energia on
+   *    pieni ja liikkeellelahto tapahtuu tasaiselle tai alamakeen. Pahempia
+   *    ovat pysahdys alamaen pohjalla (saavut lujaa, kaikki jarrutetaan pois)
+   *    ja pysahdys ylamaessa (liikkeellelahto kuormattuna).
+   *
+   * 2. Kaksi kontrollia antavat eri vastauksen. Ensimmainen ajo, jossa nousut
+   *    oli ketjutettu solmujen lapi, antoi rikastumaksi 2,03x eli signaalin.
+   *    Toinen ajo, jossa nousut laskettiin linkeittain ketjuttamatta, antoi
+   *    0,62x eli painvastaisen tuloksen. Myos alamaen pohja (0,94x) ja valo
+   *    kaltevuudessa (0,73x) jaivat alle yhden.
+   *
+   *    Ero on nousun MAARITELMASSA, ei datassa. En tieda kumpi on oikein,
+   *    enka julkaise lukua jota en osaa puolustaa. Tama palaa vasta kun
+   *    nousun maaritelma on lukittu ja kontrolli toistettu silla.
+   *
+    pysahdys: { nimi: 'Pysähdys mäen päällä', arvo: k => k.valoOsuus, muoto: v => v.toFixed(1) + ' %',
+             kaanteinen: true,
+             selite: `<b>Osuus merkittävistä nousuista (vähintään 2 m), joiden harjalla on
+               valoristeys 25 metrin sisällä.</b> Nousu maksetaan ja sitten pysähdytään — vauhti
+               menetetään juuri siellä missä se on kalleinta hankkia.
+               <br><br><b>Signaali on aito, ei verkon tiheyttä.</b> Tarkistin sen kontrollilla:
+               nousun harjoista 2,8 %:lla on valo 25 metrin sisällä, mutta satunnaisella verkon
+               pisteellä vain 1,4 %:lla (n = 16 483 harjaa, 80 000 satunnaista pistettä).
+               <b>Rikastuma 2,03×.</b> Risteyksille yleensä 41,3 % vastaan 23,8 %, eli 1,74×.
+               <br><br>Mekanismi on ilmeinen: väylä nousee kadun tasoon <i>koska siellä on
+               risteys</i> — risteys on nousun syy. Se ei tee havainnosta vähemmän pätevää,
+               koska juuri tämä on se haitta jonka ohje nimeää.` },
+  */
+  /* POIS KAYTOSTA — mittaus ei kestanyt tarkistusta.
+   *
+   * Mittari oli "osuus nousuista joiden harjalla on valoristeys". Kaksi
+   * ongelmaa, joista jalkimmainen on ratkaiseva:
+   *
+   * 1. Se mittaa kolmesta pysahdystyypista lievinta. Harjalla saavut hitaasti
+   *    juuri siksi etta asken kiipesit, joten menetettava liike-energia on
+   *    pieni ja liikkeellelahto tapahtuu tasaiselle tai alamakeen. Pahempia
+   *    ovat pysahdys alamaen pohjalla (saavut lujaa, kaikki jarrutetaan pois)
+   *    ja pysahdys ylamaessa (liikkeellelahto kuormattuna).
+   *
+   * 2. Kaksi kontrollia antavat eri vastauksen. Ensimmainen ajo, jossa nousut
+   *    oli ketjutettu solmujen lapi, antoi rikastumaksi 2,03x eli signaalin.
+   *    Toinen ajo, jossa nousut laskettiin linkeittain ketjuttamatta, antoi
+   *    0,62x eli painvastaisen tuloksen. Myos alamaen pohja (0,94x) ja valo
+   *    kaltevuudessa (0,73x) jaivat alle yhden.
+   *
+   *    Ero on nousun MAARITELMASSA, ei datassa. En tieda kumpi on oikein,
+   *    enka julkaise lukua jota en osaa puolustaa. Tama palaa vasta kun
+   *    nousun maaritelma on lukittu ja kontrolli toistettu silla.
+   *
+    pysahdys: { nimi: 'Pysähdys mäen päällä', arvo: k => k.valoOsuus, muoto: v => v.toFixed(1) + ' %',
+             kaanteinen: true,
+             selite: `<b>Osuus merkittävistä nousuista (vähintään 2 m), joiden harjalla on
+               valoristeys 25 metrin sisällä.</b> Nousu maksetaan ja sitten pysähdytään — vauhti
+               menetetään juuri siellä missä se on kalleinta hankkia.
+               <br><br><b>Signaali on aito, ei verkon tiheyttä.</b> Tarkistin sen kontrollilla:
+               nousun harjoista 2,8 %:lla on valo 25 metrin sisällä, mutta satunnaisella verkon
+               pisteellä vain 1,4 %:lla (n = 16 483 harjaa, 80 000 satunnaista pistettä).
+               <b>Rikastuma 2,03×.</b> Risteyksille yleensä 41,3 % vastaan 23,8 %, eli 1,74×.
+               <br><br>Mekanismi on ilmeinen: väylä nousee kadun tasoon <i>koska siellä on
+               risteys</i> — risteys on nousun syy. Se ei tee havainnosta vähemmän pätevää,
+               koska juuri tämä on se haitta jonka ohje nimeää.` },
+  */
+
+};
+
+/* Kokonaisarvio on kolmen vaatimustayttymisen keskiarvo, ei normalisoitu pisteluku.
+   Jokainen osa on jo osuus joka tayttaa vaatimuksen, joten 100 % on tavoite ja
+   luku on tulkittavissa sellaisenaan - ei "paras aineistossa" vaan "ohjeen mukaan".
+   Osat piirretaan erikseen, koska yksi luku piilottaa sen mika kaupunkia painaa. */
+const OSAT = [
+  { id: 'nakema',      nimi: 'näkemät',          vari: '--o1', arvo: k => k.nakema20 * 100 },
+  { id: 'pysakki',     nimi: 'pysäkkisijainti',  vari: '--o2',
+    arvo: k => k.pysakkiOsuus == null ? null : 100 - k.pysakkiOsuus },
+  { id: 'matkavastus', nimi: 'matkavastus',      vari: '--o3', arvo: k => 100 - k.raskasOsuus },
+];
+const osat = k => OSAT.map(o => ({ ...o, v: o.arvo(k) }));
+const kokArvo = k => { const a = osat(k).filter(o => o.v != null);
+  return a.length ? a.reduce((s, o) => s + o.v, 0) / a.length : null; };
+
+// Mittari on osa jaettavaa osoitetta: ?m=matkavastus#Jyvaskyla/12
+let mittari = new URLSearchParams(location.search).get('m') ?? 'kok';
+if (!MITTARIT[mittari]) mittari = 'nakema';
+const seg = $('#mittari');
+for (const [k, m] of Object.entries(MITTARIT)) {
+  const b = document.createElement('button');
+  b.textContent = m.nimi; b.dataset.k = k;
+  b.setAttribute('aria-pressed', String(k === mittari));
+  b.onclick = () => { mittari = k; for (const c of seg.children)
+    c.setAttribute('aria-pressed', String(c.dataset.k === k));
+    history.replaceState(null, '', `?m=${k}${location.hash}`);
+    piirraVertailu();                   // paivittaa myos johdannon, luvut ja selitteen
+    if (K) avaaKaupunki(K.nimi);        // auki oleva kaupunki seuraa valintaa
+  };
+  seg.append(b);
+}
+
+
+/* Johdanto ja paaluvut seuraavat valittua vertailua. Aiemmin ne olivat
+   kovakoodattu nakemiin, mika oli vaarin heti kun mittareita tuli useampi:
+   sivu lupasi alikulkuja ja naytti matkavastusta. */
+const summa = f => D.reduce((a, k) => a + (f(k) ?? 0), 0);
+const JOHDANNOT = {
+  kok: {
+    teksti: `Digiroadin tielinkeistä laskettu vertailu Suomen 20 suurimmalle kaupungille.
+      Kolme mittaria, jokainen osuus joka täyttää Helsingin pyöräliikenteen suunnitteluohjeen
+      vaatimuksen — <b>tavoite on 100 %</b>. Palkki on jaettu osiin, joten näkee mikä
+      kaupunkia painaa. Valitse yksittäinen vertailu nähdäksesi sen kohteet kartalla.`,
+    luvut: () => { const t = D.map(kokArvo).filter(v => v != null);
+      const taysi = D.filter(k => osat(k).every(o => o.v != null));
+      return [[D.length, 'kaupunkia'], [taysi.length, 'vertailukelpoista'],
+              [(t.reduce((a, v) => a + v, 0) / t.length).toFixed(0) + ' %', 'keskiarvo'],
+              [Math.max(...t).toFixed(0) + ' %', 'paras'], [Math.min(...t).toFixed(0) + ' %', 'huonoin']]; },
+  },
+  nakema: {
+    teksti: `Kuinka kaukana alikulun suuaukolta on lähin risteys. Alikulun rakenne peittää
+      sivusuunnat, joten näkemäalue voi alkaa vasta suulta — ja jos risteys on lähempänä kuin
+      vaadittu näkemä, vaatimusta ei voi täyttää riippumatta siitä mitä reunoille on rakennettu.
+      Suositeltava näkemäalue on <b>20 m</b>, tyydyttävä 15 m, minimi 12 m.`,
+    luvut: () => [[fi.format(summa(k => k.alikulut)), 'alikulkua'],
+                  [fi.format(summa(k => k.suuaukot)), 'suuaukkoa'],
+                  [Math.round(summa(k => k.kohteet.filter(o => o.m < 20).length)
+                     / summa(k => k.suuaukot) * 100) + ' %', 'alle 20 m'],
+                  [fi.format(summa(k => k.kohteet.filter(o => o.m < 1).length)), 'risteys suoraan suulla']],
+  },
+  pysakki: {
+    teksti: `Onko katos pyörätien ja ajoradan välissä. Ohje sijoittaa katoksen odotustilaan
+      <b>ajoradan puolelle pyörätietä</b>, jolloin pyöräliikenne kulkee odotustilan takaa.
+      Jos pyörätie on katoksen ja ajoradan välissä, pyöräilijät ajavat odotustilan läpi.
+      Mukaan kelpaavat vain katokset joilla on mitattu maastokoordinaatti.`,
+    luvut: () => [[fi.format(summa(k => k.katoksia)), 'katosta'],
+                  [fi.format(summa(k => k.pysArvioitavia)), 'arvioitavaa'],
+                  [fi.format(summa(k => k.pysVaarin)), 'väärällä puolella'],
+                  [Math.round(summa(k => k.pysVaarin) / summa(k => k.pysArvioitavia) * 100) + ' %', 'osuus'],
+                  [D.filter(k => k.pysakkiOsuus != null).length + '/' + D.length, 'kaupunkia kattaa']],
+  },
+  matkavastus: {
+    teksti: `Paljonko verkosta kuluu raskaisiin nousuihin. Ohje määrittelee matkavastuksen
+      <i>S = H² / L</i> ja pitää alle <b>0,2</b> jäävää arvoa erityisen tavoiteltavana.
+      Pituuskaltevuuden suositus on enintään 4 % pääreiteillä, 8 % ehdoton yläraja.
+      Laskettu Z-koordinaateista segmenteittäin.`,
+    luvut: () => [[fi.format(Math.round(summa(k => k.verkkoKm))) + ' km', 'kevytverkkoa'],
+                  [(summa(k => k.yli4 * k.verkkoKm) / summa(k => k.verkkoKm)).toFixed(1) + ' %', 'yli 4 %'],
+                  [(summa(k => k.yli8 * k.verkkoKm) / summa(k => k.verkkoKm)).toFixed(1) + ' %', 'yli 8 %'],
+                  [fi.format(summa(k => k.nousut.length)), 'nousua ≥ 2 m'],
+                  [fi.format(summa(k => k.nousut.filter(o => o.S >= 0.2).length)), 'yli tavoitteen']],
+  },
+};
+
+/* Ohjeen lahde seuraa valittua vertailua: jokaisella mittarilla on oma kohtansa
+   Helsingin pyoraliikenteen suunnitteluohjeessa, ja lukijan pitaa paasta juuri
+   siihen eika ohjeen etusivulle. */
+const PERUSTIEDOT = 'https://pyoraliikenne.hel.fi/suunnittelun-lahtokohdat/pyoraliikenteen-suunnittelun-perustiedot/';
+const OHJELAHTEET = {
+  nakema:      [[PERUSTIEDOT + '#nakemat', 'Näkemät', 'Kuva 4: pyöräteiden keskinäiset risteämiset, ' +
+                 'näkemäalue 20 m / 15 m / 12 m']],
+  matkavastus: [[PERUSTIEDOT + '#pituus-ja-sivukaltevuus', 'Pituus- ja sivukaltevuus',
+                 'matkavastus S = H² / L, tavoite alle 0,2; pituuskaltevuus enintään 4 % / 8 %']],
+  pysakki:     [['https://pyoraliikenne.hel.fi/linjaosuuksien-suunnittelu/pysakkijarjestelyt/',
+                 'Pysäkkijärjestelyt', 'katos odotustilaan pyörätien ja ajoradan väliin, ' +
+                 'vähintään 0,3 m pyörätien reunasta']],
+};
+OHJELAHTEET.kok = [...OHJELAHTEET.nakema, ...OHJELAHTEET.pysakki, ...OHJELAHTEET.matkavastus];
+
+function piirraLahde() {
+  $('#ohjelahde').innerHTML = 'Vaatimukset: ' + (OHJELAHTEET[mittari] ?? OHJELAHTEET.kok)
+    .map(([u, n, t]) => `<a href="${u}">Helsingin pyöräliikenteen suunnitteluohje — ${n}</a> (${t})`)
+    .join('; ') + '.';
+}
+
+function piirraJohdanto() {
+  piirraLahde();
+  const J = JOHDANNOT[mittari];
+  $('#johdanto').innerHTML = J.teksti;
+  $('#stats').innerHTML = J.luvut()
+    .map(([b, t]) => `<div><b>${b}</b><span>${t}</span></div>`).join('');
+}
+
+function piirraVertailu() {
+  const M = MITTARIT[mittari];
+  let rows = D.map(k => ({ k, v: M.arvo(k) })).filter(r => r.v != null)
+              .sort((a, b) => M.kaanteinen ? a.v - b.v : b.v - a.v);
+  // Puuttuva vertailu jatetaan huomiotta: keskiarvo lasketaan niista osista jotka
+  // ovat, eika kaupunkia eroteta omaan ryhmaansa. Seuraus on syyta tietaa - puuttuva
+  // osa on lahes aina pysakkisijainti, joka on useimmilla alin, joten sen pois
+  // jaaminen NOSTAA keskiarvoa. Se nakyy palkista: vajaassa on kaksi segmenttia
+  // kolmen sijaan, ja selite kertoo mika vari on mika.
+  const el = $('#rank'); el.innerHTML = '';
+  // Kaikki jaljella olevat mittarit ovat osuuksia joilla on tavoite, joten palkki
+  // skaalataan nollasta sataan eika aineiston aariarvoihin: 60 % nayttaa 60 %:lta
+  // eika "toiseksi parhaalta".
+  const lev = v => v;
+  rows.forEach((r, i) => {
+    const n = document.createElement('div'); n.className = 'n'; n.textContent = i + 1;
+    const d = document.createElement('div'); d.className = 'row';
+    let palkki;
+    if (mittari === 'kok') {
+      // Jokainen osa tuo keskiarvoon v/n, joten segmentin leveys ON sen osuus
+      // lopputuloksesta. Palkin kokonaispituus = pistemaara.
+      // Puuttuvaa osaa ei piirreta lainkaan: palkin pituus pysyy pistemaarana.
+      const o = osat(r.k).filter(x => x.v != null);
+      palkki = `<div class="bar osina">` + o.map(x =>
+        `<i style="width:${(x.v / o.length).toFixed(1)}%;background:var(${x.vari})"
+            title="${x.nimi} ${x.v.toFixed(0)} %"></i>`).join('') + `</div>`;
+    } else {
+      palkki = `<div class="bar"><i style="width:${lev(r.v).toFixed(1)}%"></i></div>`;
+    }
+    d.innerHTML = `<div class="nm">${r.k.nimi}</div>${palkki}<div class="v">${M.muoto(r.v)}</div>`;
+    d.onclick = () => avaaKaupunki(r.k.nimi);
+    el.append(n, d);
+  });
+  piirraJohdanto();
+  $('#osaselite').innerHTML = mittari !== 'kok' ? '' :
+    OSAT.map(o => `<span><i class="s" style="background:var(${o.vari});border-radius:2px"></i>${o.nimi}</span>`).join('') +
+    `<span style="color:var(--ink-3)">· palkin pituus on pistemäärä, segmentti sen osa · tavoite 100 %` +
+    ` · puuttuva vertailu jätetään huomiotta, jolloin palkissa on kaksi segmenttiä kolmen sijaan</span>`;
+  $('#vnote').innerHTML = M.selite +
+    `<br><br><b>Tämä on alaraja, ei arvio.</b> Aineistossa on vain väylän keskilinja — ei seiniä,
+     luiskia, kaiteita eikä kasvillisuutta. Jokainen niistä vain lisää peittoa, joten todellisia
+     puutteita on enemmän kuin tässä näkyy, ei vähemmän. Klikkaa kaupunkia nähdäksesi kohteet.`;
+}
+
+/* ── kaupunkinäkymä ───────────────────────────────────────────────────── */
+let K = null;                                   // valittu kaupunki
+let kohteet = [];                               // suuaukot, huonoin ensin
+let verkko = null, verkonKunta = null, verkonTiedot = null;   // haettu linkkiverkko
+let valittu = null;
+let cx = 0, cy = 0, mpp = 6;                    // näkymä: keskipiste ja metriä per pikseli
+let drag = null, token = 0;
+
+
+/**
+ * Kokonaisarvion kaupunkisivu: osien luvut ja vertailu kunkin osan parhaaseen.
+ * Kokonaisarviolla ei ole omia kohteita kartalle, joten ilman tata nakyma putoaisi
+ * nakemiin - kaupunki nayttaisi alikulkuja vaikka valittuna on kokonaisarvio.
+ */
+const OSATIEDOT = {
+  nakema:      { mittari: 'nakema',
+    tiedot: k => `${fi.format(k.suuaukot)} suuaukkoa, ` +
+      `${fi.format(k.kohteet.filter(o => o.m < 20).length)} alle 20 m` },
+  pysakki:     { mittari: 'pysakki',
+    tiedot: k => k.pysakkiOsuus == null ? 'ei maastokoordinaatteja'
+      : `${fi.format(k.pysArvioitavia)} arvioitavaa, ${fi.format(k.pysVaarin)} väärin` },
+  matkavastus: { mittari: 'matkavastus',
+    tiedot: k => `${fi.format(k.verkkoKm)} km, ${k.raskasOsuus} % raskaissa nousuissa` },
+};
+
+function piirraYhteenveto(k) {
+  const pisteet = kokArvo(k);
+  const o = osat(k);
+  const mukana = o.filter(x => x.v != null).length;
+  const el = $('#yhteenveto'); el.innerHTML = '';
+  for (const x of o) {
+    const paras = D.map(y => OSAT.find(z => z.id === x.id).arvo(y)).filter(v => v != null);
+    const hi = Math.max(...paras);
+    const parasKaupunki = D.find(y => OSAT.find(z => z.id === x.id).arvo(y) === hi);
+    const d = document.createElement('div'); d.className = 'osa';
+    const ei = x.v == null;
+    d.innerHTML =
+      `<div class="nimi">${MITTARIT[OSATIEDOT[x.id].mittari].nimi}` +
+        `<small>${OSATIEDOT[x.id].tiedot(k)}</small></div>` +
+      `<div class="luku" style="${ei ? 'color:var(--ink-3)' : ''}">${ei ? '—' : x.v.toFixed(0) + ' %'}</div>` +
+      `<div class="mitta">` +
+        (ei ? '' : `<i style="width:${x.v.toFixed(1)}%;background:var(${x.vari})"></i>`) +
+        `<u style="left:calc(${hi.toFixed(1)}% - 1px)" title="paras ${hi.toFixed(0)} %"></u></div>` +
+      `<div class="ero">${ei
+        ? '<span style="color:var(--ink-3)">jätetään huomiotta</span>'
+        : `<b>${(x.v - hi >= 0 ? '+' : '') + (x.v - hi).toFixed(0)} pp</b>` +
+          `paras ${parasKaupunki.nimi} ${hi.toFixed(0)} %`}</div>`;
+    d.onclick = () => { mittari = OSATIEDOT[x.id].mittari;
+      for (const c of seg.children) c.setAttribute('aria-pressed', String(c.dataset.k === mittari));
+      history.replaceState(null, '', `?m=${mittari}${location.hash}`);
+      piirraVertailu(); avaaKaupunki(k.nimi); };
+    el.append(d);
+  }
+  const yht = document.createElement('div');
+  yht.style.cssText = 'padding:14px 0 2px;font-size:13px;color:var(--ink-2)';
+  yht.innerHTML = `<b style="color:var(--ink-1)">Kokonaisarvio ${pisteet.toFixed(0)} %</b> — ` +
+    `${mukana === OSAT.length ? 'kolmen osan' : mukana + ' osan'} keskiarvo. ` +
+    `Musta viiva on kunkin osan paras tulos. Klikkaa riviä nähdäksesi sen kohteet kartalla.`;
+  el.append(yht);
+}
+
+let kohdeIndeksi = null;
+async function avaaKaupunki(nimi) {
+  K = D.find(x => x.nimi === nimi);
+  $('#vertailu').classList.add('hide'); $('#kaupunki').classList.remove('hide');
+  $('#knimi').textContent = K.nimi;
+  const N = nakyma();
+  const eiOmaa = NAKYMAT[mittari] == null;
+  $('#ksub').innerHTML = `<b>${N.otsikko}.</b> ` + N.tiivis(K) +
+    (eiOmaa ? `<br><span style="color:var(--ink-3)">Vertailuksi on valittu ` +
+      `“${MITTARIT[mittari].nimi}”, joka on kaupunkitason suhdeluku eikä sille ole ` +
+      `kohdetason aineistoa. Kartalla ovat alikulkujen näkemät.</span>` : '');
+  $('#klegend').innerHTML = N.luokat.map(l =>
+    `<span><i class="s" style="background:${css(l.v)}"></i>${l.nimi}</span>`).join('') +
+    `<span style="color:var(--ink-3)">· ${N.koonSelite}</span>`;
+  $('#vlegend').innerHTML =
+    `<span><i class="v" style="background:${css('--tie')};height:4px"></i>ajoneuvoväylä</span>` +
+    `<span><i class="v raita" style="background:${css('--kevyt')}"></i>kevyen liikenteen väylä</span>` +
+    `<span><i class="v" style="background:${css('--acc')};height:4px"></i>alikulku</span>` +
+    `<span style="color:var(--ink-3)">· rulla tai nipistys zoomaa, raahaus siirtää</span>`;
+
+  // Kokonaisarvio: oma yhteenvetosivu kartan ja listan sijaan
+  const yhteenveto = mittari === 'kok';
+  $('#yhteenveto').classList.toggle('hide', !yhteenveto);
+  $('#kartta-ja-lista').classList.toggle('hide', yhteenveto);
+  $('#klegend').classList.toggle('hide', yhteenveto);
+  $('#vlegend').classList.toggle('hide', yhteenveto);
+  $('#knote').classList.toggle('hide', yhteenveto);
+  if (yhteenveto) {
+    $('#ksub').innerHTML = `Kolme vertailua, kukin osuus joka täyttää ohjeen vaatimuksen.`;
+    piirraYhteenveto(K);
+    kohteet = []; valittu = null;
+    if (!kohdeIndeksi) location.hash = encodeURIComponent(nimi);
+    return;
+  }
+
+  kohteet = N.kohteet(K);                      // jo huonoin ensin, nakymakohtaisesti
+  const lista = $('#lista'); lista.innerHTML = '';
+  if (!kohteet.length) lista.innerHTML =
+    '<div class="k" style="color:var(--ink-3)">ei kohteita tällä mittarilla</div>';
+  kohteet.forEach((o, i) => {
+    const d = document.createElement('div'); d.className = 'k'; d.dataset.i = i;
+    d.innerHTML = `<i class="sw" style="background:${css(luokka(N, o).v)}"></i>` +
+      `<span class="id">${N.tunnus(o)}</span><span class="m">${N.arvo(o)}</span>`;
+    d.onclick = () => valitse(i, true, true);
+    lista.append(d);
+  });
+
+  // koko kaupunki näkyviin
+  const xs = kohteet.map(o => o.x), ys = kohteet.map(o => o.y);
+  cx = (Math.min(...xs) + Math.max(...xs)) / 2; cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+  mpp = Math.max((Math.max(...xs) - Math.min(...xs)) / ($('#kartta').clientWidth - 60),
+                 (Math.max(...ys) - Math.min(...ys)) / ($('#kartta').clientHeight - 60), 1);
+  valittu = null;
+  piirra();
+  if (!kohdeIndeksi) location.hash = encodeURIComponent(nimi);
+  // Verkko riippuu kunnasta, ei mittarista: mittarin vaihto ei saa hakea uudelleen.
+  if (verkko && verkonKunta === nimi) { kerro(verkonTiedot); piirra(); }
+  else { verkko = null; haeVerkko(nimi); }
+}
+
+/** Kunnan koko linkkiverkko artefaktista. Yksi kysely, kaksi kierrosta. */
+async function haeVerkko(nimi) {
+  const oma = ++token;
+  $('#knote').innerHTML = '<b>Haetaan linkkiverkkoa…</b>';
+  try {
+    const r = await avaa();
+    r.resetStats();
+    const t0 = performance.now();
+    const res = await r.search({
+      query: { bool: { filter: [{ term: { kuntanimi: nimi } }, { term: { laji: 'linkki' } }] } },
+      size: 60000, sort: [{ avain: 'asc' }] });
+    const ms = performance.now() - t0, s = { ...r.stats };
+    if (oma !== token) return;
+    const kevyt = [], muu = [], alikulku = [];
+    for (const h of res.hits.hits) {
+      const p = h._source;
+      const c = decodeParts(p.geom)[0];
+      if (p.linkkityyp === 8) { if (p.silta_alik === -1) alikulku.push({ id: p.link_id, c });
+                                else kevyt.push(c); }
+      else muu.push(c);
+    }
+    verkko = { kevyt, muu, alikulku }; verkonKunta = nimi;
+    verkonTiedot = { n: res.hits.total.value, s, ms };
+    piirra();
+    kerro(verkonTiedot);
+  } catch (e) {
+    if (oma === token) { verkko = { kevyt: [], muu: [] }; piirra();
+      $('#knote').innerHTML = `<b>Linkkiverkkoa ei saatu:</b> ${e.message}`; }
+  }
+}
+
+function kerro({ n, s, ms }) {
+  $('#knote').innerHTML =
+    `<b>Mitä kartalla näkyy.</b> Taustalla on kunnan koko linkkiverkko — ${fi.format(n)} linkkiä,
+     kevyen liikenteen väylät tummempina kuin ajoneuvoverkko. Päällä jokainen alikulun suuaukko
+     pylpyränä: väri kertoo luokan, koko näkemän pituuden. Listasta klikattu kohde kohdistetaan
+     kartalle. Koordinaatisto on ETRS-TM35FIN, joten etäisyydet ovat metrejä suoraan.
+     <br><br><b>Mitä verkon hakeminen maksoi.</b> Yksi kysely artefaktiin:
+     <b>${s.rounds} kierrosta, ${s.reads} hakua, ${(s.bytes / 1e6).toFixed(1)} MB, ${ms.toFixed(0)} ms.</b>
+     Kunta on klusterointiavaimen korkeissa biteissä, joten koko kunnan verkko on yhtenäinen
+     lohko eikä hajallaan oleva joukko — siksi hakuja on kourallinen eikä tuhansia.
+     <br><br><b>Mitä se ei kerro.</b> Näkemä on tässä suora etäisyys lähimpään risteykseen.
+     Se on oikea suure sille mitä silmä näkee, mutta se ei tunne seinää, luiskaa eikä pensasta.
+     Yksittäinen kohde pitää käydä katsomassa ennen kuin siitä sanoo mitään — tämä kertoo mihin
+     kannattaa mennä katsomaan.`;
+}
+
+$('#back').onclick = () => {
+  $('#kaupunki').classList.add('hide'); $('#vertailu').classList.remove('hide');
+  // K pitaa nollata: mittarin vaihto avaa K:n nimeaman kaupungin uudelleen, ja
+  // ilman tata paluu listaan jatti vanhan valinnan voimaan - jolloin vertailun
+  // klikkaus hyppasi takaisin viimeksi katsottuun kaupunkiin.
+  K = null; kohteet = []; valittu = null;
+  token++; location.hash = '';
+  piirraVertailu();                      // painotussaadin takaisin nakyviin
+};
+
+/* ── kartta ───────────────────────────────────────────────────────────── */
+const C = $('#kartta');
+const W = () => C.clientWidth, H = () => C.clientHeight;
+const sx = x => (x - cx) / mpp + W() / 2;
+const sy = y => H() / 2 - (y - cy) / mpp;       // TM35FIN on pohjoinen ylös, kangas ei
+const inv = (px, py) => [cx + (px - W() / 2) * mpp, cy - (py - H() / 2) * mpp];
+
+function piirra() {
+  const dpr = devicePixelRatio || 1;
+  if (C.width !== W() * dpr) { C.width = W() * dpr; C.height = H() * dpr; }
+  const g = C.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, W(), H());
+
+  if (verkko) {
+    // Viivanleveys skaalautuu zoomiin: kaupungin laajuudella 2 px:n tie on musta
+    // mohkale, lahikuvassa 1 px:n tie katoaa. Katkoviiva kytketaan vasta kun
+    // ruudulla on tilaa nayttaa se - kaukaa se on pelkkaa rakeisuutta.
+    const k = Math.max(0.35, Math.min(2.2, 4 / mpp));
+    const lahi = mpp < 4;
+    // Pelkka leveyden skaalaus ei riita: kaupungin laajuudella kymmenet tuhannet
+    // ohuet tummat viivat summautuvat mustaksi pinnaksi. Peitto haipyy zoomin
+    // mukana, ajoneuvoverkko enemman kuin kevytverkko, koska jalkimmainen on
+    // sivun aihe eika tausta.
+    const haipy = (lo, hi) => Math.max(lo, Math.min(1, hi - (mpp - 4) * (hi - lo) / 26));
+    const piirraViivat = (lista, vari, leveys, katko, alfa = 1) => {
+      if (!lista.length) return;
+      g.globalAlpha = alfa;
+      g.strokeStyle = vari; g.lineWidth = leveys * k;
+      g.lineCap = 'round'; g.lineJoin = 'round';
+      g.setLineDash(katko && lahi ? katko.map(v => v * k) : []);
+      g.beginPath();
+      for (const c of lista) {
+        const x0 = sx(c[0][0]), y0 = sy(c[0][1]);
+        if (x0 < -200 || x0 > W() + 200 || y0 < -200 || y0 > H() + 200) continue;
+        g.moveTo(x0, y0);
+        for (let i = 1; i < c.length; i++) g.lineTo(sx(c[i][0]), sy(c[i][1]));
+      }
+      g.stroke(); g.setLineDash([]); g.globalAlpha = 1;
+    };
+    // autotiet leveina ja tummina, kevytvaylat ohuempina ja raidallisina
+    piirraViivat(verkko.muu, css('--tie'), 2.4, null, haipy(0.22, 1));
+    piirraViivat(verkko.kevyt, css('--kevyt'), 1.5, [5, 4], haipy(0.45, 1));
+    // alikulku: vaalea kuori ja sen paalle yhtenainen korostus, jotta rakenne
+    // erottuu vaylasta jonka osa se on
+    const alikulkuGeo = verkko.alikulku.map(a => a.c);
+    piirraViivat(alikulkuGeo, css('--surface-1'), 6.5);
+    piirraViivat(alikulkuGeo, css('--acc'), 3);
+  }
+
+  // huonoimmat päällimmäisiksi
+  const N = nakyma();
+
+  // Valitun kohteen patka hehkuu, jotta nakee mita se koskee. Nakeman kohdalla
+  // se on alikulkulinkki, nousujen kohdalla koko nousu alusta harjalle.
+  if (valittu != null && kohteet[valittu] && N.patka) {
+    const pat = N.patka(kohteet[valittu]);
+    if (pat && pat.length >= 2) {
+      const veda = () => { g.beginPath(); g.moveTo(sx(pat[0][0]), sy(pat[0][1]));
+        for (let i = 1; i < pat.length; i++) g.lineTo(sx(pat[i][0]), sy(pat[i][1]));
+        g.stroke(); };
+      g.save();
+      g.lineCap = 'round'; g.lineJoin = 'round';
+      g.shadowColor = css('--acc'); g.shadowBlur = 18;
+      g.strokeStyle = css('--acc');
+      g.globalAlpha = 0.5; g.lineWidth = Math.max(6, 10 * Math.min(2, 5 / mpp)); veda();
+      g.globalAlpha = 1;   g.lineWidth = Math.max(2.5, 4 * Math.min(2, 5 / mpp)); veda();
+      g.restore();
+    }
+  }
+
+  const r = o => Math.max(3, Math.min(13, N.koko(o) * Math.min(2.2, 6 / mpp)));
+  // lista on huonoin ensin, joten piirto kaanteisessa jarjestyksessa jattaa
+  // pahimmat paallimmaisiksi
+  for (const o of [...kohteet].reverse()) {
+    const x = sx(o.x), y = sy(o.y);
+    if (x < -20 || x > W() + 20 || y < -20 || y > H() + 20) continue;
+    g.beginPath(); g.arc(x, y, r(o), 0, 7);
+    g.fillStyle = css(luokka(N, o).v); g.fill();
+    g.strokeStyle = css('--surface-1'); g.lineWidth = 2; g.stroke();   // 2 px rako
+  }
+  if (valittu != null) {
+    const o = kohteet[valittu];
+    g.beginPath(); g.arc(sx(o.x), sy(o.y), r(o) + 6, 0, 7);
+    g.strokeStyle = css('--acc'); g.lineWidth = 2.5; g.stroke();
+  }
+}
+
+function valitse(i, scroll, kohdista) {
+  valittu = i;
+  for (const el of $('#lista').children) el.classList.toggle('on', +el.dataset.i === i);
+  if (scroll) $('#lista').children[i]?.scrollIntoView({ block: 'nearest' });
+  if (kohdista) {
+    // Sovita koko patka ruutuun, ala pakota kiintaa zoomia: alikulku on 20 m
+    // ja nousu voi olla 700 m. Kiintea zoom nayttaisi jalkimmaisesta harjan
+    // ja jattaisi mitattavan osuuden ruudun ulkopuolelle.
+    const o = kohteet[i], N = nakyma();
+    const pat = N.patka?.(o);
+    if (pat && pat.length >= 2) {
+      const xs = pat.map(q => q[0]).concat(o.x), ys = pat.map(q => q[1]).concat(o.y);
+      const x0 = Math.min(...xs), x1 = Math.max(...xs);
+      const y0 = Math.min(...ys), y1 = Math.max(...ys);
+      cx = (x0 + x1) / 2; cy = (y0 + y1) / 2;
+      mpp = Math.max(0.25, Math.min(
+        (x1 - x0) / Math.max(1, W() - 90), (y1 - y0) / Math.max(1, H() - 90)) * 1.35);
+    } else { cx = o.x; cy = o.y; mpp = Math.min(mpp, 0.35); }
+  }
+  // Yksittaiseen kohteeseen pitaa voida linkittaa: suunnittelijalle lahetetaan
+  // osoite yhteen alikulkuun, ei koko kaupungin listaan.
+  location.hash = encodeURIComponent(K.nimi) + '/' + i;
+  piirra();
+}
+
+const osuma = (mx, my) => {
+  let best = -1, bd = 15;
+  kohteet.forEach((o, i) => {
+    const d = Math.hypot(sx(o.x) - mx, sy(o.y) - my);
+    if (d < bd) { bd = d; best = i; }
+  });
+  return best;
+};
+const hiiri = ev => { const b = C.getBoundingClientRect();
+  return [ev.clientX - b.left, ev.clientY - b.top]; };
+
+const tip = $('#tip');
+C.onmousedown = ev => { drag = { ...hiiri(ev), cx, cy, liik: false }; C.style.cursor = 'grabbing'; };
+addEventListener('mouseup', () => { drag = null; C.style.cursor = ''; });
+C.onmousemove = ev => {
+  const [mx, my] = hiiri(ev);
+  if (drag) {
+    if (Math.abs(mx - drag[0]) + Math.abs(my - drag[1]) > 3) drag.liik = true;
+    cx = drag.cx - (mx - drag[0]) * mpp; cy = drag.cy + (my - drag[1]) * mpp;
+    piirra(); tip.style.opacity = 0; return;
+  }
+  const i = osuma(mx, my);
+  if (i < 0) { tip.style.opacity = 0; return; }
+  const o = kohteet[i], N = nakyma();
+  tip.innerHTML = N.vihje(o) + `<br><span style="color:#bbb">${luokka(N, o).nimi}</span>`;
+  tip.style.opacity = 1;
+  tip.style.left = Math.min(ev.clientX + 14, innerWidth - 250) + 'px';
+  tip.style.top = (ev.clientY + 16) + 'px';
+};
+C.onmouseleave = () => { tip.style.opacity = 0; };
+C.onclick = ev => {
+  if (drag?.liik) return;
+  const i = osuma(...hiiri(ev));
+  if (i >= 0) valitse(i, true, false);
+};
+/**
+ * Rullan muuttaminen zoomiksi, kolme eri elettä samassa tapahtumassa.
+ *
+ * Hiiren pykala on YKSI tapahtuma, levyn nipistys on virta tapahtumia nayton
+ * virkistystaajuudella - joten kiintea askel per tapahtuma tarkoittaa, etta
+ * puolen sekunnin nipistys kertautuu noin kuusikymmenta kertaa. Kerroin on
+ * siksi matkaa kohti eika tapahtumaa kohti: k = exp(delta * herkkyys), joka
+ * komponoituu oikein riippumatta siita miten ele pilkotaan tapahtumiksi.
+ *
+ * macOS lahettaa nipistyksen ctrl+wheel-tapahtumana pienilla deltoilla, joten
+ * se tarvitsee noin nelinkertaisen kertoimen hiiren pykalaan nahden. Pykala
+ * taas halutaan pitaa tutussa 1,3x:ssa.
+ *
+ * Kahden sormen veto tulee samana tapahtumana mutta tarkoittaa panorointia,
+ * ei zoomia. Chromen omat luvut erottavat ne: levy lahettaa murtolukudeltoja
+ * ja sivuttaisliiketta, pykala kokonaisluvun ilman vaakakomponenttia.
+ */
+const kahdenSormenVeto = e => {
+  if (e.ctrlKey) return false;                       // nipistys on aina zoom
+  const wd = e.wheelDeltaY;
+  if (wd && Math.abs(wd + 3 * e.deltaY) < 0.5) return true;   // Chromen levysignatuuri
+  if (wd && Math.abs(wd) % 120 === 0) return false;           // hiiren pykala
+  if (e.deltaX !== 0) return true;                            // rullassa ei ole sivuttaista
+  if (!Number.isInteger(e.deltaY)) return true;               // levy lahettaa murtolukuja
+  return Math.abs(e.deltaY) < 40;                             // pykala on ~100 px
+};
+
+C.onwheel = ev => {
+  ev.preventDefault();
+  const yks = ev.deltaMode === 1 ? 16 : ev.deltaMode === 2 ? 400 : 1;   // rivit/sivut pikseleiksi
+  const dy = ev.deltaY * yks;
+  if (kahdenSormenVeto(ev)) {
+    // Kartta seuraa sormia. deltaY on positiivinen alaspain vieritettaessa, eli
+    // sisalto nousee ja paljastuu etelampaa - ja TM35FIN:ssa etelaan mentaessa
+    // pohjoiskoordinaatti pienenee. Siksi miinus; vaakasuunnassa merkki sailyy.
+    cx += ev.deltaX * yks * mpp; cy -= dy * mpp;
+    piirra(); return;
+  }
+  const [mx, my] = hiiri(ev), [wx, wy] = inv(mx, my);
+  const perPx = ev.ctrlKey ? 0.010 : Math.log(1.3) / 100;
+  let k = Math.exp(dy * perPx);
+  k = Math.min(1.4, Math.max(1 / 1.4, k));           // yksikaan tapahtuma ei saa karata
+  mpp = Math.max(0.08, Math.min(300, mpp * k));
+  cx = wx - (mx - W() / 2) * mpp; cy = wy + (my - H() / 2) * mpp;   // kohta kursorin alla pysyy
+  piirra();
+};
+addEventListener('resize', () => { if (K) piirra(); });
+
+/* ── käynnistys ─────────────────────────────────────────────────────── */
+
+piirraVertailu();
+if (location.hash) {
+  const [n, i] = decodeURIComponent(location.hash.slice(1)).split('/');
+  if (D.some(k => k.nimi === n)) {
+    kohdeIndeksi = i != null && i !== '' ? +i : null;
+    await avaaKaupunki(n);
+    if (kohdeIndeksi != null && kohteet[kohdeIndeksi]) valitse(kohdeIndeksi, true, true);
+    kohdeIndeksi = null;
+  }
+}
+</script>
