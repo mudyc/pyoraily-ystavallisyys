@@ -66,6 +66,7 @@ vain jos 1 = Ei.
 | Pyörätien leveys | `dr_leveys` kattaa kevytväylistä 0,8 %. |
 | Talvihoitoluokka | 11 % kattavuus, ja kartalla katsottuna merkinnät ovat satunnaisia eivätkä pääverkko. Kaksi arvoa (9, 10), joiden vastaavuutta K1/K2:een ei ole vahvistettu. |
 | Erotteluperiaatteet (nopeus × liikennemäärä) | Molemmat lähtötiedot 0 % kevytverkolla. |
+| PETI (Fintrafficin pysäkkikanta) | Digiroadin pysäkkitiedon seuraaja, avoin NeTEx-dump kahdesti päivässä. Ei auta: sama aineisto (`publisher = DGR`, `digiroad_id`-avain, katosmäärät täsmäävät ±5 %), ja **katoksella ei ole omaa koordinaattia** — `ShelterEquipment` kantaa vain `Seats`/`Enclosed`, ja `EquipmentPlace`, `EquipmentPosition` ja `AccessSpace` esiintyvät nolla kertaa. Digiroadin maastokoordinaatti ei siirtynyt mukana, joten PETI menettää juuri sen kentän jolla mittari tehdään. Uudet kentät liian harvoja: valaistus 9 % (0 % Helsingissä, Espoossa, Vantaalla ja Seinäjoella), `WheelchairAccess` 95 % unknown, `Enclosed` 35 kpl koko maassa, pyöräpysäköinti 2 kpl. |
 | B7 — väistämisvelvollisuus pyöräilijän tienylityspaikassa | Jyväskylässä 19 kpl, kaikki ajoradalla. Vastaan 124 B5/B6:ta kevytväylillä: etuajo-oikeus 13 % merkityistä kohdista. **Lupaava, mutta muita kaupunkeja ei ehditty hakea.** |
 
 ## Auki
@@ -73,6 +74,10 @@ vain jos 1 = Ei.
 - Nousun määritelmä (ketjutettu vs. ketjuttamaton) on ratkaisematta ja koskee
   myös matkavastusta.
 - Hoitoluokkien 9 ja 10 vastaavuus K1/K2:een vahvistamatta.
+- Katoksen sijainti on yhden lähteen varassa. Digiroadin maastokoordinaatti
+  kattaa 16 % katoksista eikä PETI tuo tilalle mitään (ks. hylätyt). Jos mittari
+  halutaan vertailukelpoiseksi, koordinaatin pitää tulla muualta — OSM:ssä
+  `amenity=shelter` on oma solmunsa omine koordinaatteineen.
 - Umpikujaan päättyvät suuaukot jäävät pois (Jyväskylässä 8 / 382). Kuntarajalta
   leikattu aineisto ja todellinen umpikuja näyttävät samalta; erottaminen vaatisi
   naapurikunnan verkon.
@@ -133,8 +138,11 @@ sisällä. Predikaatti valitsee rivejä, ei tavuja.
 ## Aineistot
 
 - [Digiroad](https://vayla.fi/vaylista/aineistot/digiroad/aineisto), Väylävirasto.
-  Ylläpito on siirtynyt Fintrafficin PETI-järjestelmään ja avoin rajapinta on
-  jäädytetty kevääseen 2026; tämä dokumentoi sen tilanteen.
+  Ylläpito on siirtynyt Fintrafficin [PETI](https://www.fintraffic.fi/fi/digitaalisetpalvelut/fintrafficin-datapalvelut/liikkumisen-tietopalvelut/peti)-järjestelmään
+  ja avoin rajapinta on jäädytetty kevääseen 2026; tämä dokumentoi sen tilanteen.
+  PETI julkaisee pysäkit NeTEx- ja GTFS-dumppeina kahdesti päivässä, ja
+  `digiroad_id` yhdistää ne tähän aineistoon — päivityspolku on siis olemassa,
+  mutta uusia mitattavia kenttiä se ei tuo.
 - Väestö: Tilastokeskus, kuntien asukasluvut 31.12.2025.
 - Indeksi ja lukija: [serverless_index](https://github.com/mudyc/serverless_index).
 
