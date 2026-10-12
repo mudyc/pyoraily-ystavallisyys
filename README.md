@@ -13,7 +13,7 @@ siitä mihin kannattaa mennä katsomaan.
 | Mittari | Mitä | Tila |
 | --- | --- | --- |
 | **Näkemät** | Matka alikulun suuaukolta ensimmäiseen risteykseen **ulostulosuunnassa**. Ohje: 20 m suositeltava, 15 m tyydyttävä, 12 m minimi. | 6 054 suuaukkoa, 32 % alle 20 m |
-| **Pysäkkisijainti** | Kulkeeko pyörätie katoksen ja ajoradan välistä. | 3 501 arvioitavaa, 27 % väärin, 15 kaupunkia |
+| **Pysäkkisijainti** | Kulkeeko pyörätie katoksen ja ajoradan välistä. | 3 497 arvioitavaa, 27 % väärin, 15 kaupunkia |
 | **Matkavastus** | *S = H² / L*, tavoite alle 0,2. Laskettu Z-koordinaateista. | 9 986 km verkkoa, 12,9 % yli 4 %:n kaltevuudessa |
 | **Kokonaisarvio** | Kolmen edellisen keskiarvo. Puuttuva osa jätetään huomiotta. | |
 
@@ -120,8 +120,10 @@ vain jos 1 = Ei.
 - Viisi kaupunkia (Kouvola, Salo, Tampere, Turku, Vaasa) jää yhä pysäkkivertailun
   ulkopuolelle: yhdelläkään niiden katoksellisista pysäkeistä ei ole
   maastokoordinaattia.
-- Janatesti käyttää pysäkin omaa tielinkkiä ajoratana. Jos katos on lähempänä
-  jotain toista tietä, jana osoittaa väärään suuntaan. Tapauksia ei ole laskettu.
+- Janatesti valitsee ajoradaksi lähimmän **samannimisen** autolinkin, ei pysäkin
+  omaa `link_id`:tä (Digiroad pilkkoo tien useaksi linkiksi, ja pysäkin linkki voi
+  olla kymmeniä metrejä sivussa). 163 nimetöntä putoaa lähimpään autotiehen; niissä
+  jana voi osoittaa eri kadulle kuin sille jolla bussi pysähtyy.
 - Hämeenlinnassa maastokoordinaatti on mediaanilla 179 m päässä pysäkin omasta
   geometriasta, kun muualla ero on 5–20 m. Syy on selvittämättä.
 - Umpikujaan päättyvät suuaukot jäävät pois (Jyväskylässä 8 / 382). Kuntarajalta

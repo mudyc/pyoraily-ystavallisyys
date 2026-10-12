@@ -88,11 +88,57 @@ function kaupunki(tiedosto) {
 
   const linkit = new Map();
   const kevyt = [];
+  const ajorataRuudut = new Map();        // autolinkit ruudukkoon, ks. ajorata()
   for (const f of d.features) {
     if (f.geometry?.type !== 'LineString' || f.geometry.coordinates.length < 2) continue;
-    linkit.set(f.properties.link_id, f.geometry.coordinates);
-    if (f.properties.linkkityyp === 8) kevyt.push(f.geometry.coordinates);
+    linkit.set(f.properties.link_id, f);
+    if (f.properties.linkkityyp === 8) { kevyt.push(f.geometry.coordinates); continue; }
+    const c = f.geometry.coordinates;
+    for (let i = 1; i < c.length; i++) {
+      const a = c[i-1], b = c[i];
+      const x0 = Math.floor(Math.min(a[0], b[0]) / 40), x1 = Math.floor(Math.max(a[0], b[0]) / 40);
+      const y0 = Math.floor(Math.min(a[1], b[1]) / 40), y1 = Math.floor(Math.max(a[1], b[1]) / 40);
+      for (let u = x0; u <= x1; u++) for (let v = y0; v <= y1; v++) {
+        const k = `${u}_${v}`;
+        if (!ajorataRuudut.has(k)) ajorataRuudut.set(k, new Set());
+        ajorataRuudut.get(k).add(f);
+      }
+    }
   }
+
+  /**
+   * Mille ajoradalle jana piirretaan?
+   *
+   * EI pysakin omalle tielinkille. Digiroad pilkkoo tien useaksi linkiksi, ja
+   * pysakin `link_id` voi osoittaa patkaan joka ei ylety katokselle: Oulun
+   * "Kelanmutka E" on 29 m omasta linkistaan mutta 5,6 m samasta tiesta
+   * (Hailuodontie) viereisella linkilla. Jana venyi viisinkertaiseksi ja ylitti
+   * matkalla kevytvaylan, eli pysakki luokiteltiin vaarin.
+   *
+   * EIKA myoskaan sokeasti lahimmalle autotielle: 129 tapauksessa lahin on eri
+   * niminen katu, ja silloin jana osoittaisi sivukadulle eika sille tielle jolla
+   * bussi pysahtyy.
+   *
+   * Valitaan lahin SAMANNIMINEN autolinkki. Nimeton tai loytymaton putoaa
+   * lahimpaan autotiehen ja viimeisena omaan linkkiin.
+   */
+  const ajorata = (m, oma) => {
+    const cx = Math.floor(m[0] / 40), cy = Math.floor(m[1] / 40);
+    const ehdokkaat = new Set();
+    for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++)
+      for (const f of ajorataRuudut.get(`${cx+i}_${cy+j}`) ?? []) ehdokkaat.add(f);
+    const nimi = oma.properties.tienimi_su;
+    const paras = lista => { let b = null, bd = Infinity;
+      for (const f of lista) { const z = projisoi(m, f.geometry.coordinates);
+        if (z && z.d < bd) { bd = z.d; b = { z, mista: null }; } }
+      return b; };
+    let v = nimi ? paras([...ehdokkaat].filter(f => f.properties.tienimi_su === nimi)) : null;
+    if (v) { v.mista = 'nimi'; return v; }
+    v = paras([...ehdokkaat]);
+    if (v) { v.mista = 'lahin'; return v; }
+    const z = projisoi(m, oma.geometry.coordinates);
+    return z ? { z, mista: 'oma' } : null;
+  };
   // Kevytvaylan SEGMENTIT ruudukkoon, eivat taitepisteet. Lahin taitepiste ei
   // kelpaa: pysakit ovat suorilla osuuksilla, joilla taitepistevali on p90 = 14 m
   // ja enimmillaan 356 m, joten lahin taitepiste voi olla kymmenia metreja sivussa
@@ -133,10 +179,12 @@ function kaupunki(tiedosto) {
     if (p.katos === 2 && p.mx == null) t.eiMaastoa++;   // 2 = Kylla, ks. poikkeukset.mjs
     if (SAANNOT.some(r => r.ohita(p))) continue;   // ks. suodata(): saannot ovat mittauskohtaisia
     t.katollisia++;
-    const tie = linkit.get(p.link_id);
-    if (!tie) { t.epaselva++; continue; }
-    const S = projisoi([p.mx, p.my], tie);
-    if (!S || S.d < MIN_ET) { t.epaselva++; continue; }   // katos tien paalla
+    const oma = linkit.get(p.link_id);
+    if (!oma) { t.epaselva++; continue; }
+    const V = ajorata([p.mx, p.my], oma);
+    if (!V) { t.epaselva++; continue; }
+    const S = V.z;
+    if (S.d < MIN_ET) { t.epaselva++; continue; }         // katos tien paalla
     const A = [p.mx, p.my], B = [S.rx, S.ry];
 
     // Yksi lapikaynti: lahin kevytvayla (kuuluuko pysakki vertailuun lainkaan)
@@ -172,7 +220,7 @@ function kaupunki(tiedosto) {
     const pyo = q => [Math.round(q[0]), Math.round(q[1])];
     t.kohteet.push({ x: Math.round(p.mx), y: Math.round(p.my), nimi: p.nimi_su || null,
       id: p.valtak_id, kat: +S.d.toFixed(1), ok, telin: p.pyoratelin === 1,
-      syv: +syv.toFixed(1), lah: +lahin.toFixed(1),
+      syv: +syv.toFixed(1), lah: +lahin.toFixed(1), mista: V.mista,
       g: [pyo(A), pyo(B)], yl: ylitykset.map(pyo) });
   }
   t.nimi = d.nimi;
