@@ -12,7 +12,7 @@ siitä mihin kannattaa mennä katsomaan.
 
 | Mittari | Mitä | Tila |
 | --- | --- | --- |
-| **Näkemät** | Matka alikulun suuaukolta lähimpään risteykseen. Ohje: 20 m suositeltava, 15 m tyydyttävä, 12 m minimi. | 5 844 suuaukkoa, 45 % alle 20 m |
+| **Näkemät** | Matka alikulun suuaukolta ensimmäiseen risteykseen **ulostulosuunnassa**. Ohje: 20 m suositeltava, 15 m tyydyttävä, 12 m minimi. | 6 054 suuaukkoa, 32 % alle 20 m |
 | **Pysäkkisijainti** | Onko katos pyörätien ja ajoradan välissä. | 2 271 arvioitavaa, 43 % väärin |
 | **Matkavastus** | *S = H² / L*, tavoite alle 0,2. Laskettu Z-koordinaateista. | 9 986 km verkkoa, 12,9 % yli 4 %:n kaltevuudessa |
 | **Kokonaisarvio** | Kolmen edellisen keskiarvo. Puuttuva osa jätetään huomiotta. | |
@@ -33,6 +33,24 @@ kaikki merkittäviltä, kunnes ne vertasi satunnaiseen verkon pisteeseen:
 rikastumat 0,62× … 1,02×. Ilman kontrollia olisi raportoitu kolme olematonta
 löydöstä. Ks. `tools/`-skriptien kommentit.
 
+**Suunta on osa mittausta, ei yksityiskohta.** Näkemä mitattiin aluksi suorana
+etäisyytenä lähimpään risteykseen. Lyhyellä alikululla se löysi **molemmille
+suille saman risteyksen** — sen joka on tunnelin takana ja jonne pääsee vain
+kulkemalla tunnelin läpi. Jyväskylässä 15 alikulkua sai näin kaksi alle 12 metrin
+arvoa yhdestä havainnosta, ja Espoon 12-metrinen `a489974d` merkittiin molemmista
+päistä vaikka risteys on vain toisessa. Korjaus on kävellä verkkoa ulospäin ja
+kieltää alikulun oma linkki koko kävelyn ajaksi. Virheen huomasi käyttäjä
+kartalta, ei testi: *molemmat päät vaarallisia* on uskottava tulos, ja juuri
+siksi se meni läpi.
+
+**Puuttuva tulos on yleensä hyvä tulos, ja sen pudottaminen on vinouma.**
+Verkkokävely ei löydä risteystä 80 metrin sisällä 1 851 suuaukolta — ne ovat
+mittarin **parhaat** tapaukset, koska 80 m on nelinkertainen vaatimukseen nähden.
+Niiden hylkääminen "puuttuvana" näytti jokaisen kaupungin huonompana kuin se on;
+Jyväskylä 60 % eikä 49 %. Sensurointi kiinteään 80 metriin on oikea luku, ei
+paikkaus. Aito umpikuja jää pois, koska kunta-aineisto on leikattu kuntarajalta
+eikä verkon loppumista erota aineiston reunasta.
+
 **Koodistoa ei saa arvata.** `katos`-kentässä **1 = Ei ja 2 = Kyllä**, vastoin
 Digiroadin tavanomaista konventiota. Koko pysäkkimittari laskettiin ensin
 katoksettomille pysäkeille. Virhe näkyi aineistossa koko ajan: `katos = 1`
@@ -52,16 +70,19 @@ vain jos 1 = Ei.
 
 ## Auki
 
-- **Näkemämittarilla on kaksi menetelmää eikä sivu käytä EXCEPTION RULES -sääntöjä.**
-  `tools/pisteet.mjs` (sivun luvut) mittaa suoran etäisyyden lähimpään risteykseen;
-  `tools/nakemat2.mjs` kävelee verkkoa ja soveltaa valtatiesääntöä. Jyväskylä
-  51 % vastaan 49 %. Nämä eivät ole yhdistettävissä: sääntö koskee haaroja, joita
-  suora etäisyys ei katso.
 - Nousun määritelmä (ketjutettu vs. ketjuttamaton) on ratkaisematta ja koskee
   myös matkavastusta.
 - Hoitoluokkien 9 ja 10 vastaavuus K1/K2:een vahvistamatta.
+- Umpikujaan päättyvät suuaukot jäävät pois (Jyväskylässä 8 / 382). Kuntarajalta
+  leikattu aineisto ja todellinen umpikuja näyttävät samalta; erottaminen vaatisi
+  naapurikunnan verkon.
 
 ## EXCEPTION RULES
+
+Näkemä lasketaan yhdessä paikassa, `tools/nakema.mjs`:ssä, jota sekä sivun data
+(`tools/pisteet.mjs`) että tarkistusajo (`tools/nakemat2.mjs`) kutsuvat. Ne antoivat
+aiemmin eri tuloksen samasta mittarista, mikä tarkoitti ettei kumpikaan luku ollut
+tarkistettu.
 
 `tools/poikkeukset.mjs` on nimetty rakenne mittausten poikkeuksille: jokainen
 kantaa säännön, perustelun, lähteen ja mitatun vaikutuksensa. Poikkeus joka ei
@@ -76,9 +97,10 @@ python3 tools/fetch.py 20     # Digiroad OGC API -> data/kunnat/ (~590 MB)
 node tools/ingest.mjs         # (kutsutaan build.mjs:stä)
 node tools/build.mjs          # -> data/pyoratiet.l0  (293 MB, 1 063 463 dokumenttia)
 node tools/split-artifact.js data/pyoratiet.l0   # -> 7 osaa a 45 MiB, nama ovat repossa
-node tools/pisteet.mjs        # -> viz/kaupungit.json
+node tools/pisteet.mjs        # -> viz/kaupungit.json + viz/nakema-saannot.json
 node tools/matkavastus.mjs    # liittää matkavastuksen samaan
 node tools/pysakit.mjs        # liittää pysäkkisijainnin samaan
+node tools/nakemat2.mjs       # sama näkemämittaus, tulostaa EXCEPTION RULES -osumat
 node tools/serve.js . 8910    # http://127.0.0.1:8910/viz/index.html
 ```
 

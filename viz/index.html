@@ -202,10 +202,13 @@ const NAKYMAT = {
     ],
     koonSelite: 'pylpyrän koko = näkemän pituus',
     koko: o => 4 + Math.min(9, o.m / 5),
-    arvo: o => o.m.toFixed(1) + ' m',
+    arvo: o => o.sens ? '≥ 80 m' : o.m.toFixed(1) + ' m',
     tunnus: o => `${o.nimi ? o.nimi + ' ' : ''}${o.id.slice(0, 8)}…${o.suu ? ' B' : ' A'}`,
-    vihje: o => `<b>${o.m.toFixed(1)} m</b> lähimpään risteykseen<br>` +
-      `<span style="color:#999">${o.id}<br>risteyksessä ${o.aste} haaraa, niistä ${o.kevyita} kevyttä</span>`,
+    vihje: o => (o.sens
+        ? `<b>≥ 80 m</b> — ei risteystä 80 metrin sisällä ulostulosuunnassa<br>`
+        : `<b>${o.m.toFixed(1)} m</b> risteykseen ulostulosuunnassa<br>` +
+          `<span style="color:#999">risteyksessä ${o.aste} haaraa, niistä ${o.kevyita} kevyttä</span><br>`) +
+      `<span style="color:#999">${o.id}</span>`,
     patka: o => verkko?.alikulku.find(a => a.id === o.id)?.c ?? null,
     tiivis: k => { const n = k.suuaukot, e = k.kohteet.filter(o => o.m < 20).length;
       return `${fi.format(k.alikulut)} alikulkua, ${fi.format(n)} suuaukkoa. <b>${fi.format(e)}</b> ` +
@@ -466,12 +469,17 @@ const JOHDANNOT = {
     teksti: `Kuinka kaukana alikulun suuaukolta on lähin risteys. Alikulun rakenne peittää
       sivusuunnat, joten näkemäalue voi alkaa vasta suulta — ja jos risteys on lähempänä kuin
       vaadittu näkemä, vaatimusta ei voi täyttää riippumatta siitä mitä reunoille on rakennettu.
-      Suositeltava näkemäalue on <b>20 m</b>, tyydyttävä 15 m, minimi 12 m.`,
+      Suositeltava näkemäalue on <b>20 m</b>, tyydyttävä 15 m, minimi 12 m.
+      <br><br>Mittaus kävelee verkkoa <b>vain ulostulosuuntaan</b>: alikulun pää ei voi vastata
+      siitä mikä on tunnelin toisella puolen, koska sinne pääsee vain kulkemalla tunnelin läpi.
+      Suuaukko, jolla ei ole risteystä 80 metrin sisällä, saa arvon ≥ 80 m — se läpäisee
+      jokaisen rajan, joten sen pudottaminen poistaisi juuri hyvät tapaukset.`,
     luvut: () => [[fi.format(summa(k => k.alikulut)), 'alikulkua'],
                   [fi.format(summa(k => k.suuaukot)), 'suuaukkoa'],
                   [Math.round(summa(k => k.kohteet.filter(o => o.m < 20).length)
                      / summa(k => k.suuaukot) * 100) + ' %', 'alle 20 m'],
-                  [fi.format(summa(k => k.kohteet.filter(o => o.m < 1).length)), 'risteys suoraan suulla']],
+                  [fi.format(summa(k => k.kohteet.filter(o => o.m < 1).length)), 'risteys suoraan suulla'],
+                  [fi.format(summa(k => k.sensuroituja ?? 0)), 'yli 80 m (sensuroitu)']],
   },
   pysakki: {
     teksti: `Onko katos pyörätien ja ajoradan välissä. Ohje sijoittaa katoksen odotustilaan

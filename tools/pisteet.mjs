@@ -7,12 +7,21 @@
  * joten mikaan "osuus kaikista linkeista" ei kerro pyoraverkosta mitaan.
  * Kaikki alla on suhteutettu kevyen liikenteen verkkoon tai asukaslukuun.
  *
+ * NAKEMA lasketaan tools/nakema.mjs:lla, samalla koodilla kuin tarkistusajo
+ * tools/nakemat2.mjs. Niilla oli aiemmin eri menetelma — sivu mittasi suoran
+ * etaisyyden lahimpaan risteykseen, tarkistusajo kaveli verkkoa — ja ne antoivat
+ * Jyvaskylalle 51 % ja 49 %. Suora etaisyys osoittautui vaaraksi eika vain
+ * erilaiseksi: se loysi lyhyen alikulun molemmille suille saman, tunnelin takana
+ * olevan risteyksen. Ks. tools/nakema.mjs.
+ *
  *   node tools/pisteet.mjs
  */
 import { writeFileSync, readFileSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
 import { Reader } from '../src/read/reader.js';
 import { FileTransport } from '../src/transport/file.js';
-import { decodeParts } from '../src/geom.js';
+import { suuaukot } from './nakema.mjs';
+import { kuvaus, tarkista } from './poikkeukset.mjs';
 
 const juuri = new URL('..', import.meta.url).pathname;
 const VAESTO = JSON.parse(readFileSync(process.env.HOME + '/proj/oma/ajoneuvorekisteri/viz/data/vaesto2025.json'));
@@ -21,6 +30,7 @@ const r = await new Reader(new FileTransport(`${juuri}data/pyoratiet.l0`), { cac
 const kunnat = (await r.search({ size: 0, aggs: { k: { terms: { field: 'kuntanimi', size: 50 } } } }))
   .aggregations.k.buckets.map(b => b.key);
 
+const laskuri = {};
 const RAJAT = [['suositeltava', 20], ['tyydyttava', 15], ['minimi12', 12], ['minimi10', 10]];
 const out = [];
 
@@ -38,32 +48,14 @@ for (const nimi of kunnat) {
       filter: [{ term: { kuntanimi: nimi } }, { term: { laji: 'linkki' } }, { term: { linkkityyp: 8 } }],
       must_not: [{ term: { silta_alik: 0 } }] } }, size: 0 });
 
-  const SOLU = 32, ruudut = new Map();
-  for (const h of risteykset.hits.hits) {
-    const p = h._source, k = `${Math.floor(p.x / SOLU)}_${Math.floor(p.y / SOLU)}`;
-    if (!ruudut.has(k)) ruudut.set(k, []);
-    ruudut.get(k).push(p);
-  }
-  const lahin = (x, y) => {
-    let d = Infinity, m = null, cx = Math.floor(x / SOLU), cy = Math.floor(y / SOLU);
-    for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++)
-      for (const p of ruudut.get(`${cx+i}_${cy+j}`) ?? []) {
-        const e = Math.hypot(p.x - x, p.y - y); if (e < d) { d = e; m = p; }
-      }
-    return { d, p: m };
-  };
-
-  const kohteet = [];
-  for (const h of alikulut.hits.hits) {
-    const s = h._source, c = decodeParts(s.geom)[0];
-    for (const [i, pää] of [[0, c[0]], [1, c[c.length - 1]]]) {
-      const { d, p } = lahin(pää[0], pää[1]);
-      if (!p) continue;
-      kohteet.push({ id: s.link_id, suu: i, x: Math.round(pää[0]), y: Math.round(pää[1]),
-                     m: d < 1 ? 0 : Math.round(d * 10) / 10, aste: p.aste, kevyita: p.kevyita,
-                     nimi: s.tienimi || null });
-    }
-  }
+  // Nakema kavellaan verkossa alikulun suulta ULOSPAIN, joten se tarvitsee
+  // taysgeometrian; artefaktin risteysdokumentit eivat kerro mihin suuntaan
+  // risteys on. Lahde on sama kunta-geojson josta artefaktikin on rakennettu.
+  const koodi0 = Object.entries(VAESTO.nimet).find(([, v]) => v === nimi)?.[0];
+  const tiedosto = koodi0 ? `${juuri}data/kunnat/${String(koodi0).padStart(3, '0')}.geojson.gz` : null;
+  const kohteet = tiedosto
+    ? suuaukot(JSON.parse(gunzipSync(readFileSync(tiedosto), 'utf8')).features, laskuri)
+    : [];
 
   const n = kohteet.length;
   const jakauma = Object.fromEntries(RAJAT.map(([k, raja]) =>
@@ -71,7 +63,7 @@ for (const nimi of kunnat) {
   const kevytN = kevyt.hits.total.value;
   const erita = eritaso.hits.total.value;
   const kevytRisteykset = risteykset.hits.hits.filter(h => h._source.kevyita >= 3).length;
-  const koodi = Object.entries(VAESTO.nimet).find(([, v]) => v === nimi)?.[0];
+  const koodi = koodi0;
   const as = koodi ? VAESTO.kunnat[koodi] : null;
 
   out.push({
@@ -86,13 +78,21 @@ for (const nimi of kunnat) {
     // suhteutetut tukimittarit; nimittajana kevytverkko, ei kunnan pinta-ala
     eritasojaPer1000: kevytN ? erita / kevytN * 1000 : null,
     risteyksiaPer1000: kevytN ? kevytRisteykset / kevytN * 1000 : null,
+    sensuroituja: kohteet.filter(o => o.sens).length,
     kohteet,
   });
-  process.stderr.write(`  ${nimi.padEnd(14)} ${n} suuaukkoa\n`);
+  process.stderr.write(`  ${nimi.padEnd(14)} ${String(n).padStart(5)} suuaukkoa` +
+    ` (${kohteet.filter(o => o.sens).length} sensuroitu)\n`);
 }
 
+tarkista('nakema', out.length, out.reduce((a, k) => a + k.suuaukot, 0));
 out.sort((a, b) => b.nakema20 - a.nakema20);
 writeFileSync(`${juuri}viz/kaupungit.json`, JSON.stringify(out));
+// Saannot omaan tiedostoonsa: kaupungit.json on taulukko, johon matkavastus.mjs
+// ja pysakit.mjs liittavat kenttia, eika sita kannata kaaria metatiedon ympari.
+writeFileSync(`${juuri}viz/nakema-saannot.json`,
+  JSON.stringify({ poikkeukset: kuvaus('nakema'), osumat: laskuri,
+                   sensuroituja: out.reduce((a, k) => a + (k.sensuroituja ?? 0), 0) }));
 console.log(`\n${out.length} kaupunkia -> viz/kaupungit.json ` +
             `(${(JSON.stringify(out).length / 1e6).toFixed(1)} MB)`);
 console.log('\nkarki nakemalla:');
