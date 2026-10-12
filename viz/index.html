@@ -264,23 +264,30 @@ const NAKYMAT = {
     otsikko: 'Katolliset pysäkit pyörätien varrella',
     kohteet: k => k.pysakit ?? [],
     luokat: [
-      { nimi: 'väärin, katos yli 3 m pyörätien takana', v: '--l4', test: o => o.ero > 3 },
-      { nimi: 'väärin',                                 v: '--l3', test: o => !o.ok },
-      { nimi: 'oikein, ero alle 3 m',                   v: '--l2', test: o => o.ero > -3 },
-      { nimi: 'oikein',                                 v: '--l1', test: () => true },
+      { nimi: 'väärin, pyörätie yli 5 m ajoradasta', v: '--l4', test: o => o.syv > 5 },
+      { nimi: 'väärin, pyörätie katoksen ja ajoradan välissä', v: '--l3', test: o => !o.ok },
+      { nimi: 'oikein, katos alle 5 m ajoradasta', v: '--l2', test: o => o.kat <= 5 },
+      { nimi: 'oikein',                                        v: '--l1', test: () => true },
     ],
-    koonSelite: 'pylpyrän koko = etäisyys ajoradasta',
+    koonSelite: 'pylpyrän koko = katoksen etäisyys ajoradasta',
     koko: o => 4 + Math.min(9, o.kat / 2),
-    arvo: o => (o.ok ? '' : '+') + o.ero.toFixed(1) + ' m',
+    arvo: o => o.ok ? o.kat.toFixed(1) + ' m' : o.syv.toFixed(1) + ' m',
     tunnus: o => o.nimi ?? ('pysäkki ' + o.id),
     vihje: o => `<b>${o.nimi ?? 'pysäkki ' + o.id}</b><br>` +
-      `katos ${o.kat.toFixed(1)} m ajoradasta, pyörätie ${o.pyo.toFixed(1)} m<br>` +
-      `<span style="color:#999">${o.ok ? 'katos on ajoradan puolella — ohjeen mukainen'
-        : 'pyörätie kulkee katoksen ja ajoradan välistä'}` +
-      `${o.telin ? '<br>pyöräteline' : ''}</span>`,
+      (o.ok ? `katos ${o.kat.toFixed(1)} m ajoradasta, <b>ei pyörätietä välissä</b><br>`
+            : `pyörätie ylittää katoksen ja ajoradan välin ${o.yl.length === 1 ? ''
+                : o.yl.length + ' kohdassa '}<b>${o.syv.toFixed(1)} m</b> ajoradasta<br>`) +
+      `<span style="color:#999">katos ${o.kat.toFixed(1)} m ajoradasta, ` +
+      `lähin kevytväylä ${o.lah.toFixed(1)} m${o.telin ? '<br>pyöräteline' : ''}</span>`,
+    // Valittuna piirtyy mittausjana katoksesta ajoradalle. Testi on juuri se
+    // kulkeeko pyörätie tämän janan yli, joten janan näkeminen on sama asia
+    // kuin tuloksen tarkistaminen.
+    patka: o => o.g ?? null,
     tiivis: k => `${fi.format(k.katoksia)} katosta joilla on mitattu sijainti. ` +
       `${fi.format(k.pysArvioitavia)} niistä on pyörätien varrella ja arvioitavissa; ` +
-      `<b>${fi.format(k.pysVaarin)}</b> (${k.pysakkiOsuus} %) on väärällä puolella.`,
+      `<b>${fi.format(k.pysVaarin)}</b> (${k.pysakkiOsuus} %) sellaisia, joilla pyörätie ` +
+      `kulkee katoksen ja ajoradan välistä. Valitse kohde nähdäksesi <b>mittausjanan</b> ` +
+      `katoksesta ajoradalle — testi on se, ylittääkö pyörätie sen.`,
   },
 };
 NAKYMAT.kok = null;   // kokonaisarviolla ei ole omia kohteita

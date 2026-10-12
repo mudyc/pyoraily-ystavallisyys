@@ -8,10 +8,23 @@
  * ja pyoraliikenne kulkee odotustilan takaa. Jos pyoratie on katoksen ja
  * ajoradan valissa, pyorailijat ajavat odotustilan lapi.
  *
- * TESTI. Pysakki projisoidaan omalle tielinkilleen: siita saadaan tien suunta,
- * kohtisuora etaisyys ja PUOLI. Sama tehdaan lahimmalle kevytvaylan pisteelle.
- * Jos molemmat ovat samalla puolella tieta, jarjestys ratkeaa etaisyyksista:
- * pysakki lahempana tieta = oikein, pyoratie lahempana = vaarin.
+ * TESTI. Katoksesta piirretaan jana lahimpaan kohtaan omalla tielinkillaan. Jos
+ * jokin kevytvayla YLITTAA sen janan, pyoraliikenne kulkee katoksen ja ajoradan
+ * valista - vaarin. Jos ei ylita, katos on ajoradan puolella - oikein.
+ *
+ * Testi on kayttajan muotoilema ja korvasi aiemman, joka projisoi seka katoksen
+ * etta lahimman kevytvaylan pisteen tien keskilinjalle ja vertasi etaisyyksia.
+ * Se vertailu vaati etta vayla kulkee tien suuntaisesti, mika johti kolmeen
+ * perakkaiseen korjausyritykseen - segmentin kulma, linkin jannekulma, etaisyyden
+ * heitto - joista mikaan ei erottanut ylitysta suuntaisesta vaylasta ilman
+ * mielivaltaista kynnysta. Janatesti ei kysy suuntaa lainkaan: poikittainen
+ * vayla joka ei kulje katoksen ja ajoradan valista ei haittaa ketaan, eika sita
+ * siksi tarvitse tunnistaa. Kartalle piirrettyna testi on luettava: oranssi jana
+ * ja sen ylitykset nakyvat, joten lukija voi tarkistaa jokaisen tuloksen.
+ *
+ * Vanha menetelma myos ERITTELI vaarin tapauksia joita janatesti ei: Oulun
+ * "Jaali th E" oli sen mukaan vaarin (katos 6,5 m, pyoratie 1,2 m), mutta
+ * kartalla vayla kulkee katoksen TAKAA eika valista. Janatesti antaa oikein.
  *
  * KOORDINAATTI. Pysakin GEOMETRIA on tielinkille napsautettu piste, joten sen
  * kohtisuora etaisyys tiesta on nolla eika puoli ratkea. Maastokoordinaatti
@@ -36,7 +49,7 @@ import { saannot, tarkista } from './poikkeukset.mjs';
 
 const arg = (f, d) => { const i = process.argv.indexOf(f); return i < 0 ? d : +process.argv[i + 1]; };
 const SADE = arg('--sade', 30);      // nain lahella kevytvayla kuuluu jarjestelyyn
-const MIN_ET = 1.0;                  // alle taman puoli on maarittelematon
+const MIN_ET = 1.0;                  // katos ajoradan paalla: janasta ei tule janaa
 const juuri = new URL('..', import.meta.url).pathname;
 const KOORD = {};   // mika koordinaattitulkinta osui mihinkin
 const SAANNOT = saannot('pysakit');
@@ -53,7 +66,8 @@ function projisoi(p, c) {
     const d = Math.hypot(p[0] - rx, p[1] - ry);
     if (!paras || d < paras.d) {
       // ristitulo kertoo kummalla puolella tieta piste on
-      paras = { d, rx, ry, puoli: Math.sign(dx * (p[1] - ay) - dy * (p[0] - ax)) };
+      paras = { d, rx, ry, dx, dy,   // dx,dy = tien suunta tassa kohtaa
+                puoli: Math.sign(dx * (p[1] - ay) - dy * (p[0] - ax)) };
     }
   }
   return paras;
@@ -92,26 +106,26 @@ function kaupunki(tiedosto) {
     const y0 = Math.floor(Math.min(a[1], b[1]) / SOLU), y1 = Math.floor(Math.max(a[1], b[1]) / SOLU);
     for (let u = x0; u <= x1; u++) for (let v = y0; v <= y1; v++) {
       const k = `${u}_${v}`;
-      if (!ruudut.has(k)) ruudut.set(k, []); ruudut.get(k).push([a, b]);
+      if (!ruudut.has(k)) ruudut.set(k, []); ruudut.get(k).push([a, b, c]);
     }
   }
-  /** Lahin piste VIIVALLA, ei lahin taitepiste. */
-  const lahinKevyt = (x, y) => {
-    let d = Infinity, m = null;
-    const cx = Math.floor(x / SOLU), cy = Math.floor(y / SOLU), r = Math.ceil(SADE / SOLU);
-    for (let i = -r; i <= r; i++) for (let j = -r; j <= r; j++)
-      for (const [a, b] of ruudut.get(`${cx+i}_${cy+j}`) ?? []) {
-        const vx = b[0] - a[0], vy = b[1] - a[1], L2 = vx * vx + vy * vy;
-        let t = L2 ? ((x - a[0]) * vx + (y - a[1]) * vy) / L2 : 0;
-        t = t < 0 ? 0 : t > 1 ? 1 : t;
-        const qx = a[0] + t * vx, qy = a[1] + t * vy;
-        const e = Math.hypot(qx - x, qy - y); if (e < d) { d = e; m = [qx, qy]; }
-      }
-    return d <= SADE ? m : null;
+  /**
+   * Leikkaavatko janat p1p2 ja p3p4? Palauttaa leikkauspisteen tai null.
+   * Paatepisteet suljetaan pois janalla p1p2 (t-rajat): katos itse ja tien pinta
+   * eivat ole ylityksia, ja kevytvayla paattyy usein tasmalleen tielinkille.
+   */
+  const leikkaa = (p1, p2, p3, p4) => {
+    const d1x = p2[0]-p1[0], d1y = p2[1]-p1[1], d2x = p4[0]-p3[0], d2y = p4[1]-p3[1];
+    const n = d1x*d2y - d1y*d2x;
+    if (Math.abs(n) < 1e-12) return null;              // yhdensuuntaiset
+    const t = ((p3[0]-p1[0])*d2y - (p3[1]-p1[1])*d2x) / n;
+    const u = ((p3[0]-p1[0])*d1y - (p3[1]-p1[1])*d1x) / n;
+    return (t > 0.02 && t < 0.98 && u >= 0 && u <= 1)
+      ? [p1[0] + d1x*t, p1[1] + d1y*t] : null;
   };
 
   const t = { katollisia: 0, eiMaastoa: 0, arvioitavia: 0, oikein: 0, vaarin: 0,
-              eiPyoratieta: 0, eriPuoli: 0, epaselva: 0, kohteet: [] };
+              eiPyoratieta: 0, epaselva: 0, kohteet: [] };
   for (const p of pysakit) {
     if (p.lakkautettu) continue;
     // EXCEPTION RULES: katos ilman maastokoordinaattia kasitellaan kuin katosta
@@ -122,25 +136,49 @@ function kaupunki(tiedosto) {
     const tie = linkit.get(p.link_id);
     if (!tie) { t.epaselva++; continue; }
     const S = projisoi([p.mx, p.my], tie);
-    if (!S || S.d < MIN_ET) { t.epaselva++; continue; }   // katos tien paalla: puoli ei ratkea
-    const C = lahinKevyt(p.mx, p.my);
-    if (!C) { t.eiPyoratieta++; continue; }
-    const P = projisoi(C, tie);
-    if (!P) { t.epaselva++; continue; }
-    if (P.puoli !== S.puoli) { t.eriPuoli++; continue; }   // pyoratie tien toisella puolen
+    if (!S || S.d < MIN_ET) { t.epaselva++; continue; }   // katos tien paalla
+    const A = [p.mx, p.my], B = [S.rx, S.ry];
+
+    // Yksi lapikaynti: lahin kevytvayla (kuuluuko pysakki vertailuun lainkaan)
+    // ja janan ylitykset (ratkaisu). Ruudukko kattaa SADE-sateen.
+    let lahin = Infinity; const ylitykset = [];
+    const cx = Math.floor(p.mx / SOLU), cy = Math.floor(p.my / SOLU), r = Math.ceil(SADE / SOLU);
+    for (let i = -r; i <= r; i++) for (let j = -r; j <= r; j++)
+      for (const [a, b] of ruudut.get(`${cx+i}_${cy+j}`) ?? []) {
+        const vx = b[0]-a[0], vy = b[1]-a[1], L2 = vx*vx + vy*vy;
+        let q = L2 ? ((p.mx - a[0])*vx + (p.my - a[1])*vy) / L2 : 0;
+        q = q < 0 ? 0 : q > 1 ? 1 : q;
+        const e = Math.hypot(a[0] + vx*q - p.mx, a[1] + vy*q - p.my);
+        if (e < lahin) lahin = e;
+        const x = leikkaa(A, B, a, b);
+        if (x) ylitykset.push(x);
+      }
+    // Ei kevytvaylaa lahella: koko jarjestelykysymysta ei synny.
+    if (lahin > SADE) { t.eiPyoratieta++; continue; }
+
     t.arvioitavia++;
-    const ok = S.d < P.d;                                   // katos lahempana ajorataa
+    const ok = ylitykset.length === 0;
     if (ok) t.oikein++; else t.vaarin++;
+    // Syvyys = kuinka kaukana ajoradasta ylitys on. Se on vakavuusmitta: mita
+    // kauempana vayla kulkee, sita leveampi odotustila jaa sen taakse.
+    const syv = ylitykset.length
+      ? Math.max(...ylitykset.map(q => Math.hypot(q[0] - B[0], q[1] - B[1]))) : 0;
     // Kaikki arvioitavat talteen, ei vain vaarat: kartalla pitaa nakya myos
     // mihin ne oikein sijoitetut osuvat, muuten lukija ei nae mittakaavaa.
+    //
+    // `g` on mittausjana katoksesta ajoradalle ja `yl` sen ylitykset. Niiden
+    // piirtaminen on ainoa tapa nahda MIHIN mitattiin; ilman sita lukija nakee
+    // vain luvun ja joutuu uskomaan sen.
+    const pyo = q => [Math.round(q[0]), Math.round(q[1])];
     t.kohteet.push({ x: Math.round(p.mx), y: Math.round(p.my), nimi: p.nimi_su || null,
-      id: p.valtak_id, kat: +S.d.toFixed(1), pyo: +P.d.toFixed(1),
-      ero: +(S.d - P.d).toFixed(1), ok, telin: p.pyoratelin === 1 });
+      id: p.valtak_id, kat: +S.d.toFixed(1), ok, telin: p.pyoratelin === 1,
+      syv: +syv.toFixed(1), lah: +lahin.toFixed(1),
+      g: [pyo(A), pyo(B)], yl: ylitykset.map(pyo) });
   }
   t.nimi = d.nimi;
   t.osuus = t.arvioitavia ? t.vaarin / t.arvioitavia * 100 : null;
-  // pahin ensin: suurin positiivinen ero = katos kauimpana ajoradasta pyoratien takana
-  t.kohteet.sort((a, b) => b.ero - a.ero);
+  // pahin ensin: syvin ylitys, sitten kauimpana ajoradasta oleva katos
+  t.kohteet.sort((a, b) => (b.syv - a.syv) || (b.kat - a.kat));
   return t;
 }
 
@@ -171,7 +209,7 @@ for (const r of SAANNOT) {
 console.log(`\nmaastokoordinaatin tulkinta: ` + Object.entries(KOORD)
   .map(([k, v]) => `${k} ${v.toLocaleString('fi-FI')}`).join(', '));
 console.log(`\nkatoksista rajattu pois: ei pyörätietä ${SADE} m:ssä ${S('eiPyoratieta')}, ` +
-  `pyörätie tien toisella puolen ${S('eriPuoli')}, katos tien päällä tai linkki tuntematon ${S('epaselva')}`);
+  `katos tien päällä tai linkki tuntematon ${S('epaselva')}`);
 
 // Kaupunki, jolta ei jaa yhtaan arvioitavaa, putoaa taulukosta kokonaan - ja sen
 // mukana katoaa tieto siita MIKSI. Se on sama hiljainen nimittajavirhe kuin
@@ -181,10 +219,10 @@ const nolla = kaikkiRivit.filter(r => !r.arvioitavia);
 if (nolla.length) {
   console.log(`\nEI YHTAAN ARVIOITAVAA — ${nolla.length} kaupunkia putoaa vertailusta`);
   console.log(`${'kaupunki'.padEnd(14)}${'katoksia'.padStart(10)}${'ei maastoa'.padStart(12)}` +
-    `${'ei pyörätietä'.padStart(15)}${'eri puoli'.padStart(11)}${'epäselvä'.padStart(10)}`);
+    `${'ei pyörätietä'.padStart(15)}${'epäselvä'.padStart(10)}`);
   for (const r of nolla)
     console.log(`${r.nimi.padEnd(14)}${String(r.katollisia).padStart(10)}${String(r.eiMaastoa).padStart(12)}` +
-      `${String(r.eiPyoratieta).padStart(15)}${String(r.eriPuoli).padStart(11)}${String(r.epaselva).padStart(10)}`);
+      `${String(r.eiPyoratieta).padStart(15)}${String(r.epaselva).padStart(10)}`);
 }
 writeFileSync(`${juuri}data/pysakit.json`, JSON.stringify(rivit));
 

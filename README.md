@@ -13,7 +13,7 @@ siitä mihin kannattaa mennä katsomaan.
 | Mittari | Mitä | Tila |
 | --- | --- | --- |
 | **Näkemät** | Matka alikulun suuaukolta ensimmäiseen risteykseen **ulostulosuunnassa**. Ohje: 20 m suositeltava, 15 m tyydyttävä, 12 m minimi. | 6 054 suuaukkoa, 32 % alle 20 m |
-| **Pysäkkisijainti** | Onko katos pyörätien ja ajoradan välissä. | 2 865 arvioitavaa, 39 % väärin, 15 kaupunkia |
+| **Pysäkkisijainti** | Kulkeeko pyörätie katoksen ja ajoradan välistä. | 3 501 arvioitavaa, 27 % väärin, 15 kaupunkia |
 | **Matkavastus** | *S = H² / L*, tavoite alle 0,2. Laskettu Z-koordinaateista. | 9 986 km verkkoa, 12,9 % yli 4 %:n kaltevuudessa |
 | **Kokonaisarvio** | Kolmen edellisen keskiarvo. Puuttuva osa jätetään huomiotta. | |
 
@@ -66,21 +66,29 @@ samasta syystä" ei näkynyt missään. Ja 100 % hylkäysosuus näyttää uskott
 puuttuvalta aineistolta. Kumpikin on nyt tulosteessa: `tools/pysakit.mjs` listaa
 pudonneet kaupungit syineen ja kertoo mikä koordinaattitulkinta osui mihinkin.
 
-**Mittaustarkkuus kuuluu mitata, ei arvioida.** Kysymykseen "mikä on väärin, jos
-katos on oikein ja ero alle 3 m?" ensimmäinen vastaukseni oli lisätä kolmas luokka:
-alle 3 metrin ero jätettäisiin ratkaisematta. Se oli väärin. Oikein sijoitettu
-katos tuottaa *luonnostaan* parin metrin eron — noin 2 m syvä katos pyörätien
-edessä — joten pieni ero on normaalitapaus eikä epäselvyys, ja kaista olisi
-pudottanut 34 % aineistosta oletetun virherajan perusteella.
+**Oikea testi on yksinkertaisempi kuin kolme korjausta väärään.** Pysäkkimittari
+vertasi aluksi katoksen ja lähimmän pyörätien etäisyyttä ajoradan keskilinjasta.
+Se vaati, että pyörätie kulkee tien suuntaisesti — ja sen takaamiseksi kokeiltiin
+kolme peräkkäistä kriteeriä: segmentin kulma tiehen, linkin jännekulma, ja
+etäisyyden heitto 30 metrin ikkunassa. Jokainen kaatui: kaartuvasta yhdyspätkästä
+löytyy aina jokin segmentti minkä tahansa rajan alta, ja tiukempi raja alkoi
+hylätä oikeita väyliä. Kartalle piirrettynä näkyi myös, että "etsi lähin
+*suuntainen* väylä" hyppäsi 25 metrin päähän toiseen käytävään.
 
-Todellinen epätarkkuus oli muualla ja mitattavissa. Lähin pyörätien piste haettiin
-**taitepisteistä**, ei viivalta, ja pysäkit ovat suorilla osuuksilla joilla
-taitepisteväli on p90 = 14 m ja enimmillään 356 m. Virhe pyörätien etäisyydessä
-oli mediaanilla 0,10 m, p90 1,1 m, p99 10,4 m, ja luokitus vaihtui **4,8 %:ssa**
-tapauksista. Kolmen metrin kaista olisi siis heittänyt kolmanneksen aineistosta
-viiden prosentin ongelman takia. Korjaus on projisoida segmentille, jolloin virhe
-poistuu sen sijaan että se peitettäisiin. Luokitus pysyy binäärisenä, koska
-neutraalia fyysistä tilaa ei ole: katos on joko välissä tai takana.
+Käyttäjän muotoilu ratkaisi sen ilman yhtään kynnysarvoa: **piirrä jana
+katoksesta lähimpään kohtaan ajoradalla; jos pyörätie ylittää sen, se on
+väärin.** Testi ei kysy suuntaa lainkaan, koska poikittainen väylä joka ei kulje
+katoksen ja ajoradan välistä ei haittaa ketään. Arvioitavia 2 299 → 3 501,
+koska suuntaisuusvaatimus ja "eri puoli" -rajaus kävivät tarpeettomiksi. Ja se
+korjasi myös vääriä positiivisia: Oulun "Jääli th E" oli vanhalla menetelmällä
+väärin (katos 6,5 m, pyörätie 1,2 m), mutta kartalla väylä kulkee katoksen
+takaa eikä välistä.
+
+**Mittaus on luettava vasta kun sen näkee.** Kolme väärää kriteeriä eli siksi,
+että tarkistin niitä luvuista. Kun kysyit piirtämään mihin mitattiin, ensimmäinen
+kuva paljasti ongelman heti. Mittausjana ja sen ylitykset ovat nyt sivulla:
+kohdetta klikkaamalla näkee tasan sen minkä perusteella tulos syntyi, eikä
+lukijan tarvitse uskoa lukua.
 
 **Koodistoa ei saa arvata.** `katos`-kentässä **1 = Ei ja 2 = Kyllä**, vastoin
 Digiroadin tavanomaista konventiota. Koko pysäkkimittari laskettiin ensin
@@ -112,6 +120,8 @@ vain jos 1 = Ei.
 - Viisi kaupunkia (Kouvola, Salo, Tampere, Turku, Vaasa) jää yhä pysäkkivertailun
   ulkopuolelle: yhdelläkään niiden katoksellisista pysäkeistä ei ole
   maastokoordinaattia.
+- Janatesti käyttää pysäkin omaa tielinkkiä ajoratana. Jos katos on lähempänä
+  jotain toista tietä, jana osoittaa väärään suuntaan. Tapauksia ei ole laskettu.
 - Hämeenlinnassa maastokoordinaatti on mediaanilla 179 m päässä pysäkin omasta
   geometriasta, kun muualla ero on 5–20 m. Syy on selvittämättä.
 - Umpikujaan päättyvät suuaukot jäävät pois (Jyväskylässä 8 / 382). Kuntarajalta
