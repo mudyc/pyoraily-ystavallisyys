@@ -233,6 +233,7 @@ const NAKYMAT = {
       `<span style="color:#999">risteys ${o.r > 900 ? '—' : o.r + ' m'}, ` +
       `valo ${o.v > 900 ? '—' : o.v + ' m'} harjasta</span>`,
     patka: o => o.g ?? null,
+    patkaSelite: 'valittu nousu',
     tiivis: k => `${fi.format(k.verkkoKm)} km kevytverkkoa. <b>${k.raskasOsuus} %</b> sen ` +
       `pituudesta kuluu nousuihin joiden matkavastus ylittää tavoitteen 0,2. ` +
       `Yli 4 %:n kaltevuudessa ${k.yli4} %, yli 8 %:n ${k.yli8} %.`,
@@ -263,15 +264,17 @@ const NAKYMAT = {
   pysakki: {
     otsikko: 'Katolliset pysäkit pyörätien varrella',
     kohteet: k => k.pysakit ?? [],
+    // Testi on binäärinen, joten luokkia on kaksi. Aiemmat neljä olivat jäänne
+    // mittarista joka vertasi etäisyyksiä ja tuotti jatkuvan eron.
     luokat: [
-      { nimi: 'väärin, pyörätie yli 5 m ajoradasta', v: '--l4', test: o => o.syv > 5 },
-      { nimi: 'väärin, pyörätie katoksen ja ajoradan välissä', v: '--l3', test: o => !o.ok },
-      { nimi: 'oikein, katos alle 5 m ajoradasta', v: '--l2', test: o => o.kat <= 5 },
-      { nimi: 'oikein',                                        v: '--l1', test: () => true },
+      { nimi: 'pyörätie katoksen ja ajoradan välissä',    v: '--l4', test: o => !o.ok },
+      // --l1 on sarjan vaalein ja katoaa valkoista vasten; kahden luokan
+      // selitteessä molempien on erotuttava, joten hyva pää on --l2.
+      { nimi: 'pyörätie ei ole katoksen ja ajoradan välissä', v: '--l2', test: () => true },
     ],
-    koonSelite: 'pylpyrän koko = katoksen etäisyys ajoradasta',
+    koonSelite: 'pylpyrän koko ja luku = katoksen etäisyys ajoradasta',
     koko: o => 4 + Math.min(9, o.kat / 2),
-    arvo: o => o.ok ? o.kat.toFixed(1) + ' m' : o.syv.toFixed(1) + ' m',
+    arvo: o => o.kat.toFixed(1) + ' m',
     tunnus: o => o.nimi ?? ('pysäkki ' + o.id),
     vihje: o => `<b>${o.nimi ?? 'pysäkki ' + o.id}</b><br>` +
       (o.ok ? `katos ${o.kat.toFixed(1)} m ajoradasta, <b>ei pyörätietä välissä</b><br>`
@@ -283,6 +286,7 @@ const NAKYMAT = {
     // kulkeeko pyörätie tämän janan yli, joten janan näkeminen on sama asia
     // kuin tuloksen tarkistaminen.
     patka: o => o.g ?? null,
+    patkaSelite: 'mittausjana katoksesta ajoradalle',
     tiivis: k => `${fi.format(k.katoksia)} katosta joilla on mitattu sijainti. ` +
       `${fi.format(k.pysArvioitavia)} niistä on pyörätien varrella ja arvioitavissa; ` +
       `<b>${fi.format(k.pysVaarin)}</b> (${k.pysakkiOsuus} %) sellaisia, joilla pyörätie ` +
@@ -664,7 +668,8 @@ async function avaaKaupunki(nimi) {
   $('#vlegend').innerHTML =
     `<span><i class="v" style="background:${css('--tie')};height:4px"></i>ajoneuvoväylä</span>` +
     `<span><i class="v raita" style="background:${css('--kevyt')}"></i>kevyen liikenteen väylä</span>` +
-    `<span><i class="v" style="background:${css('--acc')};height:4px"></i>alikulku</span>` +
+    `<span><i class="v" style="background:${css('--acc')};height:4px"></i>` +
+      `${N.patkaSelite ?? 'alikulku'}</span>` +
     `<span style="color:var(--ink-3)">· rulla tai nipistys zoomaa, raahaus siirtää</span>`;
 
   // Kokonaisarvio: oma yhteenvetosivu kartan ja listan sijaan

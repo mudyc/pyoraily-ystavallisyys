@@ -225,8 +225,9 @@ function kaupunki(tiedosto) {
   }
   t.nimi = d.nimi;
   t.osuus = t.arvioitavia ? t.vaarin / t.arvioitavia * 100 : null;
-  // pahin ensin: syvin ylitys, sitten kauimpana ajoradasta oleva katos
-  t.kohteet.sort((a, b) => (b.syv - a.syv) || (b.kat - a.kat));
+  // Vaarin ensin, kummankin sisalla kauimpana ajoradasta oleva katos ensin.
+  // Sama luku jonka lista nayttaa, jottei jarjestys nayta mielivaltaiselta.
+  t.kohteet.sort((a, b) => (a.ok - b.ok) || (b.kat - a.kat));
   return t;
 }
 
