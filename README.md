@@ -13,7 +13,7 @@ siitä mihin kannattaa mennä katsomaan.
 | Mittari | Mitä | Tila |
 | --- | --- | --- |
 | **Näkemät** | Matka alikulun suuaukolta ensimmäiseen risteykseen **ulostulosuunnassa**. Ohje: 20 m suositeltava, 15 m tyydyttävä, 12 m minimi. | 6 054 suuaukkoa, 32 % alle 20 m |
-| **Pysäkkisijainti** | Onko katos pyörätien ja ajoradan välissä. | 2 694 arvioitavaa, 39 % väärin, 15 kaupunkia |
+| **Pysäkkisijainti** | Onko katos pyörätien ja ajoradan välissä. | 2 865 arvioitavaa, 39 % väärin, 15 kaupunkia |
 | **Matkavastus** | *S = H² / L*, tavoite alle 0,2. Laskettu Z-koordinaateista. | 9 986 km verkkoa, 12,9 % yli 4 %:n kaltevuudessa |
 | **Kokonaisarvio** | Kolmen edellisen keskiarvo. Puuttuva osa jätetään huomiotta. | |
 
@@ -65,6 +65,22 @@ putosi taulukosta eikä sen hylkäyssyitä tulostettu lainkaan — joten "399 hy
 samasta syystä" ei näkynyt missään. Ja 100 % hylkäysosuus näyttää uskottavalta
 puuttuvalta aineistolta. Kumpikin on nyt tulosteessa: `tools/pysakit.mjs` listaa
 pudonneet kaupungit syineen ja kertoo mikä koordinaattitulkinta osui mihinkin.
+
+**Mittaustarkkuus kuuluu mitata, ei arvioida.** Kysymykseen "mikä on väärin, jos
+katos on oikein ja ero alle 3 m?" ensimmäinen vastaukseni oli lisätä kolmas luokka:
+alle 3 metrin ero jätettäisiin ratkaisematta. Se oli väärin. Oikein sijoitettu
+katos tuottaa *luonnostaan* parin metrin eron — noin 2 m syvä katos pyörätien
+edessä — joten pieni ero on normaalitapaus eikä epäselvyys, ja kaista olisi
+pudottanut 34 % aineistosta oletetun virherajan perusteella.
+
+Todellinen epätarkkuus oli muualla ja mitattavissa. Lähin pyörätien piste haettiin
+**taitepisteistä**, ei viivalta, ja pysäkit ovat suorilla osuuksilla joilla
+taitepisteväli on p90 = 14 m ja enimmillään 356 m. Virhe pyörätien etäisyydessä
+oli mediaanilla 0,10 m, p90 1,1 m, p99 10,4 m, ja luokitus vaihtui **4,8 %:ssa**
+tapauksista. Kolmen metrin kaista olisi siis heittänyt kolmanneksen aineistosta
+viiden prosentin ongelman takia. Korjaus on projisoida segmentille, jolloin virhe
+poistuu sen sijaan että se peitettäisiin. Luokitus pysyy binäärisenä, koska
+neutraalia fyysistä tilaa ei ole: katos on joko välissä tai takana.
 
 **Koodistoa ei saa arvata.** `katos`-kentässä **1 = Ei ja 2 = Kyllä**, vastoin
 Digiroadin tavanomaista konventiota. Koko pysäkkimittari laskettiin ensin

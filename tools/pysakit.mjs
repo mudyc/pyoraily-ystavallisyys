@@ -79,18 +79,33 @@ function kaupunki(tiedosto) {
     linkit.set(f.properties.link_id, f.geometry.coordinates);
     if (f.properties.linkkityyp === 8) kevyt.push(f.geometry.coordinates);
   }
-  // kevytvaylan pisteet ruudukkoon lahimman haun vuoksi
+  // Kevytvaylan SEGMENTIT ruudukkoon, eivat taitepisteet. Lahin taitepiste ei
+  // kelpaa: pysakit ovat suorilla osuuksilla, joilla taitepistevali on p90 = 14 m
+  // ja enimmillaan 356 m, joten lahin taitepiste voi olla kymmenia metreja sivussa
+  // kohtisuorasta jalasta - ja sen etaisyys ajoradasta on silloin eri. Mitattuna
+  // ero oli mediaanilla 0,10 m mutta p90 1,1 m ja p99 10,4 m, ja luokitus vaihtui
+  // 4,8 %:ssa tapauksista. Segmentti kirjataan jokaiseen ruutuun jonka se lavistaa.
   const SOLU = 40, ruudut = new Map();
-  for (const c of kevyt) for (const q of c) {
-    const k = `${Math.floor(q[0] / SOLU)}_${Math.floor(q[1] / SOLU)}`;
-    if (!ruudut.has(k)) ruudut.set(k, []); ruudut.get(k).push(q);
+  for (const c of kevyt) for (let i = 1; i < c.length; i++) {
+    const a = c[i-1], b = c[i];
+    const x0 = Math.floor(Math.min(a[0], b[0]) / SOLU), x1 = Math.floor(Math.max(a[0], b[0]) / SOLU);
+    const y0 = Math.floor(Math.min(a[1], b[1]) / SOLU), y1 = Math.floor(Math.max(a[1], b[1]) / SOLU);
+    for (let u = x0; u <= x1; u++) for (let v = y0; v <= y1; v++) {
+      const k = `${u}_${v}`;
+      if (!ruudut.has(k)) ruudut.set(k, []); ruudut.get(k).push([a, b]);
+    }
   }
+  /** Lahin piste VIIVALLA, ei lahin taitepiste. */
   const lahinKevyt = (x, y) => {
     let d = Infinity, m = null;
     const cx = Math.floor(x / SOLU), cy = Math.floor(y / SOLU), r = Math.ceil(SADE / SOLU);
     for (let i = -r; i <= r; i++) for (let j = -r; j <= r; j++)
-      for (const q of ruudut.get(`${cx+i}_${cy+j}`) ?? []) {
-        const e = Math.hypot(q[0] - x, q[1] - y); if (e < d) { d = e; m = q; }
+      for (const [a, b] of ruudut.get(`${cx+i}_${cy+j}`) ?? []) {
+        const vx = b[0] - a[0], vy = b[1] - a[1], L2 = vx * vx + vy * vy;
+        let t = L2 ? ((x - a[0]) * vx + (y - a[1]) * vy) / L2 : 0;
+        t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const qx = a[0] + t * vx, qy = a[1] + t * vy;
+        const e = Math.hypot(qx - x, qy - y); if (e < d) { d = e; m = [qx, qy]; }
       }
     return d <= SADE ? m : null;
   };
