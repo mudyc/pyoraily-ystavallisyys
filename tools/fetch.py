@@ -22,6 +22,7 @@ API = 'https://avoinapi.vaylapilvi.fi/vaylatiedot/digiroad/ogc/features/v1/colle
 # liikennevalot, jotka ovat pisteita linkilla - mittari "maen jalkeen ei saisi
 # olla valoristeysta" tarvitsee molemmat.
 KOKOELMAT = {'linkit': 'dr_tielinkki_silta_alikulku_tunneli', 'valot': 'dr_liikennevalo',
+             'merkit': 'dr_liikennemerkit',
              'pysakit': 'dr_pysakki'}
 B = f'{API}/{KOKOELMAT["linkit"]}/items'
 JUURI = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

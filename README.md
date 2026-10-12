@@ -106,7 +106,27 @@ vain jos 1 = Ei.
 | Talvihoitoluokka | 11 % kattavuus, ja kartalla katsottuna merkinnät ovat satunnaisia eivätkä pääverkko. Kaksi arvoa (9, 10), joiden vastaavuutta K1/K2:een ei ole vahvistettu. |
 | Erotteluperiaatteet (nopeus × liikennemäärä) | Molemmat lähtötiedot 0 % kevytverkolla. |
 | PETI (Fintrafficin pysäkkikanta) | Digiroadin pysäkkitiedon seuraaja, avoin NeTEx-dump kahdesti päivässä. Ei auta: sama aineisto (`publisher = DGR`, `digiroad_id`-avain, katosmäärät täsmäävät ±5 %), ja **katoksella ei ole omaa koordinaattia** — `ShelterEquipment` kantaa vain `Seats`/`Enclosed`, ja `EquipmentPlace`, `EquipmentPosition` ja `AccessSpace` esiintyvät nolla kertaa. Digiroadin maastokoordinaatti ei siirtynyt mukana, joten PETI menettää juuri sen kentän jolla mittari tehdään. Uudet kentät liian harvoja: valaistus 9 % (0 % Helsingissä, Espoossa, Vantaalla ja Seinäjoella), `WheelchairAccess` 95 % unknown, `Enclosed` 35 kpl koko maassa, pyöräpysäköinti 2 kpl. |
+| Etuajo-oikeus alamäen pohjalla | Kontrolli kaatoi. 4 787 alamäkeä (≥ 2 m) kahdeksassa kaupungissa, joista 1 907 päättyy risteykseen 25 m sisällä; niistä 31 % on sellaisia joissa autoilijalla on kolmio eli pyöräilijä saa ajaa ensin. Satunnaisilla ylityksillä osuus on 25–42 % ja rikastuma 0,77–1,21 — alamäen pohja ei poikkea muusta verkosta. Luvut jäävät `tools/alamaki.mjs`:ään, koska kuvaileva vastaus on silti kiinnostava: **66 % on merkitsemättömiä**, eli pyöräilijä jarruttaa vauhdista. |
 | B7 — väistämisvelvollisuus pyöräilijän tienylityspaikassa | Jyväskylässä 19 kpl, kaikki ajoradalla. Vastaan 124 B5/B6:ta kevytväylillä: etuajo-oikeus 13 % merkityistä kohdista. **Lupaava, mutta muita kaupunkeja ei ehditty hakea.** |
+
+## Liikennemerkit: premissi kannattaa tarkistaa
+
+Merkkiaineisto näytti käyttökelvottomalta, koska B7 (väistämisvelvollisuus
+pyöräilijän tienylityspaikassa) on harvinainen — Jyväskylässä 19 kpl. Kaksi
+asiaa osoittautui vääräksi.
+
+**Rekisteri ei ole vanhentunut.** Jyväskylän 1 845 B5-merkistä 1 531 on muokattu
+2026 ja 271 vuonna 2025. B7 on harvinainen merkki, ei kirjaamatta jäänyt.
+
+**Eikä kysymykseen tarvita B7:ää.** Etuajo-oikeus pyörätien jatkeella ratkeaa
+*risteävän ajoradan* merkistä: tieliikennelain (2020) mukaan pyöräilijä väistää
+suoraan ajettaessa, paitsi jos ajoradalla on B5 tai B6. B5 on vanha ja runsas.
+
+**Kattavuuden kertoo Digiroad itse.** `dr_liikennemerkit_kattavuus` luokittelee
+kunnat; luokassa 1 on 137 kuntaa 294:stä. Vertailun 20 kaupungista siihen
+kuuluvat Helsinki (44 merkkiä/km), Jyväskylä 28, Vaasa 27, Joensuu 22,
+Mikkeli 20, Salo 20, Rovaniemi 19 ja Pori 17 — loput 12 ovat luokassa 3 eli
+0–1 merkkiä/km. Kahdeksan kaupungin analyysi on siis mahdollinen, 20:n ei.
 
 ## Auki
 
@@ -124,6 +144,9 @@ vain jos 1 = Ei.
   omaa `link_id`:tä (Digiroad pilkkoo tien useaksi linkiksi, ja pysäkin linkki voi
   olla kymmeniä metrejä sivussa). 163 nimetöntä putoaa lähimpään autotiehen; niissä
   jana voi osoittaa eri kadulle kuin sille jolla bussi pysähtyy.
+- Alamäkimittarin herkin kohta on se, kuinka läheltä merkki luetaan risteykseen
+  kuuluvaksi: 15 m antaa 18 %, 30 m antaa 31 %, 50 m antaa 37 %. Merkin
+  `liiksuunta` kertoisi minne se osoittaa, mutta sitä ei ole käytetty.
 - Hämeenlinnassa maastokoordinaatti on mediaanilla 179 m päässä pysäkin omasta
   geometriasta, kun muualla ero on 5–20 m. Syy on selvittämättä.
 - Umpikujaan päättyvät suuaukot jäävät pois (Jyväskylässä 8 / 382). Kuntarajalta
@@ -153,6 +176,8 @@ node tools/split-artifact.js data/pyoratiet.l0   # -> 7 osaa a 45 MiB, nama ovat
 node tools/pisteet.mjs        # -> viz/kaupungit.json + viz/nakema-saannot.json
 node tools/matkavastus.mjs    # liittää matkavastuksen samaan
 node tools/pysakit.mjs        # liittää pysäkkisijainnin samaan
+python3 tools/fetch.py --merkit  # liikennemerkit 8 kattavuusluokan 1 kaupungista
+node tools/alamaki.mjs        # etuajo-oikeus alamäen pohjalla (hylätty, ks. yllä)
 node tools/nakemat2.mjs       # sama näkemämittaus, tulostaa EXCEPTION RULES -osumat
 node tools/serve.js . 8910    # http://127.0.0.1:8910/viz/index.html
 ```
