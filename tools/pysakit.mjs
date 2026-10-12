@@ -31,12 +31,14 @@
  */
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
+import { maasto } from './koordinaatit.mjs';
 import { saannot, tarkista } from './poikkeukset.mjs';
 
 const arg = (f, d) => { const i = process.argv.indexOf(f); return i < 0 ? d : +process.argv[i + 1]; };
 const SADE = arg('--sade', 30);      // nain lahella kevytvayla kuuluu jarjestelyyn
 const MIN_ET = 1.0;                  // alle taman puoli on maarittelematon
 const juuri = new URL('..', import.meta.url).pathname;
+const KOORD = {};   // mika koordinaattitulkinta osui mihinkin
 const SAANNOT = saannot('pysakit');
 
 /** Pisteen projektio murtoviivalle: kohtisuora etaisyys, puoli ja tien suunta. */
@@ -63,6 +65,12 @@ function kaupunki(tiedosto) {
   let pysakit = [];
   try { pysakit = JSON.parse(gunzipSync(readFileSync(
     `${juuri}data/pysakit/${koodi}.json.gz`), 'utf8')); } catch { return null; }
+  // Maastokoordinaatti yhteen koordinaatistoon ENNEN mittausta: Digiroad julkaisee
+  // sen osassa kuntia WGS84-asteina ja osassa x/y vaarin pain. Ks. koordinaatit.mjs.
+  for (const p of Object.values(pysakit)) {
+    const m = maasto(p.mx, p.my, KOORD);
+    p.mx = m ? m[0] : null; p.my = m ? m[1] : null;
+  }
 
   const linkit = new Map();
   const kevyt = [];
@@ -145,8 +153,24 @@ for (const r of SAANNOT) {
   console.log(`  saanto: ${r.saanto}`);
   console.log(`  huom:   ${r.huom.replace(/(.{72}) /g, '$1\n          ')}`);
 }
+console.log(`\nmaastokoordinaatin tulkinta: ` + Object.entries(KOORD)
+  .map(([k, v]) => `${k} ${v.toLocaleString('fi-FI')}`).join(', '));
 console.log(`\nkatoksista rajattu pois: ei pyörätietä ${SADE} m:ssä ${S('eiPyoratieta')}, ` +
   `pyörätie tien toisella puolen ${S('eriPuoli')}, katos tien päällä tai linkki tuntematon ${S('epaselva')}`);
+
+// Kaupunki, jolta ei jaa yhtaan arvioitavaa, putoaa taulukosta kokonaan - ja sen
+// mukana katoaa tieto siita MIKSI. Se on sama hiljainen nimittajavirhe kuin
+// nakemamittauksessa: Oulu putosi vaikka silla on maan paras maastokoordinaatti-
+// kattavuus. Tulostetaan pudonneet ja syyt erikseen.
+const nolla = kaikkiRivit.filter(r => !r.arvioitavia);
+if (nolla.length) {
+  console.log(`\nEI YHTAAN ARVIOITAVAA — ${nolla.length} kaupunkia putoaa vertailusta`);
+  console.log(`${'kaupunki'.padEnd(14)}${'katoksia'.padStart(10)}${'ei maastoa'.padStart(12)}` +
+    `${'ei pyörätietä'.padStart(15)}${'eri puoli'.padStart(11)}${'epäselvä'.padStart(10)}`);
+  for (const r of nolla)
+    console.log(`${r.nimi.padEnd(14)}${String(r.katollisia).padStart(10)}${String(r.eiMaastoa).padStart(12)}` +
+      `${String(r.eiPyoratieta).padStart(15)}${String(r.eriPuoli).padStart(11)}${String(r.epaselva).padStart(10)}`);
+}
 writeFileSync(`${juuri}data/pysakit.json`, JSON.stringify(rivit));
 
 const kpol = `${juuri}viz/kaupungit.json`;

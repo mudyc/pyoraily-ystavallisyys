@@ -13,7 +13,7 @@ siitä mihin kannattaa mennä katsomaan.
 | Mittari | Mitä | Tila |
 | --- | --- | --- |
 | **Näkemät** | Matka alikulun suuaukolta ensimmäiseen risteykseen **ulostulosuunnassa**. Ohje: 20 m suositeltava, 15 m tyydyttävä, 12 m minimi. | 6 054 suuaukkoa, 32 % alle 20 m |
-| **Pysäkkisijainti** | Onko katos pyörätien ja ajoradan välissä. | 2 271 arvioitavaa, 43 % väärin |
+| **Pysäkkisijainti** | Onko katos pyörätien ja ajoradan välissä. | 2 694 arvioitavaa, 39 % väärin, 15 kaupunkia |
 | **Matkavastus** | *S = H² / L*, tavoite alle 0,2. Laskettu Z-koordinaateista. | 9 986 km verkkoa, 12,9 % yli 4 %:n kaltevuudessa |
 | **Kokonaisarvio** | Kolmen edellisen keskiarvo. Puuttuva osa jätetään huomiotta. | |
 
@@ -51,6 +51,21 @@ Jyväskylä 60 % eikä 49 %. Sensurointi kiinteään 80 metriin on oikea luku, e
 paikkaus. Aito umpikuja jää pois, koska kunta-aineisto on leikattu kuntarajalta
 eikä verkon loppumista erota aineiston reunasta.
 
+**Koordinaatisto ei ole aineiston ominaisuus vaan kunnan.** Digiroad julkaisee
+pysäkin maastokoordinaatin Oulussa, Kuopiossa, Mikkelissä ja Vaasassa
+**WGS84-asteina** ja muualla TM35FIN-metreinä — Kuopiossa molempia samassa
+kunnassa (584 astetta, 68 metriä). Tampereella 47 riviä on x ja y väärin päin.
+Oulun koko katosmittaus hävisi tähän: jokainen 399:stä katoksesta hylättiin
+"ei pyörätietä 30 metrissä", koska pisteet olivat Atlantilla. Oulu putosi
+vertailusta kokonaan ja näytti kaupungilta jolta puuttuu tieto, vaikka sillä on
+maan paras kattavuus. Korjattuna Oulu on **kolmanneksi paras**, 20 % väärin.
+
+Kaksi asiaa teki tästä hiljaisen. Kaupunki, jolta ei jäänyt yhtään arvioitavaa,
+putosi taulukosta eikä sen hylkäyssyitä tulostettu lainkaan — joten "399 hylättiin
+samasta syystä" ei näkynyt missään. Ja 100 % hylkäysosuus näyttää uskottavalta
+puuttuvalta aineistolta. Kumpikin on nyt tulosteessa: `tools/pysakit.mjs` listaa
+pudonneet kaupungit syineen ja kertoo mikä koordinaattitulkinta osui mihinkin.
+
 **Koodistoa ei saa arvata.** `katos`-kentässä **1 = Ei ja 2 = Kyllä**, vastoin
 Digiroadin tavanomaista konventiota. Koko pysäkkimittari laskettiin ensin
 katoksettomille pysäkeille. Virhe näkyi aineistossa koko ajan: `katos = 1`
@@ -78,6 +93,11 @@ vain jos 1 = Ei.
   kattaa 16 % katoksista eikä PETI tuo tilalle mitään (ks. hylätyt). Jos mittari
   halutaan vertailukelpoiseksi, koordinaatin pitää tulla muualta — OSM:ssä
   `amenity=shelter` on oma solmunsa omine koordinaatteineen.
+- Viisi kaupunkia (Kouvola, Salo, Tampere, Turku, Vaasa) jää yhä pysäkkivertailun
+  ulkopuolelle: yhdelläkään niiden katoksellisista pysäkeistä ei ole
+  maastokoordinaattia.
+- Hämeenlinnassa maastokoordinaatti on mediaanilla 179 m päässä pysäkin omasta
+  geometriasta, kun muualla ero on 5–20 m. Syy on selvittämättä.
 - Umpikujaan päättyvät suuaukot jäävät pois (Jyväskylässä 8 / 382). Kuntarajalta
   leikattu aineisto ja todellinen umpikuja näyttävät samalta; erottaminen vaatisi
   naapurikunnan verkon.
