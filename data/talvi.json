@@ -1,0 +1,1730 @@
+{
+ "kuvaus": "Pyöräväylien talvikunnossapidon julkiset ohjeet verrattuna Oulun malliin (Oulu = 100 %). Haettu 2026-11-12. Kriteerejä 9. Pisteet: kyllä 1, osittain 0,5, ei / ei tietoa 0. Arvio perustuu julkisiin asiakirjoihin; jos kaupunki ei julkaise laatuvaatimuksiaan, niitä ei voi arvioida.",
+ "kriteerit": {
+  "K1": "Oma, korkein hoitoluokka baanoille / pääreiteille (vähintään pääkatujen tasolla)",
+  "K2": "Lumen maksimisyvyys ennen toimenpidettä ja toimenpideaika määritelty",
+  "K3": "Karhea, ei-liukas jälki vaaditaan (karhentava terä, karhennus, harjasuolaus)",
+  "K4": "Lumi linkotaan / poistetaan väylän reunoilta, ei valleja",
+  "K5": "Väylälle lunta puskenut auraaja kunnostaa väylän, tai aurausjärjestys turvaa sen",
+  "K6": "Säännölliset käyttäjien ja kuljettajien palautetapahtumat (yleinen palautelomake = osittain)",
+  "K7": "Polanteen maksimikorkeus / epätasaisuus määritelty, kiristyy kevättä kohti",
+  "K8": "Pyöräilyagentit: järjestelmällinen käyttäjäarviointi reiteistä (esim. viikoittain), joka menee urakoitsijalle",
+  "K9": "Bonus/sanktio: urakoitsijan palkkio sidottu laatuun (käyttäjäarviot tai laatumittaukset)"
+ },
+ "kaupungit": {
+  "Turku": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "Tehostettu hoito oma luokka: klo 6 ja 15 mennessä, ~80 km",
+     [
+      "tku1",
+      "kk2024"
+     ]
+    ],
+    "K2": [
+     "osittain",
+     "Kevytväylät I lk 4 cm, II lk 6 cm; tehostetulla vain kellonajat",
+     [
+      "kk2024",
+      "tku2"
+     ]
+    ],
+    "K3": [
+     "kyllä",
+     "Tehostetulla reitillä harjasuolaus ja harjahiekoitus",
+     [
+      "tku3"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Lumi poistetaan koko leveydeltä tai väh. 3 m; ei linkousta",
+     [
+      "tku3"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "Auraus ennen ajoratoja; ei palautussääntöä",
+     [
+      "kk2024"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen palaute; urakoitsijan viikoittaiset pyöräilevät laatukierrokset",
+     [
+      "tku4"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "Tehtäväkortit eivät saatavilla (palvelin hylkäsi haun)",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 44,
+   "raaka": 4.0
+  },
+  "Jyväskylä": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Kiireellisyysluokka 1: merkittävät kävely- ja pyöräilyväylät samassa luokassa kuin pääkadut",
+     [
+      "jkl1"
+     ]
+    ],
+    "K2": [
+     "ei",
+     "Syksystä 2024 tarveperusteinen hoito, senttirajat ja toimenpideajat poistettu",
+     [
+      "jkl2",
+      "jkl3"
+     ]
+    ],
+    "K3": [
+     "ei tietoa",
+     "",
+     [
+      "jkl4"
+     ]
+    ],
+    "K4": [
+     "ei tietoa",
+     "",
+     [
+      "jkl4"
+     ]
+    ],
+    "K5": [
+     "ei tietoa",
+     "Aurataan samassa yhteydessä ajoratojen kanssa",
+     [
+      "jkl1"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen palaute",
+     [
+      "jkl2"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 11,
+   "raaka": 1.0
+  },
+  "Lahti": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "A++/A+ pääpyöräilyreitit (2022); tehostettu reitti ~20 km 2023. Nykyinen sivu mainitsee vain A ja B",
+     [
+      "lah1",
+      "lah4"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "Nyt A ja B 3 cm / 6 h; 2022 A++ 2 cm / 3 h, ei koskaan yli 4 cm",
+     [
+      "lah2"
+     ]
+    ],
+    "K3": [
+     "kyllä",
+     "Oulun malli: karhennettu polannekerros (2022)",
+     [
+      "lah3"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Aurausvallit poistetaan tai madalletaan, kun haittaavat",
+     [
+      "lah5"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "2022: A++/A+ ajetaan uudelleen ajoratojen jälkeen (vain hakukoneotteet, asiakirja poistunut)",
+     [
+      "lah4"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen palaute",
+     [
+      "lah5"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 50,
+   "raaka": 4.5
+  },
+  "Kuopio": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Luokat 1–3 yhteiset katujen kanssa; ei pääreittien tehostettua mallia",
+     [
+      "kk2024"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "Lk 1 3 cm, lk 2 5 cm; auraus 5–12 h; liukkaudentorjunta 3/5/10 h",
+     [
+      "kuo1"
+     ]
+    ],
+    "K3": [
+     "ei",
+     "Auraus; harjasuolauskokeilu lopetettu",
+     [
+      "kk2024"
+     ]
+    ],
+    "K4": [
+     "ei",
+     "Lumilinkoja ei käytössä",
+     [
+      "kk2024"
+     ]
+    ],
+    "K5": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K6": [
+     "osittain",
+     "Palaute ja kysely; urakan laatulupaukset eivät toteutuneet",
+     [
+      "kk2024",
+      "kuo1"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "osittain",
+     "Urakassa laatulupaukset talvipyöräilystä; eivät ole toteutuneet",
+     [
+      "kk2024"
+     ]
+    ]
+   },
+   "pisteet": 28,
+   "raaka": 2.5
+  },
+  "Pori": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Yksi taso kaikille kevytväylille, tiukempi kuin 1 lk kaduilla; ei pääreittiluokkaa",
+     [
+      "por1"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "Auraus 2–3 cm irtolunta; ei toimenpideaikaa",
+     [
+      "por1",
+      "por2"
+     ]
+    ],
+    "K3": [
+     "ei tietoa",
+     "",
+     [
+      "por1"
+     ]
+    ],
+    "K4": [
+     "ei tietoa",
+     "",
+     [
+      "por2"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "3 lk kadut vasta kevytväylien jälkeen",
+     [
+      "por1"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Palaute ja aurauskartta (testi)",
+     [
+      "por2"
+     ]
+    ],
+    "K7": [
+     "ei",
+     "Polanteenpoisto vasta kiireellisten töiden jälkeen, ei cm-rajaa",
+     [
+      "por1"
+     ]
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 28,
+   "raaka": 2.5
+  },
+  "Hämeenlinna": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "Pääpyöräteiden superluokka, erillinen urakka talvesta 2026–27",
+     [
+      "hml1"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "Superluokka: auraus jo 2 cm jälkeen ennen ruuhkia (tiedote, ei varmennettu asiakirjasta)",
+     [
+      "hml2",
+      "hml3"
+     ]
+    ],
+    "K3": [
+     "ei tietoa",
+     "Pintavaatimukset tarjouspyynnössä, ei julkinen",
+     [
+      "hml4"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Urakkaan kuuluu lumen lähisiirto",
+     [
+      "hml1"
+     ]
+    ],
+    "K5": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K6": [
+     "osittain",
+     "Talvipyöräilyagentit raportoivat havaintojaan; ei kuljettajatapaamisia",
+     [
+      "hml5"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "Polanteen poisto urakassa, raja-arvot eivät julkisia",
+     [
+      "hml1"
+     ]
+    ],
+    "K8": [
+     "kyllä",
+     "Talvipyöräilyagentit testaavat superluokkaa ja raportoivat talven aikana",
+     [
+      "hml5",
+      "hml2"
+     ]
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 44,
+   "raaka": 4.0
+  },
+  "Kouvola": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Pyöräväylät ja pääkadut aurataan ensin; ei omaa luokkaa",
+     [
+      "kou1",
+      "kou2"
+     ]
+    ],
+    "K2": [
+     "ei tietoa",
+     "Tavoitetaso 2020/2023 ei julkisesti saatavilla",
+     [
+      "kou3"
+     ]
+    ],
+    "K3": [
+     "osittain",
+     "Karhentavat reikä- ja hammasterät yleisesti käytössä, ei pyöräväylävaatimus",
+     [
+      "kou1",
+      "kou4"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Lumivallien poiskuljetus kaupungin vastuulla; lumen poisvientiä vähennetty 2023",
+     [
+      "kou2",
+      "kou5"
+     ]
+    ],
+    "K5": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K6": [
+     "osittain",
+     "Sähköinen palaute",
+     [
+      "kou1"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 22,
+   "raaka": 2.0
+  },
+  "Porvoo": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Kevytväylät ennen 2. ja 3. luokan katuja; ei omaa luokkaa",
+     [
+      "pvo1"
+     ]
+    ],
+    "K2": [
+     "ei tietoa",
+     "Pyöräväylille ei lukua (kadut 3/5 cm)",
+     [
+      "pvo1"
+     ]
+    ],
+    "K3": [
+     "ei tietoa",
+     "Tehtäväkortit kirjautumisen takana",
+     [
+      "pvo2"
+     ]
+    ],
+    "K4": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K5": [
+     "kyllä",
+     "Katu aurataan ensin ja kevytväylä heti sen jälkeen, jotta lumivallia ei jää väylälle",
+     [
+      "pvo1"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen palaute",
+     [
+      "pvo1"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 22,
+   "raaka": 2.0
+  },
+  "Mikkeli": {
+   "K": {
+    "K1": [
+     "osittain",
+     "I- ja II-luokan kevyen liikenteen väylät erillään katuluokista; ei pääreittiluokkaa",
+     [
+      "mik1"
+     ]
+    ],
+    "K2": [
+     "ei tietoa",
+     "Virallista lukua ei löytynyt; 2025–26 auraus pääosin yöllä, hiljaisilla väylillä ei talvihoitoa",
+     [
+      "mik2"
+     ]
+    ],
+    "K3": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K4": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K5": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K6": [
+     "osittain",
+     "Palaute ja urakoitsijan päivystysnumero",
+     [
+      "mik3"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 11,
+   "raaka": 1.0
+  },
+  "Salo": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Kevytväylät aurataan ennen vastaavan luokan ajoratoja (lk I); ei pääreittiluokkaa",
+     [
+      "salo1"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "3 cm irtolunta, valmis ennen klo 7 ja 16; sohjo 2 cm, poisto välittömästi",
+     [
+      "salo1",
+      "salo2"
+     ]
+    ],
+    "K3": [
+     "ei",
+     "Vain hiekka/sepeli; tasauksen jälkeen pinnan oltava tasainen",
+     [
+      "salo3",
+      "salo4"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Väylä puhdas irtolumesta heti aurauksen jälkeen; vallit näkemäalueilla rajattu",
+     [
+      "salo1",
+      "salo5"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "Kevytväylät ennen ajoratoja; ei palautussääntöä",
+     [
+      "salo1",
+      "salo6"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen palaute",
+     [
+      "salo7"
+     ]
+    ],
+    "K7": [
+     "osittain",
+     "Urasyvyys max 3/4 cm; ennakoiva polanteen poisto keväällä; ei kauden mittaan kiristyvää rajaa",
+     [
+      "salo4"
+     ]
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 39,
+   "raaka": 3.5
+  },
+  "Joensuu": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "Laatukäytävä (41 km) aurataan ensin, tiukempi kuin I lk kadut",
+     [
+      "joe1",
+      "joe2",
+      "joe3"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "Laatukäytävä 1,5 cm, max 3 cm, 3 h; A 3 cm / 4 h klo 7 mennessä",
+     [
+      "joe1"
+     ]
+    ],
+    "K3": [
+     "kyllä",
+     "Lumen poistossa pinnan karhentava terä tai karhennus",
+     [
+      "joe1",
+      "joe4"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Haittaavat vallit siirrettävä 2 työpäivässä; ei linkousta",
+     [
+      "joe1",
+      "joe4"
+     ]
+    ],
+    "K5": [
+     "kyllä",
+     "Ajoradan vieressä kevytväylän lumenpoisto aina välittömästi ajoradan jälkeen",
+     [
+      "joe1"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen palaute ja aurausseuranta",
+     [
+      "joe2",
+      "joe3"
+     ]
+    ],
+    "K7": [
+     "osittain",
+     "Max urasyvyys / epätasaisuus 2 cm; ei kevätkiristystä",
+     [
+      "joe1"
+     ]
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 61,
+   "raaka": 5.5
+  },
+  "Lappeenranta": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "I Pääreitti (23 km): ≤ 2 cm, tiukempi kuin pääkadut (≤ 5 cm)",
+     [
+      "lpr1"
+     ]
+    ],
+    "K2": [
+     "osittain",
+     "Pääreitti ≤ 2 cm, aluereitti ≤ 5 cm; ei tuntirajaa",
+     [
+      "lpr1"
+     ]
+    ],
+    "K3": [
+     "ei",
+     "Hiekoitussepeli; ei karhennusvaatimusta",
+     [
+      "lpr1",
+      "lpr3"
+     ]
+    ],
+    "K4": [
+     "ei tietoa",
+     "",
+     [
+      "lpr1"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "Käytäntö: ajoradan aurauksen jälkeen pyörätiet aurataan täyteen leveyteen",
+     [
+      "lpr2"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Sähköposti ja palautepalvelu",
+     [
+      "lpr3"
+     ]
+    ],
+    "K7": [
+     "ei",
+     "Ei polanne- tai epätasaisuusrajoja",
+     [
+      "lpr1"
+     ]
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 28,
+   "raaka": 2.5
+  },
+  "Vaasa": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "Superhoitoluokka 62–77 km, aurataan yhtä aikaa I lk ajoratojen kanssa",
+     [
+      "vaa1",
+      "vaa2"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "Klo 5–23: 2 cm, max 4 cm, 3 h; yö 3/5 cm, 4 h",
+     [
+      "vaa1"
+     ]
+    ],
+    "K3": [
+     "kyllä",
+     "Karhennettu aurausjälki, hammastus < 20 mm; tasaterä polanteella kielletty",
+     [
+      "vaa1"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Kaventavia valleja ei sallita, lumi ajetaan pois; linko lisäpisteenä, ei vaatimus",
+     [
+      "vaa1",
+      "vaa3"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "Jatkuva yhteys viereisten alueiden urakoitsijoihin; risteysten vallit; ei suoraa palautussääntöä",
+     [
+      "vaa4",
+      "vaa1"
+     ]
+    ],
+    "K6": [
+     "kyllä",
+     "Urakoitsija järjestää 3 keskustelutapahtumaa tammi–maaliskuussa (mehu, kahvi); ~284 pyöräilyagenttia, bonus/sanktio ±30 000 €",
+     [
+      "vaa4",
+      "vaa5",
+      "vaa3",
+      "vaa6"
+     ]
+    ],
+    "K7": [
+     "kyllä",
+     "Polanne max 3 cm 15.10–14.3, 2 cm 15.3–30.4; epätasaisuus max 2 cm",
+     [
+      "vaa1"
+     ]
+    ],
+    "K8": [
+     "kyllä",
+     "~284 pyöräilyagenttia, viikoittaiset arviot",
+     [
+      "vaa3",
+      "vaa6"
+     ]
+    ],
+    "K9": [
+     "kyllä",
+     "Agenttiarviot ratkaisevat bonuksen tai sanktion, ±30 000 €",
+     [
+      "vaa5",
+      "vaa3"
+     ]
+    ]
+   },
+   "pisteet": 89,
+   "raaka": 8.0
+  },
+  "Seinäjoki": {
+   "K": {
+    "K1": [
+     "osittain",
+     "1. ja 2. luokka; pääpyörätieluokka vain ehdotettu",
+     [
+      "sjk2",
+      "sjk3"
+     ]
+    ],
+    "K2": [
+     "ei tietoa",
+     "Lautakunnan aurauskynnykset ilman lukuja",
+     [
+      "sjk1"
+     ]
+    ],
+    "K3": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K4": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K5": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K6": [
+     "osittain",
+     "Sähköinen palaute",
+     [
+      "sjk1"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 11,
+   "raaka": 1.0
+  },
+  "Rovaniemi": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "Jk/pp A+: 2 cm ruuhka-aikaan, tiukempi kuin I lk kadut (3 cm)",
+     [
+      "rov1"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "A+: ruuhka 2 cm, päivä 4 cm, yö 6 cm; kynnys 2 cm, 3 h",
+     [
+      "rov1"
+     ]
+    ],
+    "K3": [
+     "kyllä",
+     "Menetelmä, josta jää karhennettu aurausjälki",
+     [
+      "rov1"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Kaventavia aurausvalleja ei sallita; ei linkousta",
+     [
+      "rov1"
+     ]
+    ],
+    "K5": [
+     "kyllä",
+     "Ajoradalta tulevat aurauslumet poistettava väyliltä välittömästi ajoradan aurauksen yhteydessä",
+     [
+      "rov1"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen asiakaspalaute",
+     [
+      "rov2"
+     ]
+    ],
+    "K7": [
+     "osittain",
+     "Epätasaisuus A+ 2 cm, polanne max 8 cm; ei kevätkiristystä",
+     [
+      "rov1"
+     ]
+    ],
+    "K8": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 61,
+   "raaka": 5.5
+  },
+  "Oulu": {
+   "vertailukohta": true,
+   "K": {
+    "K1": [
+     "kyllä",
+     "Pääpyörätiet, kunnossapitoluokka Super; erillinen urakka; pyörätiet ennen ajoratoja",
+     [
+      "oulu1"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "3 h kuluessa, 2 cm (klo 5–23) tai 4 cm (yö); 4 cm ei saa ylittää",
+     [
+      "oulu1",
+      "oulu2"
+     ]
+    ],
+    "K3": [
+     "kyllä",
+     "Karhennus auraamalla; hammasväli < 20 mm, suora terä kielletty, ei rengasta ohjaavaa uraa",
+     [
+      "oulu1",
+      "oulu2",
+      "tre2"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Etuaura ja lumilinko perässä käytäntönä, ei velvoite kaikkialla",
+     [
+      "ltva",
+      "oulu3"
+     ]
+    ],
+    "K5": [
+     "ei tietoa",
+     "Sääntöä ei löytynyt julkisista lähteistä (käyttäjän kuvaus)",
+     []
+    ],
+    "K6": [
+     "kyllä",
+     "Urakoitsija järjestää väh. 3 kertaa vuodessa kadunvarsitapahtuman (kuuma juoma, palaute); pyöräilyagentit, bonus/sanktio",
+     [
+      "oulu4",
+      "oulu2"
+     ]
+    ],
+    "K7": [
+     "kyllä",
+     "Epätasaisuus max 20 mm, polanne max 50 mm, 15.3.–30.4. 20 mm",
+     [
+      "tre3"
+     ]
+    ],
+    "K8": [
+     "kyllä",
+     "Pyöräilyagentit antavat viikkoarvosanat",
+     [
+      "oulu2",
+      "oulu4"
+     ]
+    ],
+    "K9": [
+     "kyllä",
+     "Agenttien arvosanat vaikuttavat bonukseen ja sanktioon (sanktio ~2× bonus)",
+     [
+      "oulu2",
+      "oulu4"
+     ]
+    ]
+   },
+   "pisteet": 100.0,
+   "raaka": 7.5
+  },
+  "Helsinki": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "Baanat ja pääreitit A++ (harjasuolaus ~90 km) tai A+ (tehostettu auraus ~70 km)",
+     [
+      "hel1",
+      "hel2"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "A+: aurattu klo 7 mennessä, viim. 4 h lumisateen jälkeen; A/B 3 cm / 4 h",
+     [
+      "hel1"
+     ]
+    ],
+    "K3": [
+     "osittain",
+     "A++ harjataan ja suolataan liuoksella; muualla sepeli",
+     [
+      "hel1"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Lumen siirto valleista lähisijoituspaikkaan; ei linkousvaatimusta",
+     [
+      "hel3"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "Risteysalueet aurataan uudestaan viimeistelytöissä; ei palautussääntöä",
+     [
+      "tt2022"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Talviagentit, palaute, kysely; urakoitsijan omavalvonta pyörällä",
+     [
+      "hel2"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "Tuotekortit eivät julkisia",
+     [
+      "hel3"
+     ]
+    ],
+    "K8": [
+     "osittain",
+     "Talviagentit mainittu (kaupungin uutinen ei luettavissa, HTTP 403)",
+     [
+      "hel1"
+     ]
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 50,
+   "raaka": 4.5
+  },
+  "Espoo": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Vain A- ja B-luokat katuluokan mukaan; harjasuolausta 22 km; luokitus ei pyöräreittien mukainen",
+     [
+      "esp1",
+      "esp2"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "A: lumi 3 cm, sohjo 2 cm, 4 h, klo 7 mennessä; B 5/4 cm, 14 h",
+     [
+      "esp1"
+     ]
+    ],
+    "K3": [
+     "osittain",
+     "Harjasuolaus 22 km; muuten hiekoitus",
+     [
+      "esp1",
+      "esp3"
+     ]
+    ],
+    "K4": [
+     "ei tietoa",
+     "",
+     [
+      "esp3"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "Ajoradan vieressä ajorata aurataan yleensä ensin",
+     [
+      "esp3",
+      "esp2"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Yleinen palaute",
+     [
+      "esp1"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "Tehtäväkortit eivät julkisia",
+     [
+      "esp1"
+     ]
+    ],
+    "K8": [
+     "osittain",
+     "Pyöräilypäivystäjäkokeilu (kaupungin kesätyö 2026), ei käyttäjäagentteja",
+     [
+      "esp1"
+     ]
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 39,
+   "raaka": 3.5
+  },
+  "Vantaa": {
+   "K": {
+    "K1": [
+     "osittain",
+     "Merkittävät jalankulku- ja pyöräkadut luokassa 1; laatukäytävä 15 km",
+     [
+      "van1",
+      "van2"
+     ]
+    ],
+    "K2": [
+     "osittain",
+     "3–5 cm lunta; toimenpideaikoja ei julkaistu",
+     [
+      "van1"
+     ]
+    ],
+    "K3": [
+     "osittain",
+     "Harjasuolauskokeilu Tikkurila–Korso; muuten pesty sepeli",
+     [
+      "van2",
+      "van1"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Haittaavat vallit poistetaan, voi kestää viikkoja",
+     [
+      "van1"
+     ]
+    ],
+    "K5": [
+     "osittain",
+     "Autokadut ensin, pyörätiet sen jälkeen; ei palautussääntöä",
+     [
+      "tt2022"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Pikapalaute; Hepo ry:n talviagentit",
+     [
+      "van1",
+      "van2"
+     ]
+    ],
+    "K7": [
+     "ei tietoa",
+     "",
+     []
+    ],
+    "K8": [
+     "osittain",
+     "Hepo ry:n talviagenttitoiminta (yhdistyksen, ei urakan osa)",
+     [
+      "van2"
+     ]
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 39,
+   "raaka": 3.5
+  },
+  "Tampere": {
+   "K": {
+    "K1": [
+     "kyllä",
+     "A+ = seudulliset pyöräilyn pääreitit ja muut pääreitit, 1 lk katujen tasolla",
+     [
+      "tre1"
+     ]
+    ],
+    "K2": [
+     "kyllä",
+     "A+: klo 6–22 3 cm, yö 8 cm, 4 h, arkisin klo 7 ja 16 mennessä",
+     [
+      "tre1"
+     ]
+    ],
+    "K3": [
+     "osittain",
+     "Seudullinen tehtäväkortti 2015: karhennettu aurausjälki (soveltamisala epäselvä)",
+     [
+      "tre4"
+     ]
+    ],
+    "K4": [
+     "osittain",
+     "Ei kulkuleveyttä kaventavia valleja; ei linkousta",
+     [
+      "tre4"
+     ]
+    ],
+    "K5": [
+     "ei tietoa",
+     "Agenttipalaute 2023: mikään ei estä auraamasta ajoradan lunta pyörätielle",
+     [
+      "tre5"
+     ]
+    ],
+    "K6": [
+     "osittain",
+     "Pyöräilyagentit viikoittain urakoitsijoille; ei tapahtumia",
+     [
+      "tre5",
+      "tre6"
+     ]
+    ],
+    "K7": [
+     "osittain",
+     "A+/A: epätasaisuus 20–30 mm, polanne max 40 mm; ei kevätkiristystä",
+     [
+      "tre3",
+      "tre4"
+     ]
+    ],
+    "K8": [
+     "kyllä",
+     "Pyöräilyagenttitoiminta vuodesta ~2022, viikoittainen palaute urakoitsijoille",
+     [
+      "tre5"
+     ]
+    ],
+    "K9": [
+     "ei tietoa",
+     "",
+     []
+    ]
+   },
+   "pisteet": 56,
+   "raaka": 5.0
+  }
+ },
+ "viitteet": {
+  "kk2024": [
+   "Pyöräilykuntien verkosto: Kunnossapito kuntoon! – ohje kunnille",
+   2024,
+   "https://www.poljin.fi/sites/default/files/2024-02/Kunnossapito%20kuntoon%20-ohje%20kunnille_1-2024_Py%C3%B6r%C3%A4ilykuntien%20verkosto.pdf"
+  ],
+  "tku1": [
+   "Turku, kaupunginvaltuuston vastaus 26.9.2025",
+   2025,
+   "https://www.turku.fi/paatoksenteko/kaupunginvaltuusto/vastaus/hae/2459778"
+  ],
+  "tku2": [
+   "Turku, kaupunginvaltuuston vastaus 28.3.2022",
+   2022,
+   "https://www.turku.fi/paatoksenteko/kaupunginvaltuusto/vastaus/hae/2382366"
+  ],
+  "tku3": [
+   "Turku, kaupunginvaltuuston vastaus 13.6.2022 (Kv §161)",
+   2022,
+   "https://www.turku.fi/paatoksenteko/kaupunginvaltuusto/vastaus/hae/2382399"
+  ],
+  "tku4": [
+   "Tieyhdistys: Kehittynyttä talvikunnon seurantaa satulasta käsin",
+   2024,
+   "https://tieyhdistys.fi/kehittynytta-talvikunnon-seurantaa-satulasta-kasin/"
+  ],
+  "jkl1": [
+   "Jyväskylä: Kevyen liikenteen väylien auraus",
+   2026,
+   "https://www.jyvaskyla.fi/liikenne/katualueen-hoito-ja-kunnossapito/katujen-talvihoito/kevyen-liikenteen-vaylien-auraus"
+  ],
+  "jkl2": [
+   "Jyväskylä, Kaupunkirakennepalvelut, tilinpäätös 2024",
+   2025,
+   "https://jyvaskyla.cloudnc.fi/download/noname/%7Bb25fc7b9-97a6-4082-bc6f-3d04dbf3fd18%7D/40291"
+  ],
+  "jkl3": [
+   "Yle 15.12.2024: Jyväskylän auraus ilman senttirajaa",
+   2024,
+   "https://yle.fi/a/74-20131485"
+  ],
+  "jkl4": [
+   "Jyväskylä: Katujen talvihoito",
+   2026,
+   "https://jyvaskyla.fi/liikenne/katualueen-hoito-ja-kunnossapito/katujen-talvihoito"
+  ],
+  "lah1": [
+   "Lahti: Jalankulku- ja pyöräteiden talvikunnossapito hoidetaan auraamalla ja hiekoittamalla (uutinen 20.1.2023)",
+   2023,
+   "https://www.lahti.fi/uutiset/jalankulku-ja-pyorateiden-talvikunnossapito-hoidetaan-auraamalla-ja-hiekoittamalla/"
+  ],
+  "lah2": [
+   "Lahti: Jalankulku- ja pyöräväylien hoito",
+   2026,
+   "https://www.lahti.fi/asuminen-ja-ymparisto/liikenne-ja-kadut/kunnossapito-ja-vikailmoitukset/kadut-puistot-ja-kalusteet/jalankulku-ja-pyoravaylien-hoito/"
+  ],
+  "lah3": [
+   "Lahti korvaa pyöräteiden talviharjausmenetelmän Oulun mallilla (uutinen 8.12.2022)",
+   2022,
+   "https://www.lahti.fi/uutiset/lahti-korvaa-pyorateiden-talviharjausmenetelman-oulun-mallilla/"
+  ],
+  "lah4": [
+   "Lahti, lautakunta- ja valtuustoasiakirjat 2022 (A++/A+), nyt poistuneet: lahti-prod.oncloudos.com/kokous/2022532-10, 2022576-7, 2022609-15, 2022454-11",
+   2022,
+   ""
+  ],
+  "lah5": [
+   "Lahti: Talvikunnossapidon usein kysytyt kysymykset",
+   2026,
+   "https://www.lahti.fi/asuminen-ja-ymparisto/liikenne-ja-kadut/kunnossapito-ja-vikailmoitukset/kadut-puistot-ja-kalusteet/talvikunnossapidon-usein-kysytyt-kysymykset/"
+  ],
+  "kuo1": [
+   "Kuopio: Katujen kunnossa- ja puhtaanapito",
+   2026,
+   "https://www.kuopio.fi/asuminen-ja-ymparisto/katualueet/katujen-kunnossa-ja-puhtaanapito/"
+  ],
+  "por1": [
+   "Pori: Talvihoidon kunnossapitokriteerit",
+   2022,
+   "https://cms.pori.fi/uploads/sites/2/2022/11/talvihoidon_laatukriteerit.pdf"
+  ],
+  "por2": [
+   "Pori: Liikenneväylien kunnossapito",
+   2026,
+   "https://www.pori.fi/asuminen-ja-ymparisto/liikenne-ja-veneily/liikennevaylien-kunnossapito/"
+  ],
+  "hml1": [
+   "Hämeenlinna: pääpyöräteiden superluokan tehostettu talvikunnossapito, hankintailmoitus TED 404413-2026",
+   2026,
+   "https://ted.europa.eu/en/notice/404413-2026/pdf"
+  ],
+  "hml2": [
+   "Hämeenlinna: Hae talvipyöräilyagentiksi (tiedote, nyt poistunut)",
+   2026,
+   "https://www.hameenlinna.fi/tiedotteet/hae-hameenlinnan-talvipyorailyagentiksi-ja-vaikuta-pyorateiden-kunnossapitoon/"
+  ],
+  "hml3": [
+   "Hämeenlinna: Katujen kunnossapito",
+   2026,
+   "https://hameenlinna.fi/asuminen-ja-ymparisto/kadut-ja-liikenne/katujen-kunnossapito"
+  ],
+  "hml4": [
+   "Hämeenlinna: tarjouspyyntö (Tarjouspalvelu, vaatii kirjautumisen)",
+   2026,
+   "https://tarjouspalvelu.fi/hameenlinna?id=613410"
+  ],
+  "hml5": [
+   "Hämeen Sanomat 4.9.2026 ja 15.11.2025: talvipyöräilyagentit ja superluokka",
+   2026,
+   "https://www.hameensanomat.fi/paikalliset/9763852"
+  ],
+  "kou1": [
+   "Kouvola: Kaupungin aurauskalusto valmiina talven tuloon (25.11.2022)",
+   2022,
+   "https://www.kouvola.fi/ajankohtaiset/kaupungin-aurauskalusto-valmiina-talven-tuloon/"
+  ],
+  "kou2": [
+   "Kouvola: Kunnossapitovastuut",
+   2024,
+   "https://www.kouvola.fi/kunnossapitovastuut"
+  ],
+  "kou3": [
+   "Kouvola: Liikennealueiden talvikunnossapidon tavoitetason päivitys lautakuntakäsittelyyn",
+   2023,
+   "https://www.kouvola.fi/ajankohtaiset/liikennealueiden-talvikunnossapidon-tavoitetason-paivitys-lautakuntakasittelyyn/"
+  ],
+  "kou4": [
+   "Yle: Kouvolan talvikunnossapidon säästöt",
+   2023,
+   "https://yle.fi/a/74-20053610"
+  ],
+  "kou5": [
+   "Yle: Kouvola vähentää lumen poisvientiä",
+   2023,
+   "https://yle.fi/a/74-20068467"
+  ],
+  "pvo1": [
+   "Porvoo: Katujen kunnossapito (UKK)",
+   2026,
+   "https://www.porvoo.fi/asuminen-ymparisto/kadut-ja-liikenne/katujen-kunnossapito/"
+  ],
+  "pvo2": [
+   "Porvoo: alueurakan tarjouspyyntö, tehtäväkortit (Tarjouspalvelu, vaatii kirjautumisen)",
+   2025,
+   "https://tarjouspalvelu.fi/porvoo?id=566021"
+  ],
+  "mik1": [
+   "Mikkeli: Katuluokituskartan selitykset",
+   2022,
+   "https://mikkeli.fi/wp-content/uploads/2022/02/Katuluokituskartta_selitykset.pdf"
+  ],
+  "mik2": [
+   "Yle 6.11.2025: Mikkelin talvihoito yöhön",
+   2025,
+   "https://yle.fi/a/74-20192327"
+  ],
+  "mik3": [
+   "Mikkeli: Katujen ylläpito",
+   2026,
+   "https://mikkeli.fi/asuminen-ja-ymparisto/liikenne-ja-kadut/katujen-yllapito-viheralueiden-yllapito-2/"
+  ],
+  "salo1": [
+   "Salo: laatukortti Auraus kevyen liikenteen väylillä (2010, julk. 2025)",
+   2010,
+   "https://salo.fi/wp-content/uploads/2025/03/Auraus-kevyen-liikenteen-vaylilla.pdf"
+  ],
+  "salo2": [
+   "Salo: laatukortti Sohjon poisto ajoradoilla ja kevyen liikenteen väylillä",
+   2010,
+   "https://salo.fi/wp-content/uploads/2025/03/Sohjon-poisto-ajoradoilla-ja-kevyen-liikenteen-vaylilla.pdf"
+  ],
+  "salo3": [
+   "Salo: laatukortti Liukkauden torjunta kevyen liikenteen väylillä",
+   2010,
+   "https://salo.fi/wp-content/uploads/2025/03/Liukkauden-torjunta-kevyen-liikenteen-vaylilla.pdf"
+  ],
+  "salo4": [
+   "Salo: laatukortti Pinnan tasaus ja polanteen poisto",
+   2010,
+   "https://salo.fi/wp-content/uploads/2025/03/Pinnan-tasaus-ja-polanteen-poisto-ajoradoilla-ja-kevyen-liikenteen-vaylilla-1.pdf"
+  ],
+  "salo5": [
+   "Salo: laatukortti Lumen lähisiirto ja läjitys",
+   2010,
+   "https://salo.fi/wp-content/uploads/2025/03/Lumen-lahisiirto-ja-lajitys.pdf"
+  ],
+  "salo6": [
+   "Salo: laatukortti Auraus ajoradoilla",
+   2010,
+   "https://salo.fi/wp-content/uploads/2025/03/Auraus-ajoradoilla.pdf"
+  ],
+  "salo7": [
+   "Salo: Kesä- ja talvikunnossapito",
+   2026,
+   "https://salo.fi/asuminen-ja-ymparisto/kadut-liikenne-ja-yleiset-alueet/katujen-kunnossapito/kesa-ja-talvikunnossapito/"
+  ],
+  "joe1": [
+   "Joensuu: Tehtäväselostus, alueurakka 2023 (Wayback-kopio)",
+   2023,
+   "http://web.archive.org/web/20260208041413id_/https://www.joensuu.fi/documents/144181/2457718/Au2023_Teht%C3%A4v%C3%A4seloste_valmis.pdf/a28f7f0e-09d6-006a-32d6-16ddf6192bc5"
+  ],
+  "joe2": [
+   "Joensuu, kaupunkirakennelautakunta 20.10.2020 § 171",
+   2020,
+   "https://dynastyjulkaisu.pohjoiskarjala.net/joensuu/kokous/2020136.PDF"
+  ],
+  "joe3": [
+   "Joensuu: Katujen talvihoito",
+   2026,
+   "https://www.joensuu.fi/arjen-palvelut/liikenne-kadut-ja-kunnossapito/katujen-talvihoito/"
+  ],
+  "joe4": [
+   "Joensuu: Työkohtainen tehtäväluettelo 31.10.2018 (Wayback-kopio)",
+   2018,
+   ""
+  ],
+  "lpr1": [
+   "Lappeenranta: Katujen kunnossapitoluokitus (kaupunkikehityslautakunta 18.11.2025)",
+   2025,
+   "https://lappeenranta.fi/fi/liikenne-ja-kaupunkiymparisto/katujen-ja-kaupunkiympariston-kunnossapito/katujen-kunnossapitoluokitus"
+  ],
+  "lpr2": [
+   "Lappeenranta: Kunnossapidon UKK",
+   2026,
+   "https://lappeenranta.fi/fi/liikenne-ja-kaupunkiymparisto/katujen-ja-kaupunkiympariston-kunnossapito/kunnossapidon-ukk"
+  ],
+  "lpr3": [
+   "Lappeenranta: Katujen ja kaupunkiympäristön kunnossapito",
+   2026,
+   "https://lappeenranta.fi/fi/liikenne-ja-kaupunkiymparisto/katujen-ja-kaupunkiympariston-kunnossapito"
+  ],
+  "vaa1": [
+   "Vaasa: Pääpyöräteiden talvihoitourakka 2024–2029, Liite E Tehtäväkortit",
+   2023,
+   "https://www.grk.fi/vaasa-talvihoitourakka/"
+  ],
+  "vaa2": [
+   "Vaasa: uutinen 16.1.2025, tehostettu talvihoito saa kiitosta",
+   2025,
+   "https://www.vaasa.fi/en/news/its-great-to-be-able-to-rely-on-the-bicycle-lanes-being-well-maintained-enhanced-winter-maintenance-receives-praise/"
+  ],
+  "vaa3": [
+   "Vaasa: Pääpyöräteiden talvihoitourakka 2024–2029, Liite F Laatulupaukset",
+   2023,
+   "https://www.grk.fi/vaasa-talvihoitourakka/"
+  ],
+  "vaa4": [
+   "Vaasa: Pääpyöräteiden talvihoitourakka 2024–2029, Liite B Urakkaohjelma",
+   2023,
+   "https://www.grk.fi/vaasa-talvihoitourakka/"
+  ],
+  "vaa5": [
+   "Vaasa: Pääpyöräteiden talvihoitourakka 2024–2029, Liite A Urakkasopimusluonnos",
+   2023,
+   "https://www.grk.fi/vaasa-talvihoitourakka/"
+  ],
+  "vaa6": [
+   "Vaasa: uutinen 21.1.2026, keskustelutapahtuma talvihoidosta",
+   2026,
+   "https://www.vaasa.fi/en/news/come-and-share-your-views-on-the-winter-maintenance-of-pedestrian-and-cycle-paths-breakfast-snacks-and-grilled-sausages-will-be-served/"
+  ],
+  "sjk1": [
+   "Seinäjoki: Talvikunnossapito ja päivystys",
+   2026,
+   "https://www.seinajoki.fi/asuminen-ja-ymparisto/kadut-ja-liikenne/katujen-kunnossapito/talvikunnossapito-ja-paivystys/"
+  ],
+  "sjk2": [
+   "Seinäjoen kestävän liikkumisen ohjelma, loppuraportti",
+   2022,
+   "https://www.seinajoki.fi/wp-content/uploads/2022/02/Seinajoen_kestavan_liikkumisen_ohjelma_loppuraportti.pdf"
+  ],
+  "sjk3": [
+   "Seinäjoki SUMP 19.6.2023",
+   2023,
+   "https://www.seinajoki.fi/wp-content/uploads/2023/06/seinajoki_sump_raportti_19.6.2023_saavutettava.pdf"
+  ],
+  "rov1": [
+   "Rovaniemi: Katujen kunnossapitourakka 2024–2029, Kunnossapidon tehtäväkortit",
+   2023,
+   "https://rovaniemi.cloudnc.fi/download/noname/%7B652e08d3-374b-4f29-a276-6981ffe1aae3%7D/984734"
+  ],
+  "rov2": [
+   "Rovaniemi: Katujen kunnossapitourakka 2024–2029, Urakkaohjelma",
+   2023,
+   "https://rovaniemi.cloudnc.fi/download/noname/%7Bb67129b6-de8c-4195-a444-fcc8b03b99a3%7D/984738"
+  ],
+  "oulu1": [
+   "Oulu: Auraus ja liukkauden torjunta",
+   2026,
+   "https://www.ouka.fi/katujen-kunnossapito/auraus-ja-liukkauden-torjunta"
+  ],
+  "oulu2": [
+   "Pekka Tahkola 9.2.2021: Oulun pääpyöräteiden talvihoidon laatuvaatimukset (ketju)",
+   2021,
+   "https://threadreaderapp.com/thread/1359269804448899074"
+  ],
+  "oulu3": [
+   "Tampere, valtuustoaloite TRE:1499/2021 (Oulun malli)",
+   2021,
+   "https://tampere.cloudnc.fi/download/noname/{5a0d84ce-5a7f-4bad-907b-c9eadec56997}/5610183"
+  ],
+  "oulu4": [
+   "Taloustaito 25.1.2022: pyöräteiden talvihoito Oulussa ja pääkaupunkiseudulla",
+   2022,
+   ""
+  ],
+  "ltva": [
+   "Liikenneturva / Traficom: Kunnossapito kuntoon",
+   2023,
+   "https://www.liikenneturva.fi/wp-content/uploads/2023/12/Kunnossapito-kuntoon.pdf"
+  ],
+  "tt2022": [
+   "Taloustaito 25.1.2022: pyöräteiden talvihoito Oulussa ja pääkaupunkiseudulla",
+   2022,
+   ""
+  ],
+  "hel1": [
+   "Helsinki: Pyöräteiden talvihoito",
+   2026,
+   "https://www.hel.fi/fi/kaupunkiymparisto-ja-liikenne/pyoraily/pyorateiden-talvihoito"
+  ],
+  "hel2": [
+   "Helsinki, päätösasiakirja 28.8.2024 (tehostettu talvihoito)",
+   2024,
+   "https://ahjojulkaisu.hel.fi/6D18CE82-DABB-CC47-8FA5-91984FC00001.pdf"
+  ],
+  "hel3": [
+   "Helsinki, päätösasiakirja 2022 (alueurakat, tuotekortit)",
+   2022,
+   "https://ahjojulkaisu.hel.fi/D8AFD700-C8B6-CDCE-AAE8-917A25500003.pdf"
+  ],
+  "esp1": [
+   "Espoon pyöräliikenteen edistämisohjelma 2026–2036",
+   2026,
+   "https://espoo-sv.oncloudos.com/kokous/20261647-7-346815.PDF"
+  ],
+  "esp2": [
+   "Espoo, valtuusto 13.6.2022 § 91",
+   2022,
+   "https://espoo.oncloudos.com/kokous/2022677-19.PDF"
+  ],
+  "esp3": [
+   "Espoo: Katujen kunnossapito",
+   2026,
+   "https://www.espoo.fi/fi/liikenne-ja-kadut/katujen-kunnossapito"
+  ],
+  "van1": [
+   "Vantaa: street maintenance (winter)",
+   2026,
+   "https://www.vantaa.fi/en/node/4760"
+  ],
+  "van2": [
+   "Vantaan pyöräliikenteen kehittämisohjelma 2021–2026",
+   2021,
+   "https://www.traficom.fi/files/media/file/Vantaan%20py%C3%B6r%C3%A4liikenteen%20kehitt%C3%A4misohjelma.pdf"
+  ],
+  "tre1": [
+   "Tampere: Katujen kunnossapitoluokat (päiv. 22.12.2025)",
+   2025,
+   "https://www.tampere.fi/liikenne-kadut-ja-kunnossapito/kunnossapito/katujen-kunnossapitoluokat"
+  ],
+  "tre2": [
+   "Tampere, valtuustoaloite TRE:1499/2021 (Oulun malli)",
+   2021,
+   "https://tampere.cloudnc.fi/download/noname/{5a0d84ce-5a7f-4bad-907b-c9eadec56997}/5610183"
+  ],
+  "tre3": [
+   "Tampere, liite 2: Oulun ja Tampereen laatuvaatimusten vertailu",
+   2022,
+   "https://tampere.cloudnc.fi/download/noname/{3ff60ed3-07e1-44f4-aded-a0a3184061c1}/5610182"
+  ],
+  "tre4": [
+   "Tampereen seutu: Liikenneväylien ylläpidon tuotteistus 30.3.2015",
+   2015,
+   "https://tampereenseutu.fi/wp-content/uploads/2020/10/liikennevaylien_yllapidon_tuotteistus_30032015.pdf"
+  ],
+  "tre5": [
+   "Tampere: pyöräilyagenttien kooste 06/2023",
+   2023,
+   "https://tampere.cloudnc.fi/download/noname/{c25cf8bb-49cb-4fc0-8e8d-c49308351323}/7457624"
+  ],
+  "tre6": [
+   "Tampere, valtuustoaloite palautejärjestelmästä",
+   2023,
+   "https://tampere.cloudnc.fi/download/noname/{e54528bc-3ab5-4d8b-8b6e-19df964a55fa}/7302263"
+  ]
+ }
+}

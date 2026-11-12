@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talvihoidon kriteerit</title>
+<style>
+:root{--surface-0:#faf9f6;--surface-1:#fff;--surface-2:#f3f1ec;
+  --ink-1:#0b0b0b;--ink-2:#52514e;--ink-3:#85837c;--rule:#dedbd4;
+  --kylla:#3f7d66;--osittain:#e07b39;--ei:#b8b5ac;--acc:#2a78d6;--hl:#fff6d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--surface-0:#15150f;--surface-1:#1c1c17;--surface-2:#232320;
+  --ink-1:#fff;--ink-2:#c3c2b7;--ink-3:#8f8e85;--rule:#33332f;
+  --kylla:#5aa88c;--osittain:#f0945a;--ei:#5a5952;--acc:#4a90e2;--hl:#3a3420}}
+:root[data-theme="dark"]{--surface-0:#15150f;--surface-1:#1c1c17;--surface-2:#232320;
+  --ink-1:#fff;--ink-2:#c3c2b7;--ink-3:#8f8e85;--rule:#33332f;
+  --kylla:#5aa88c;--osittain:#f0945a;--ei:#5a5952;--acc:#4a90e2;--hl:#3a3420}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--ink-1);
+  font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:22px;margin:0 0 6px} h2{font-size:17px;margin:30px 0 8px}
+p.sub{color:var(--ink-2);margin:0 0 14px;max-width:78ch;font-size:14px}
+a{color:var(--acc)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--ink-2);margin:10px 0}
+.taulu{overflow-x:auto;border:1px solid var(--rule);border-radius:12px;background:var(--surface-1)}
+table{border-collapse:collapse;font-size:13.5px;width:100%}
+th,td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:center;white-space:nowrap}
+th{font-weight:500;color:var(--ink-3);font-size:12px;vertical-align:bottom}
+th.k{cursor:help}
+td.n,th.n{text-align:left;position:sticky;left:0;background:var(--surface-1)}
+td.p{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+td.m{font-size:17px;cursor:pointer;line-height:1}
+td.m:hover,td.m.on{background:var(--surface-2)}
+tr.hl td{background:var(--hl)}
+.kylla{color:var(--kylla)}.osittain{color:var(--osittain)}.ei,.eitieto{color:var(--ei)}
+/* Merkit CSS-ympyröinä: fonttien ●/◐ ovat eri kokoisia ja vääristävät taulukon. */
+i.mk{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;box-sizing:border-box}
+i.mk.kylla{background:var(--kylla)}
+i.mk.osittain{background:linear-gradient(90deg,var(--osittain) 50%,transparent 50%);border:1.5px solid var(--osittain)}
+i.mk.ei{border:1.5px solid var(--ei)}
+i.mk.eitieto{width:4px;height:4px;background:var(--ei);vertical-align:2px}
+#tieto{background:var(--surface-2);border-radius:10px;padding:14px 16px;margin:14px 0;font-size:14px;min-height:64px}
+#tieto .lahde{font-size:13px;color:var(--ink-2);margin-top:6px}
+ol.krit{margin:6px 0 0 20px;padding:0;font-size:14px} ol.krit li{margin:3px 0}
+ol.viitteet{font-size:13px;margin:6px 0 0 22px;padding:0;color:var(--ink-2)}
+ol.viitteet li{margin:4px 0;word-break:break-word}
+ol.viitteet li:target{background:var(--hl)}
+.note{background:var(--surface-2);border-radius:10px;padding:14px 16px;font-size:13.5px;
+  line-height:1.62;color:var(--ink-2);margin:16px 0}.note b{color:var(--ink-1)}
+</style>
+<div class="wrap">
+  <p style="margin:0 0 10px;font-size:13px"><a href="index.html?m=talvi">← kaupunkien vertailu</a></p>
+  <h1>Pyöräväylien talvihoito: kriteerit kaupungeittain</h1>
+  <p class="sub" id="kuvaus"></p>
+  <div class="legend" id="legend"></div>
+  <div class="taulu"><table id="t"></table></div>
+  <div id="tieto">Valitse solu nähdäksesi perustelun ja lähteet.</div>
+
+  <h2>Kriteerit</h2>
+  <ol class="krit" id="krit"></ol>
+  <div class="note">
+    <b>Laskenta.</b> Kyllä = 1, osittain = ½, ei = 0 ja <b>ei tietoa = 0</b>; prosentti = summa / 9.
+    Oulun malli on vertailukohta ja saa 100 %. Arvio perustuu kaupunkien julkisiin asiakirjoihin
+    (laatuvaatimukset, urakan tehtäväkortit, hoitoluokitus, päätökset): se kertoo mihin kaupunki
+    on julkisesti sitoutunut, ei toteutunutta talvikuntoa. Julkaisematon laatuvaatimus ei sido
+    ketään eikä sitä voi tarkistaa, joten se lasketaan nollaksi.
+    <br><br><b>Varaukset.</b> Oulun omista julkisista lähteistä löytyy 83 %; sääntöä, että väylälle
+    lunta puskenut auraaja kunnostaa väylän (K5), ei löytynyt. Lahden A++-luokan luvut ovat vuoden
+    2022 asiakirjoista, jotka on poistettu verkosta. Hämeenlinnan, Porvoon, Helsingin ja Espoon
+    tarkat laatuvaatimukset ovat tarjouspyynnöissä tai julkaisemattomissa tuotekorteissa. Salon
+    laatukortit ovat vuodelta 2010. Haettu 12.11.2026.
+  </div>
+
+  <h2>Viitteet</h2>
+  <ol class="viitteet" id="viitteet"></ol>
+</div>
+<script type="module">
+const $ = s => document.querySelector(s);
+const D = await (await fetch('../data/talvi.json')).json();
+const P = { 'kyllä': 1, 'osittain': 0.5, 'ei': 0, 'ei tietoa': 0 };
+const M = Object.fromEntries([['kyllä', 'kylla'], ['osittain', 'osittain'], ['ei', 'ei'], ['ei tietoa', 'eitieto']]
+  .map(([t, c]) => [t, [`<i class="mk ${c}"></i>`, c]]));
+const KR = Object.keys(D.kriteerit).sort();
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+const kaup = Object.entries(D.kaupungit).map(([nimi, c]) => {
+  const s = KR.reduce((a, k) => a + P[c.K[k][0]], 0);
+  return { nimi, c, p: c.vertailukohta ? 100 : s / KR.length * 100 };
+}).sort((a, b) => b.p - a.p);
+
+// Viitteet numeroidaan siinä järjestyksessä kuin ne esiintyvät taulukossa.
+const num = new Map();
+for (const { c } of kaup) for (const k of KR) for (const r of c.K[k][2]) if (!num.has(r)) num.set(r, num.size + 1);
+for (const r of Object.keys(D.viitteet)) if (!num.has(r)) num.set(r, num.size + 1);
+
+$('#kuvaus').innerHTML = `Kuinka hyvin kaupunkien julkiset ohjeet pyöräväylien talvihoidolle vastaavat
+  Oulun mallia. ${kaup.length} kaupunkia, ${KR.length} kriteeriä, ${num.size} viitettä. Jokainen solu
+  kertoo perustelun ja lähteen.`;
+$('#legend').innerHTML = Object.entries(M).map(([t, [m, c]]) => `<span>${m} ${t}</span>`).join('');
+$('#krit').innerHTML = KR.map(k => `<li value="${k.slice(1)}"><b>${k}</b> ${esc(D.kriteerit[k])}</li>`).join('');
+
+$('#t').innerHTML = `<tr><th class="n">kaupunki</th><th>%</th>` +
+  KR.map(k => `<th class="k" title="${esc(D.kriteerit[k])}">${k}</th>`).join('') + `</tr>` +
+  kaup.map(({ nimi, c, p }) => `<tr id="${esc(nimi)}"><td class="n">${esc(nimi)}${c.vertailukohta ? ' <span style="color:var(--ink-3);font-size:11.5px">vertailukohta</span>' : ''}</td>` +
+    `<td class="p">${p.toFixed(0)}</td>` +
+    KR.map(k => { const [m, cl] = M[c.K[k][0]];
+      return `<td class="m ${cl}" data-n="${esc(nimi)}" data-k="${k}" title="${k}: ${c.K[k][0]}">${m}</td>`; }).join('') + `</tr>`).join('');
+
+const viite = r => { const v = D.viitteet[r];
+  return `[${num.get(r)}] ${v[2] ? `<a href="${esc(v[2])}">${esc(v[0])}</a>` : esc(v[0])} (${v[1]})`; };
+for (const td of document.querySelectorAll('td.m')) td.onclick = () => {
+  document.querySelectorAll('td.m.on').forEach(x => x.classList.remove('on')); td.classList.add('on');
+  const c = D.kaupungit[td.dataset.n], [tila, peruste, refs] = c.K[td.dataset.k];
+  $('#tieto').innerHTML = `<b>${esc(td.dataset.n)} · ${td.dataset.k}</b> ${esc(D.kriteerit[td.dataset.k])}<br>` +
+    `${M[tila][0]} <span class="${M[tila][1]}" style="font-weight:600">${tila}</span>` +
+    (peruste ? ` — ${esc(peruste)}` : '') +
+    `<div class="lahde">${refs.length ? refs.map(viite).join('<br>') : 'Ei lähdettä: julkista asiakirjaa ei löytynyt.'}</div>`;
+};
+
+$('#viitteet').innerHTML = [...num.entries()].map(([r, n]) => { const v = D.viitteet[r];
+  return `<li id="viite-${r}" value="${n}">${esc(v[0])} (${v[1]})${v[2] ? `<br><a href="${esc(v[2])}">${esc(v[2])}</a>` : ' — ei verkko-osoitetta (asiakirja poistettu tai ei julkinen)'}</li>`; }).join('');
+
+const h = decodeURIComponent(location.hash.slice(1));
+const rivi = h && document.getElementById(h);
+if (rivi) { rivi.classList.add('hl'); rivi.querySelector('td.m')?.click(); }
+</script>

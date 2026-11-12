@@ -14,7 +14,7 @@
   --acc:#2a78d6; --tie:#4a4843; --kevyt:#26251f;
   /* kokonaisarvion osat; jarjestys on kiintea, joten paikka kantaa
      tunnistetta varin rinnalla */
-  --o1:#2a78d6; --o2:#e07b39; --o3:#3f7d66; --o4:#7b4fa8;
+  --o1:#2a78d6; --o2:#e07b39; --o3:#3f7d66; --o4:#7b4fa8; --o5:#3aa0b5;
   /* lähibaana: sama 5-portainen asteikko kuin lahibaana.html:ssä (punainen
      = kaukana pääverkosta, sininen = lähellä), molemmissa teemoissa */
   --p0:#d7301f; --p1:#fc8d59; --p2:#fdcc8a; --p3:#91bfdb; --p4:#4575b4;
@@ -24,14 +24,14 @@
   --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
   --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
   --tie:#8d8a81; --kevyt:#c9c6bb;
-  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf; --o5:#5cc0d4;
 }}
 :root[data-theme="dark"]{
   --surface-0:#15150f; --surface-1:#1c1c17; --surface-2:#232320;
   --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
   --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
   --tie:#8d8a81; --kevyt:#c9c6bb;
-  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf; --o5:#5cc0d4;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface-0);color:var(--ink-1);
@@ -327,7 +327,8 @@ const NAKYMAT = {
         (k.lahiLahde[0] === 'kuva' ? ' — karttakuva sovitettu Digiroadiin automaattisesti' : '') + `.</span>` : ''),
   },
 };
-NAKYMAT.kok = null;   // kokonaisarviolla ei ole omia kohteita
+NAKYMAT.kok = null;
+NAKYMAT.talvi = null;   // ei kohteita kartalle: kaupunkisivulla kriteeritaulukko   // kokonaisarviolla ei ole omia kohteita
 const nakyma = () => NAKYMAT[mittari] ?? NAKYMAT.nakema;
 const luokka = (N, o) => N.luokat.find(l => l.test(o));
 
@@ -363,10 +364,36 @@ const LAHIBAANA_MAARITELMA = `<b>Lähibaanaprosentti: kuinka lähellä asuinrake
   DI-työ 2017) ja Kouvolalta on vain pääreitit. <b>Lahden kartta kattaa vain keskustan</b>,
   joten Lahden luku on aliarvio. Kunkin kaupungin lähde on kaupunkisivulla.`;
 
+/* Talvihoito: julkiset ohjeet Oulun mallia vastaan. Data: data/talvi.json,
+   koonti tools/talvi.py, kriteerivertailu ja viitteet: talvi.html. */
+const TALVI_K = {
+  K1: 'Oma, korkein hoitoluokka baanoille / pääreiteille',
+  K2: 'Lumen maksimisyvyys ja toimenpideaika',
+  K3: 'Karhea, ei-liukas jälki',
+  K4: 'Lumi linkotaan / poistetaan reunoilta',
+  K5: 'Väylälle lunta puskenut auraaja kunnostaa väylän',
+  K6: 'Palautetapahtumat käyttäjien ja kuljettajien kesken',
+  K7: 'Polanteen maksimikorkeus, kiristyy kevättä kohti',
+  K8: 'Pyöräilyagentit arvioivat reittejä',
+  K9: 'Urakoitsijan bonus / sanktio laadun mukaan',
+};
+const TALVI_MAARITELMA = `<b>Talvihoito: kuinka lähellä kaupungin julkiset pyöräväylien
+  talvihoidon ohjeet ovat Oulun mallia.</b> Oulu = 100 %.
+  <ol style="margin:8px 0 8px 18px;padding:0">
+  ${Object.entries(TALVI_K).map(([k, t]) => `<li><b>${k}</b> ${t}</li>`).join('')}
+  </ol>
+  <b>Laskenta:</b> jokainen kriteeri kyllä = 1, osittain = ½, ei = 0, <b>ei tietoa = 0</b>;
+  prosentti = summa / 9. Arvio perustuu kaupungin julkisiin asiakirjoihin (laatuvaatimukset,
+  urakan tehtäväkortit, hoitoluokitus, päätökset): mittari kertoo mihin kaupunki on julkisesti
+  sitoutunut, ei toteutunutta talvikuntoa. Julkaisematon laatuvaatimus ei sido ketään eikä
+  sitä voi tarkistaa, joten se on 0. Oulun omista julkisista lähteistä löytyy 83 %.
+  <br><br>Kriteerit kaupungeittain perusteluineen ja kaikki viitteet:
+  <a href="talvi.html">talvihoidon kriteerivertailu</a>. Haettu 12.11.2026.`;
+
 const MITTARIT = {
   kok:     { nimi: 'Kokonaisarvio', arvo: k => kokArvo(k), muoto: v => v.toFixed(0) + ' %',
-             selite: `<b>Neljän osan keskiarvo: näkemät, pysäkkisijainti, matkavastus ja
-               lähibaana.</b> Jokainen osa on jo osuus joka täyttää ohjeen, joten
+             selite: `<b>Viiden osan keskiarvo: näkemät, pysäkkisijainti, matkavastus,
+               lähibaana ja talvihoito.</b> Jokainen osa on jo osuus joka täyttää ohjeen, joten
                <b>100 % on tavoite</b> — luku ei ole "paras aineistossa" vaan "ohjeen mukaan".
                Palkki on jaettu osiin ja <b>segmentin leveys on sen osuus lopputuloksesta</b>,
                joten näkee suoraan mikä kaupunkia painaa.
@@ -492,6 +519,8 @@ const MITTARIT = {
                koska juuri tämä on se haitta jonka ohje nimeää.` },
   */
 
+  talvi: { nimi: 'Talvihoito', arvo: k => k.talvi, muoto: v => v.toFixed(0) + ' %',
+             selite: TALVI_MAARITELMA },
   lahibaana: { nimi: 'Lähibaana', arvo: k => k.lahibaana, muoto: v => v.toFixed(0) + ' %',
              // Mediaanimatka on konkreettisempi kuin prosentti: puolet asuinrakennuksista
              // on tätä lähempänä pääverkkoa (verkkoa pitkin, 2 km:iin katkaistuna).
@@ -499,11 +528,12 @@ const MITTARIT = {
              selite: LAHIBAANA_MAARITELMA },
 };
 
-/* Kokonaisarvio on neljän vaatimustayttymisen keskiarvo, ei normalisoitu pisteluku.
+/* Kokonaisarvio on viiden vaatimustayttymisen keskiarvo, ei normalisoitu pisteluku.
    Jokainen osa on jo osuus joka tayttaa vaatimuksen, joten 100 % on tavoite ja
    luku on tulkittavissa sellaisenaan - ei "paras aineistossa" vaan "ohjeen mukaan".
    Osat piirretaan erikseen, koska yksi luku piilottaa sen mika kaupunkia painaa. */
 const OSAT = [
+  { id: 'talvi',       nimi: 'talvihoito',       vari: '--o5', arvo: k => k.talvi ?? null },
   { id: 'lahibaana',   nimi: 'lähibaana',        vari: '--o4', arvo: k => k.lahibaana ?? null },
   { id: 'nakema',      nimi: 'näkemät',          vari: '--o1', arvo: k => k.nakema20 * 100 },
   { id: 'pysakki',     nimi: 'pysäkkisijainti',  vari: '--o2',
@@ -539,8 +569,9 @@ const summa = f => D.reduce((a, k) => a + (f(k) ?? 0), 0);
 const JOHDANNOT = {
   kok: {
     teksti: `Digiroadin tielinkeistä laskettu vertailu Suomen 20 suurimmalle kaupungille.
-      Neljä mittaria, jokainen prosentti joka täyttää Helsingin pyöräliikenteen suunnitteluohjeen
-      vaatimuksen — <b>tavoite on 100 %</b>. Palkki on jaettu osiin, joten näkee mikä
+      Viisi mittaria, jokainen prosentti jonka <b>tavoite on 100 %</b>: kolme mitataan Helsingin
+      pyöräliikenteen suunnitteluohjetta vastaan, lähibaana pääverkon etäisyytenä ja talvihoito
+      Oulun mallia vastaan. Palkki on jaettu osiin, joten näkee mikä
       kaupunkia painaa. Valitse yksittäinen vertailu nähdäksesi sen kohteet kartalla.`,
     luvut: () => { const t = D.map(kokArvo).filter(v => v != null);
       const taysi = D.filter(k => osat(k).every(o => o.v != null));
@@ -574,6 +605,17 @@ const JOHDANNOT = {
                   [fi.format(summa(k => k.pysVaarin)), 'väärällä puolella'],
                   [Math.round(summa(k => k.pysVaarin) / summa(k => k.pysArvioitavia) * 100) + ' %', 'osuus'],
                   [D.filter(k => k.pysakkiOsuus != null).length + '/' + D.length, 'kaupunkia kattaa']],
+  },
+  talvi: {
+    teksti: `Kuinka hyvin kaupungin <b>julkiset ohjeet</b> pyöräväylien talvihoidolle vastaavat
+      Oulun mallia: oma hoitoluokka pääreiteille, tiukka lumiraja, karhea jälki, polanneraja,
+      pyöräilyagentit ja urakoitsijan bonus laadusta. Yhdeksän kriteeriä, Oulu = 100 %.
+      <a href="talvi.html">Kriteerivertailu ja viitteet</a>.`,
+    luvut: () => { const m = D.filter(k => k.talvi != null && k.nimi !== 'Oulu');
+      const n = kr => D.filter(k => k.talviK?.[kr] === 'kyllä').length;
+      return [[m.length + 1 + '/' + D.length, 'kaupunkia arvioitu'],
+              [n('K1'), 'oma luokka pääreiteille'], [n('K3'), 'vaatii karhean jäljen'],
+              [n('K8'), 'pyöräilyagentit'], [n('K9'), 'bonus / sanktio']]; },
   },
   lahibaana: {
     teksti: `Kuinka lähellä asuinrakennuksia kaupungin pyöräilyn pääverkko on <b>verkkoa
@@ -617,12 +659,14 @@ const OHJELAHTEET = {
 OHJELAHTEET.lahibaana = [['https://pyoraliikenne.hel.fi/verkkotason-suunnittelu/pyoraliikenneverkon_suunnittelu/',
                  'Pyöräliikenneverkon suunnittelu', 'verkon hierarkia; ' +
                  '2 km:n raja on tämän vertailun oma valinta, ei ohjeen']];
+OHJELAHTEET.talvi = [['talvi.html', 'Oulun malli ja kaupunkien talvihoidon ohjeet',
+                      'kriteerivertailu ja viitteet', 'Talvihoito']];
 OHJELAHTEET.kok = [...OHJELAHTEET.nakema, ...OHJELAHTEET.pysakki, ...OHJELAHTEET.matkavastus,
-                   ...OHJELAHTEET.lahibaana];
+                   ...OHJELAHTEET.lahibaana, ...OHJELAHTEET.talvi];
 
 function piirraLahde() {
   $('#ohjelahde').innerHTML = 'Vaatimukset: ' + (OHJELAHTEET[mittari] ?? OHJELAHTEET.kok)
-    .map(([u, n, t]) => `<a href="${u}">Helsingin pyöräliikenteen suunnitteluohje — ${n}</a> (${t})`)
+    .map(([u, n, t, oma]) => `<a href="${u}">${oma ? oma + ' — ' : 'Helsingin pyöräliikenteen suunnitteluohje — '}${n}</a> (${t})`)
     .join('; ') + '.';
 }
 
@@ -674,7 +718,7 @@ function piirraVertailu() {
     OSAT.map(o => `<span><i class="s" style="background:var(${o.vari});border-radius:2px"></i>${o.nimi}</span>`).join('') +
     `<span style="color:var(--ink-3)">· palkin pituus on pistemäärä, segmentti sen osa · tavoite 100 %` +
     ` · puuttuva vertailu jätetään huomiotta, jolloin palkissa on vähemmän segmenttejä</span>`;
-  $('#vnote').innerHTML = M.selite + (mittari === 'lahibaana' ? '' :
+  $('#vnote').innerHTML = M.selite + (['lahibaana', 'talvi'].includes(mittari) ? '' :
     `<br><br><b>Tämä on alaraja, ei arvio.</b> Aineistossa on vain väylän keskilinja — ei seiniä,
      luiskia, kaiteita eikä kasvillisuutta. Jokainen niistä vain lisää peittoa, joten todellisia
      puutteita on enemmän kuin tässä näkyy, ei vähemmän. Klikkaa kaupunkia nähdäksesi kohteet.`);
@@ -703,6 +747,8 @@ const OSATIEDOT = {
       : `${fi.format(k.pysArvioitavia)} arvioitavaa, ${fi.format(k.pysVaarin)} väärin` },
   matkavastus: { mittari: 'matkavastus',
     tiedot: k => `${fi.format(k.verkkoKm)} km, ${k.raskasOsuus} % raskaissa nousuissa` },
+  talvi:       { mittari: 'talvi',
+    tiedot: k => k.talviK ? `${Object.values(k.talviK).filter(v => v === 'kyllä').length}/9 kriteeriä täyttyy` : 'ei arvioitu' },
   lahibaana:   { mittari: 'lahibaana',
     tiedot: k => k.lahibaana == null ? 'ei koneluettavaa pääverkkoa'
       : `mediaani ${fi.format(k.lahiMed)} m pääverkolle` },
@@ -744,6 +790,30 @@ function piirraYhteenveto(k) {
   el.append(yht);
 }
 
+// Merkit CSS-ympyröinä (fonttien ●/◐ ovat eri kokoisia), samat kuin talvi.html:ssä.
+const _mk = st => `<i style="display:inline-block;width:12px;height:12px;border-radius:50%;box-sizing:border-box;vertical-align:-1px;${st}"></i>`;
+const TALVI_MERKKI = {
+  'kyllä': [_mk('background:var(--o3)'), 'var(--o3)'],
+  'osittain': [_mk('background:linear-gradient(90deg,var(--o2) 50%,transparent 50%);border:1.5px solid var(--o2)'), 'var(--o2)'],
+  'ei': [_mk('border:1.5px solid var(--ink-3)'), 'var(--ink-3)'],
+  'ei tietoa': [`<i style="display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--ink-3);vertical-align:2px;margin:0 4px"></i>`, 'var(--ink-3)'] };
+function piirraTalvi(k) {
+  $('#ksub').innerHTML = k.talvi == null ? 'Ei arvioitu.' :
+    `<b>Talvihoito ${k.talvi.toFixed(0)} %</b> — julkiset ohjeet Oulun mallia vastaan. ` +
+    `Perustelut ja lähteet: <a href="talvi.html#${encodeURIComponent(k.nimi)}">kriteerivertailu</a>.`;
+  const el = $('#yhteenveto'); el.innerHTML = '';
+  if (!k.talviK) return;
+  const t = document.createElement('table');
+  t.style.cssText = 'border-collapse:collapse;font-size:13.5px;width:100%;max-width:720px';
+  t.innerHTML = Object.entries(TALVI_K).map(([kr, nimi]) => {
+    const v = k.talviK[kr], [m, c] = TALVI_MERKKI[v];
+    return `<tr style="border-bottom:1px solid var(--rule)"><td style="padding:5px 8px;color:var(--ink-3)">${kr}</td>` +
+      `<td style="padding:5px 8px">${nimi}</td><td style="padding:5px 8px;text-align:center">${m}</td>` +
+      `<td style="padding:5px 8px;color:var(--ink-2)">${v}</td></tr>`;
+  }).join('');
+  el.append(t);
+}
+
 let kohdeIndeksi = null;
 async function avaaKaupunki(nimi) {
   K = D.find(x => x.nimi === nimi);
@@ -766,15 +836,18 @@ async function avaaKaupunki(nimi) {
     `<span style="color:var(--ink-3)">· rulla tai nipistys zoomaa, raahaus siirtää</span>`;
 
   // Kokonaisarvio: oma yhteenvetosivu kartan ja listan sijaan
-  const yhteenveto = mittari === 'kok';
+  const yhteenveto = mittari === 'kok' || mittari === 'talvi';
   $('#yhteenveto').classList.toggle('hide', !yhteenveto);
   $('#kartta-ja-lista').classList.toggle('hide', yhteenveto);
   $('#klegend').classList.toggle('hide', yhteenveto);
   $('#vlegend').classList.toggle('hide', yhteenveto);
   $('#knote').classList.toggle('hide', yhteenveto);
   if (yhteenveto) {
-    $('#ksub').innerHTML = `${OSAT.length} vertailua, kukin prosentti jonka tavoite on 100.`;
-    piirraYhteenveto(K);
+    if (mittari === 'talvi') piirraTalvi(K);
+    else {
+      $('#ksub').innerHTML = `${OSAT.length} vertailua, kukin prosentti jonka tavoite on 100.`;
+      piirraYhteenveto(K);
+    }
     kohteet = []; valittu = null;
     if (!kohdeIndeksi) location.hash = encodeURIComponent(nimi);
     return;
