@@ -28,8 +28,19 @@ Pois verkosta: moottoritie (linkkityyp 1), moottoriliikennetie (4), ramppi (6)
 ja huoltoaukko (13); niillä ei saa pyöräillä. Solmut ovat linkkien päätepisteet,
 joten silta ei yhdisty alittavaan katuun.
 
-  tools/lahibaana.py -> data/lahibaana/<koodi>.json.gz, data/lahibaana.json
+ETUSIVUN LUKU (viz/kaupungit.json, kenttä lahibaana) on yksi näistä:
+taso "pääreitti tai parempi", rajaus koko kunta, huoneistoalalla painotettu.
+Baana yksin ei kelpaa, koska baanaluokka on vain neljällä kaupungilla;
+"mikä tahansa reitti" taas sekoittaa kaupunkien omat aluereittiluokat.
+Taajamarajaus ei muuta lukuja olennaisesti (asuinalasta 0-2 % taajamien
+ulkopuolella, Joensuussa ja Lappeenrannassa 13-14 %), joten koko kunta.
+Kaupunkisivun kohteet ovat RUUTU-metrin ruutuja: huoneistoalalla painotettu
+prosentti, huonoin ensin.
+
+  tools/lahibaana.py -> data/lahibaana/<koodi>.json.gz, data/lahibaana.json,
+                        viz/kaupungit.json (liitetään)
 """
+import collections
 import gzip
 import heapq
 import json
@@ -44,6 +55,7 @@ from shapely.geometry import shape
 
 JUURI = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MAKS = 2000.0
+RUUTU = 250
 KIELLETTY = {1, 4, 6, 13}
 TAAJAMAT = ('https://paikkatiedot.ymparisto.fi/geoserver/liiteri_taajamat/wfs?service=WFS'
             '&version=2.0.0&request=GetFeature&typeNames=liiteri_taajamat:taajamat25'
@@ -181,7 +193,19 @@ def kunta(koodi, luokitus, taaj):
     json.dump({'nimi': dr['nimi'], 'tasot': [t for t in TASOT if tulos['rajaus']['kunta'][t] is not None],
                'verkko': verkko, 'reitit': reitit, 'rak': rivit},
               gzip.open(f'{JUURI}/data/lahibaana/{koodi}.json.gz', 'wt'), separators=(',', ':'))
+    tulos['ruudut'] = ruudut(rak, pros['paa'])
     return dr['nimi'], tulos
+
+
+def ruudut(rak, p):
+    r = collections.defaultdict(lambda: np.zeros(5))   # ala, ala*p, ala*x, ala*y, n
+    for (x, y, a, _), v in zip(rak, p):
+        a = max(a, 1.0)
+        r[(int(x // RUUTU), int(y // RUUTU))] += [a, a * v, a * x, a * y, 1]
+    out = [{'x': round(q[2] / q[0]), 'y': round(q[3] / q[0]), 'p': round(q[1] / q[0] * 100, 1),
+            'ala': round(q[0]), 'n': int(q[4]), 'rx': i * RUUTU, 'ry': j * RUUTU}
+           for (i, j), q in r.items()]
+    return sorted(out, key=lambda o: (o['p'], -o['ala']))
 
 
 if __name__ == '__main__':
@@ -191,7 +215,23 @@ if __name__ == '__main__':
     for koodi in sorted(luok):
         nimi, r = kunta(koodi, luok[koodi], taaj)
         kaikki[koodi] = {'nimi': nimi, **r}
+    ruutu = {k: r.pop('ruudut') for k, r in kaikki.items()}
     json.dump(kaikki, open(f'{JUURI}/data/lahibaana.json', 'w'), ensure_ascii=False, indent=1)
+
+    # Etusivulle: pääreitti tai parempi, koko kunta. Muut kaupungit null.
+    kpol = f'{JUURI}/viz/kaupungit.json'
+    K = json.load(open(kpol))
+    for k in K:
+        r = kaikki.get(f"{int(k['koodi']):03d}")
+        q = r and r['rajaus']['kunta']['paa']
+        k['lahibaana'] = q and q['painotettu']
+        k['lahiMed'] = q and q['mediaaniM']
+        k['lahiKiinni'] = q and q['kiinni']
+        k['lahiYli2'] = q and q['yli2km']
+        k['lahiRak'] = r and r['rakennuksia']
+        k['lahiRuudut'] = ruutu[f"{int(k['koodi']):03d}"] if r else []
+    json.dump(K, open(kpol, 'w'), ensure_ascii=False, separators=(',', ':'))
+    print(f'\nliitetty viz/kaupungit.json ({len(json.dumps(K)) / 1e6:.1f} MB)')
 
     v = lambda x: '     -' if x is None else f'{x["painotettu"]:>5.0f}%'
     print(f'{"":<14}{"keskustaajama":<22}' + ''.join(f'{r:>22}' for r in RAJAUS))

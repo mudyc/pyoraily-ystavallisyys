@@ -14,21 +14,21 @@
   --acc:#2a78d6; --tie:#4a4843; --kevyt:#26251f;
   /* kokonaisarvion osat; jarjestys on kiintea, joten paikka kantaa
      tunnistetta varin rinnalla */
-  --o1:#2a78d6; --o2:#e07b39; --o3:#3f7d66;
+  --o1:#2a78d6; --o2:#e07b39; --o3:#3f7d66; --o4:#7b4fa8;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --surface-0:#15150f; --surface-1:#1c1c17; --surface-2:#232320;
   --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
   --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
   --tie:#8d8a81; --kevyt:#c9c6bb;
-  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf;
 }}
 :root[data-theme="dark"]{
   --surface-0:#15150f; --surface-1:#1c1c17; --surface-2:#232320;
   --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
   --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
   --tie:#8d8a81; --kevyt:#c9c6bb;
-  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface-0);color:var(--ink-1);
@@ -111,7 +111,6 @@ a{color:var(--acc)}
   <div class="ctl" style="margin:14px 0 18px">
     <label>Vertailu</label>
     <span class="seg" id="mittari"></span>
-    <a href="lahibaana.html" style="font-size:13px">Lähibaanaprosentti (kokeilu) →</a>
   </div>
 
   <p class="sub" id="johdanto"></p>
@@ -145,7 +144,8 @@ a{color:var(--acc)}
     Väylävirasto (ylläpito siirtynyt Fintrafficille, avoin rajapinta jäädytetty kevääseen 2026).
     Väestö: Tilastokeskus.
     Laskenta: <a href="https://github.com/mudyc/serverless_index">serverless_index</a>.
-    <br>Kokeilu: <a href="lahibaana.html">Lähibaanaprosentti</a> — kuinka kaukana asuinrakennuksista on pyöräilyn pääverkko.
+    Asuinrakennukset: Ryhti, SYKE. Pyöräilyn pääverkko: kaupunkien avoimet aineistot,
+    Vaasa © OpenStreetMap contributors (ODbL).
     <br><span id="ohjelahde"></span>
   </footer>
 </div>
@@ -295,24 +295,72 @@ const NAKYMAT = {
       `kulkee katoksen ja ajoradan välistä. Valitse kohde nähdäksesi <b>mittausjanan</b> ` +
       `katoksesta ajoradalle — testi on se, ylittääkö pyörätie sen.`,
   },
+  lahibaana: {
+    otsikko: 'Asuinalueet kaukana pääverkosta',
+    kohteet: k => k.lahiRuudut ?? [],
+    // Luokat matkana: 100 % = reitin varrella, 0 % = 2 km, lineaarinen.
+    luokat: [
+      { nimi: 'yli 1,5 km pääverkolle (< 25 %)',    v: '--l4', test: o => o.p < 25 },
+      { nimi: '1–1,5 km (25–50 %)',                 v: '--l3', test: o => o.p < 50 },
+      { nimi: '0,5–1 km (50–75 %)',                 v: '--l2', test: o => o.p < 75 },
+      { nimi: 'alle 0,5 km (≥ 75 %)',               v: '--l1', test: () => true },
+    ],
+    koonSelite: 'pylpyrän koko = ruudun asuinala; ruutu 250 m',
+    koko: o => 3 + Math.min(10, Math.sqrt(o.ala) / 25),
+    arvo: o => o.p.toFixed(0) + ' %',
+    tunnus: o => `${fi.format(o.n)} rak., ${fi.format(o.ala)} m²`,
+    vihje: o => `<b>${o.p.toFixed(0)} %</b> — keskimäärin ≈ ${fi.format(Math.round((100 - o.p) * 20))} m ` +
+      `verkkoa pitkin pääverkolle<br>${fi.format(o.n)} asuinrakennusta, ${fi.format(o.ala)} m² huoneistoalaa` +
+      `<br><span style="color:#999">250 m ruutu, huoneistoalalla painotettu</span>`,
+    patka: o => [[o.rx, o.ry], [o.rx + 250, o.ry], [o.rx + 250, o.ry + 250], [o.rx, o.ry + 250], [o.rx, o.ry]],
+    patkaSelite: 'valittu 250 m ruutu',
+    tiivis: k => k.lahibaana == null ? 'Kaupungin pyöräilyn pääverkkoa ei ole saatavilla koneluettavana.' :
+      `${fi.format(k.lahiRak)} asuinrakennusta. Matka verkkoa pitkin lähimmälle pääreitille: ` +
+      `mediaani <b>${fi.format(k.lahiMed)} m</b>, reitin varrella ${k.lahiKiinni} %, yli 2 km ${k.lahiYli2} %. ` +
+      `Rakennustason kartta reitteineen: <a href="lahibaana.html#${String(k.koodi).padStart(3, '0')}">lähibaanakartta</a>.`,
+  },
 };
 NAKYMAT.kok = null;   // kokonaisarviolla ei ole omia kohteita
 const nakyma = () => NAKYMAT[mittari] ?? NAKYMAT.nakema;
 const luokka = (N, o) => N.luokat.find(l => l.test(o));
 
+/* Lahibaanaprosentti. Maaritelma on tassa yhdessa paikassa, koska sama teksti
+   on seka vertailun selite etta kokonaisarvion osa. Laskenta: tools/lahibaana.py. */
+const LAHIBAANA_MAARITELMA = `<b>Lähibaanaprosentti: kuinka lähellä asuinrakennuksia kaupungin
+  pyöräilyn pääverkko on, verkkoa pitkin mitattuna.</b>
+  <ol style="margin:8px 0 8px 18px;padding:0">
+  <li><b>Rakennukset:</b> Ryhdin käytössä olevat pientalot ja kerrostalot (ei vapaa-ajan asuntoja),
+    koko kunnasta. Sijainti on rakennuksen keskipiste.</li>
+  <li><b>Pääverkko:</b> kaupungin oma aineisto, luokat <i>baana</i> ja <i>pääreitti</i> (Turussa myös
+    seudullinen reitti). Suunniteltua, rakentamatonta verkkoa ei lasketa. Reitit on sovitettu
+    Digiroadin linkeille: linkki kuuluu reittiin, jos reittiviiva kulkee vähintään puolella sen
+    pituudesta 15 metrin sisällä ja samansuuntaisesti.</li>
+  <li><b>Matka d:</b> rakennus liitetään lähimpään pyöräiltävään Digiroad-linkkiin (ei moottoritietä
+    eikä ramppia), ja siitä mitataan lyhin reitti tieverkkoa pitkin lähimmälle pääverkon linkille.
+    Matkaa talolta linkille ei lasketa.</li>
+  <li><b>Rakennuksen arvo:</b> 100 % × max(0, 1 − d / 2000 m). Reitin varrella 100 %,
+    1 km:n päässä 50 %, 2 km tai kauempana 0 %.</li>
+  <li><b>Kaupungin luku:</b> rakennusten arvojen keskiarvo <b>huoneistoalalla painotettuna</b>, jotta
+    kerrostalo painaa asuntojensa verran eikä yhden pientalon verran.</li>
+  </ol>
+  <b>Varaukset.</b> Mikä on "pääreitti", on kaupungin oma päätös: Turku luokittelee pääreitiksi lähes
+  koko kevytverkkonsa, Espoo vain osan. Luku mittaa siis myös luokittelutapaa. Kuntaliitosten
+  maaseutu laskee lukua (Joensuu, Lappeenranta). Kaupungit ilman koneluettavaa pääverkkoa
+  puuttuvat.`;
+
 const MITTARIT = {
   kok:     { nimi: 'Kokonaisarvio', arvo: k => kokArvo(k), muoto: v => v.toFixed(0) + ' %',
-             selite: `<b>Kolmen vaatimustäyttymisen keskiarvo: näkemät, pysäkkisijainti ja
-               matkavastus.</b> Jokainen osa on jo osuus joka täyttää ohjeen, joten
+             selite: `<b>Neljän osan keskiarvo: näkemät, pysäkkisijainti, matkavastus ja
+               lähibaana.</b> Jokainen osa on jo osuus joka täyttää ohjeen, joten
                <b>100 % on tavoite</b> — luku ei ole "paras aineistossa" vaan "ohjeen mukaan".
                Palkki on jaettu osiin ja <b>segmentin leveys on sen osuus lopputuloksesta</b>,
                joten näkee suoraan mikä kaupunkia painaa.
                <br><br><b>Puuttuva vertailu jätetään huomiotta.</b> Keskiarvo lasketaan
                niistä osista jotka ovat, eikä kaupunkia eroteta omaan ryhmäänsä. Seuraus on
-               syytä tietää: puuttuva osa on lähes aina pysäkkisijainti, joka on useimmilla
-               alin osa — joten sen pois jääminen <i>nostaa</i> keskiarvoa. Palkista sen
-               näkee: vajaassa on kaksi segmenttiä kolmen sijaan. Viisi kaupunkia putoaa,
-               koska yhdelläkään niiden katoksista ei ole maastokoordinaattia.
+               syytä tietää: puuttuvat osat ovat pysäkkisijainti ja lähibaana, ja ne ovat
+               useimmilla alimmat — joten niiden pois jääminen <i>nostaa</i> keskiarvoa. Palkista
+               sen näkee: vajaassa on vähemmän segmenttejä. Pysäkkisijainnista puuttuu viisi
+               kaupunkia (ei maastokoordinaatteja), lähibaanasta ne joiden pääverkko on vain PDF:nä.
                <br><br><b>Osat painavat yhtä paljon,</b> koska mikään ei kerro niiden
                keskinäisestä tärkeydestä. Matkavastus mittaa osin maastoa eikä suunnittelua —
                Seinäjoki ja Pori ovat tasaisia — joten sen osuus kannattaa lukea varauksella.
@@ -429,13 +477,16 @@ const MITTARIT = {
                koska juuri tämä on se haitta jonka ohje nimeää.` },
   */
 
+  lahibaana: { nimi: 'Lähibaana', arvo: k => k.lahibaana, muoto: v => v.toFixed(0) + ' %',
+             selite: LAHIBAANA_MAARITELMA },
 };
 
-/* Kokonaisarvio on kolmen vaatimustayttymisen keskiarvo, ei normalisoitu pisteluku.
+/* Kokonaisarvio on neljän vaatimustayttymisen keskiarvo, ei normalisoitu pisteluku.
    Jokainen osa on jo osuus joka tayttaa vaatimuksen, joten 100 % on tavoite ja
    luku on tulkittavissa sellaisenaan - ei "paras aineistossa" vaan "ohjeen mukaan".
    Osat piirretaan erikseen, koska yksi luku piilottaa sen mika kaupunkia painaa. */
 const OSAT = [
+  { id: 'lahibaana',   nimi: 'lähibaana',        vari: '--o4', arvo: k => k.lahibaana ?? null },
   { id: 'nakema',      nimi: 'näkemät',          vari: '--o1', arvo: k => k.nakema20 * 100 },
   { id: 'pysakki',     nimi: 'pysäkkisijainti',  vari: '--o2',
     arvo: k => k.pysakkiOsuus == null ? null : 100 - k.pysakkiOsuus },
@@ -470,7 +521,7 @@ const summa = f => D.reduce((a, k) => a + (f(k) ?? 0), 0);
 const JOHDANNOT = {
   kok: {
     teksti: `Digiroadin tielinkeistä laskettu vertailu Suomen 20 suurimmalle kaupungille.
-      Kolme mittaria, jokainen osuus joka täyttää Helsingin pyöräliikenteen suunnitteluohjeen
+      Neljä mittaria, jokainen prosentti joka täyttää Helsingin pyöräliikenteen suunnitteluohjeen
       vaatimuksen — <b>tavoite on 100 %</b>. Palkki on jaettu osiin, joten näkee mikä
       kaupunkia painaa. Valitse yksittäinen vertailu nähdäksesi sen kohteet kartalla.`,
     luvut: () => { const t = D.map(kokArvo).filter(v => v != null);
@@ -506,6 +557,17 @@ const JOHDANNOT = {
                   [Math.round(summa(k => k.pysVaarin) / summa(k => k.pysArvioitavia) * 100) + ' %', 'osuus'],
                   [D.filter(k => k.pysakkiOsuus != null).length + '/' + D.length, 'kaupunkia kattaa']],
   },
+  lahibaana: {
+    teksti: `Kuinka lähellä asuinrakennuksia kaupungin pyöräilyn pääverkko on <b>verkkoa
+      pitkin</b>. Rakennus saa 100 %, jos sen vieressä kulkee baana tai pääreitti, ja 0 %,
+      jos pääverkolle on 2 km tai enemmän; välissä lineaarisesti. Kaupungin luku on
+      huoneistoalalla painotettu keskiarvo. Tarkka määrittely alla.`,
+    luvut: () => { const m = D.filter(k => k.lahibaana != null);
+      return [[m.length + '/' + D.length, 'kaupunkia kattaa'],
+              [fi.format(m.reduce((a, k) => a + k.lahiRak, 0)), 'asuinrakennusta'],
+              [Math.max(...m.map(k => k.lahibaana)).toFixed(0) + ' %', 'paras'],
+              [Math.min(...m.map(k => k.lahibaana)).toFixed(0) + ' %', 'huonoin']]; },
+  },
   matkavastus: {
     teksti: `Paljonko verkosta kuluu raskaisiin nousuihin. Ohje määrittelee matkavastuksen
       <i>S = H² / L</i> ja pitää alle <b>0,2</b> jäävää arvoa erityisen tavoiteltavana.
@@ -532,7 +594,11 @@ const OHJELAHTEET = {
                  'Pysäkkijärjestelyt', 'katos odotustilaan pyörätien ja ajoradan väliin, ' +
                  'vähintään 0,3 m pyörätien reunasta']],
 };
-OHJELAHTEET.kok = [...OHJELAHTEET.nakema, ...OHJELAHTEET.pysakki, ...OHJELAHTEET.matkavastus];
+OHJELAHTEET.lahibaana = [['https://pyoraliikenne.hel.fi/verkkotason-suunnittelu/pyoraliikenneverkon_suunnittelu/',
+                 'Pyöräliikenneverkon suunnittelu', 'verkon hierarkia; ' +
+                 '2 km:n raja on tämän vertailun oma valinta, ei ohjeen']];
+OHJELAHTEET.kok = [...OHJELAHTEET.nakema, ...OHJELAHTEET.pysakki, ...OHJELAHTEET.matkavastus,
+                   ...OHJELAHTEET.lahibaana];
 
 function piirraLahde() {
   $('#ohjelahde').innerHTML = 'Vaatimukset: ' + (OHJELAHTEET[mittari] ?? OHJELAHTEET.kok)
@@ -585,11 +651,11 @@ function piirraVertailu() {
   $('#osaselite').innerHTML = mittari !== 'kok' ? '' :
     OSAT.map(o => `<span><i class="s" style="background:var(${o.vari});border-radius:2px"></i>${o.nimi}</span>`).join('') +
     `<span style="color:var(--ink-3)">· palkin pituus on pistemäärä, segmentti sen osa · tavoite 100 %` +
-    ` · puuttuva vertailu jätetään huomiotta, jolloin palkissa on kaksi segmenttiä kolmen sijaan</span>`;
-  $('#vnote').innerHTML = M.selite +
+    ` · puuttuva vertailu jätetään huomiotta, jolloin palkissa on vähemmän segmenttejä</span>`;
+  $('#vnote').innerHTML = M.selite + (mittari === 'lahibaana' ? '' :
     `<br><br><b>Tämä on alaraja, ei arvio.</b> Aineistossa on vain väylän keskilinja — ei seiniä,
      luiskia, kaiteita eikä kasvillisuutta. Jokainen niistä vain lisää peittoa, joten todellisia
-     puutteita on enemmän kuin tässä näkyy, ei vähemmän. Klikkaa kaupunkia nähdäksesi kohteet.`;
+     puutteita on enemmän kuin tässä näkyy, ei vähemmän. Klikkaa kaupunkia nähdäksesi kohteet.`);
 }
 
 /* ── kaupunkinäkymä ───────────────────────────────────────────────────── */
@@ -615,6 +681,9 @@ const OSATIEDOT = {
       : `${fi.format(k.pysArvioitavia)} arvioitavaa, ${fi.format(k.pysVaarin)} väärin` },
   matkavastus: { mittari: 'matkavastus',
     tiedot: k => `${fi.format(k.verkkoKm)} km, ${k.raskasOsuus} % raskaissa nousuissa` },
+  lahibaana:   { mittari: 'lahibaana',
+    tiedot: k => k.lahibaana == null ? 'ei koneluettavaa pääverkkoa'
+      : `mediaani ${fi.format(k.lahiMed)} m pääverkolle` },
 };
 
 function piirraYhteenveto(k) {
@@ -648,7 +717,7 @@ function piirraYhteenveto(k) {
   const yht = document.createElement('div');
   yht.style.cssText = 'padding:14px 0 2px;font-size:13px;color:var(--ink-2)';
   yht.innerHTML = `<b style="color:var(--ink-1)">Kokonaisarvio ${pisteet.toFixed(0)} %</b> — ` +
-    `${mukana === OSAT.length ? 'kolmen osan' : mukana + ' osan'} keskiarvo. ` +
+    `${mukana} osan keskiarvo${mukana < OSAT.length ? ` (${OSAT.length - mukana} puuttuu)` : ''}. ` +
     `Musta viiva on kunkin osan paras tulos. Klikkaa riviä nähdäksesi sen kohteet kartalla.`;
   el.append(yht);
 }
@@ -682,7 +751,7 @@ async function avaaKaupunki(nimi) {
   $('#vlegend').classList.toggle('hide', yhteenveto);
   $('#knote').classList.toggle('hide', yhteenveto);
   if (yhteenveto) {
-    $('#ksub').innerHTML = `Kolme vertailua, kukin osuus joka täyttää ohjeen vaatimuksen.`;
+    $('#ksub').innerHTML = `${OSAT.length} vertailua, kukin prosentti jonka tavoite on 100.`;
     piirraYhteenveto(K);
     kohteet = []; valittu = null;
     if (!kohdeIndeksi) location.hash = encodeURIComponent(nimi);
