@@ -23,3 +23,6 @@ data/pysakit.json
 
 # Hoitoluokkakokeilun aineisto; kokeilu johti kielteiseen tulokseen (README)
 viz/hoitoluokat-jkl.json
+
+# Reittilähteiden raakadata, haetaan tools/reitit.py:lla (Espoo yksin ~640 MB)
+data/reitit/raw/
