@@ -17,7 +17,7 @@ pituus tulostetaan erikseen, koska esim. Turun aineisto kattaa koko seudun. Jos 
 pieneksi, vika on koordinaatistossa tai lähteen piirtotavassa eikä
 Digiroadissa - ja se pitää nähdä ennen kuin lukuja käytetään.
 
-  tools/reitit_linkit.py [--etaisyys 15] -> data/reitit/linkit.json
+  tools/reitit_linkit.py [--etaisyys 15] [koodi ...] -> data/reitit/linkit.json
 """
 import collections
 import glob
@@ -95,7 +95,11 @@ def lahin(xy, ang, A, B, tree, maxd):
 
 def kunta(polku, maxd, tulos):
     koodi = int(os.path.basename(polku)[:3])
-    reitit = json.load(gzip.open(polku))['features']
+    rd = json.load(gzip.open(polku))
+    reitit = rd['features']
+    # Karkeasta karttakuvasta georeferoidut reitit (tools/reitit.py) kantavat
+    # oman sovitusetäisyytensä: pikselin tarkkuus voi olla yli 15 m.
+    maxd = max(maxd, rd.get('sovitusetaisyys', 0))
     dr = json.load(gzip.open(f'{JUURI}/data/kunnat/{koodi:03d}.geojson.gz'))
     feats = dr['features']
     A, B, LI = segmentit(feats)
@@ -112,7 +116,7 @@ def kunta(polku, maxd, tulos):
         xy, ang = naytteet(r['geometry']['coordinates'])
         if not len(xy):
             continue
-        d, s = lahin(xy, ang, A, B, tree, 25.0)
+        d, s = lahin(xy, ang, A, B, tree, max(25.0, maxd))
         # Digiroad on leikattu kuntarajalta, osa lähteistä ei (Turun seutu).
         # Näyte on kunnassa, jos jokin kunnan linkki on ULKO metrin sisällä.
         sis = np.zeros(len(xy), bool)
@@ -149,9 +153,14 @@ def kunta(polku, maxd, tulos):
 
 
 if __name__ == '__main__':
-    maxd = float(sys.argv[sys.argv.index('--etaisyys') + 1]) if '--etaisyys' in sys.argv else 15.0
-    tulos = {}
+    a = sys.argv[1:]
+    maxd = float(a[a.index('--etaisyys') + 1]) if '--etaisyys' in a else 15.0
+    # Kuntakoodit argumentteina: päivitetään vain ne, muut säilyvät.
+    valitut = {f'{int(x):03d}' for x in a if x.isdigit() and '--etaisyys' not in a[a.index(x) - 1:a.index(x)]}
+    ulos = f'{JUURI}/data/reitit/linkit.json'
+    tulos = json.load(open(ulos)) if valitut and os.path.exists(ulos) else {}
     for polku in sorted(glob.glob(f'{JUURI}/data/reitit/*.geojson.gz')):
-        kunta(polku, maxd, tulos)
+        if not valitut or os.path.basename(polku)[:3] in valitut:
+            kunta(polku, maxd, tulos)
     json.dump(tulos, open(f'{JUURI}/data/reitit/linkit.json', 'w'))
     print(f'\n{sum(len(v) for v in tulos.values())} linkkiä luokiteltu -> data/reitit/linkit.json')

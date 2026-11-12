@@ -23,9 +23,14 @@ kaupungin opastettuja pääreittejä) ja vaatii Suomen OSM-otteen:
 Vaasan tiedosto on ODbL-lisensoitu (© OpenStreetMapin tekijät) ja pidetään
 erillään muusta aineistosta: data/reitit/905.osm.geojson.gz.
 
-Jyväskylän pää- ja aluereitit ovat vain karttapalvelun kuvatiilinä ja
-Ouluun, Kuopioon, Lahteen ja PDF-kaupunkeihin ei ole koneluettavaa lähdettä;
-ks. README.
+Jyväskylän pää- ja aluereitit ovat vain karttapalvelun kuvatiilinä
+(jyvaskyla.asiointi.fi/IMS, taso "Pyorailyn paa- ja aluereitit"). Tiilet
+haetaan curlilla hakemistoon data/reitit/raw/jkl_z16/ (palvelu hylkää
+Pythonin oletustunnisteen; tunnistetta ei naamioida) ja muunnetaan viivoiksi
+tools/rasteri.py:llä. Tiiliruudukko on GK26 ilman kaistanumeroa, origo (0, 0),
+z16 = 2 m/px = 512 m tiili. Punainen = pääreitti, sininen = aluereitti.
+
+Yksi kaupunki: tools/reitit.py 179
 
 Riippuvuudet: pyproj, pyshp; Vaasaan lisäksi osmium (pyosmium).
 """
@@ -83,6 +88,19 @@ LAHTEET = {
     'oulu_baana.zip': 'https://avoindata.suomi.fi/data/dataset/74d3f0b2-7f67-4089-95e0-c2174aa256c8/resource/003807a2-75fd-404f-b73c-ee4d8c438e05/download/baanaverkko.shp.zip',
     'oulu_paa.zip': 'https://avoindata.suomi.fi/data/dataset/d2ba0440-1bee-47d9-9e7a-8c33a4eb879b/resource/f1812df3-6b9b-43d1-a6b5-ea5efb0b4772/download/paa_ja_aluereitit.zip',
     'joe': wfs2('https://geoserver.joensuu.fi/geoserver/ows', 'pyoraily:paaverkko2023'),
+    'kuo.geojson': 'https://services6.arcgis.com/HoTvas7L0vfiOSZ8/arcgis/rest/services/'
+                   + urllib.parse.quote('Kuopion_seudun_kävelyn_ja_pyöräilyn_edistämisohjelma_WFL1')
+                   + '/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=3067&f=geojson',
+    # PDF-kartat (kuvat), georeferoidaan Digiroadia vasten: ks. RASTERIT.
+    'rov.pdf': 'https://rovaniemi.cloudnc.fi/download/noname/%7B5213ae23-f7d8-4cca-85e5-c23dd1048875%7D/998299',
+    'mik.pdf': 'https://mikkeli.cloudnc.fi/download/noname/%7B061e6ae0-6a5b-4a10-a833-3b85826e7bdb%7D/99887',
+    'salo.pdf': 'https://www.traficom.fi/sites/default/files/media/file/Salo_KaPy_kehittamisohjelma_2016.pdf',
+    'kou.pdf': 'https://www.kouvola.fi/wp-content/uploads/2021/09/Kavelyn-ja-pyorailyn-edistamissuunnitelma_saavutettava.pdf',
+    'porvoo.pdf': 'https://www.porvoo.fi/app/uploads/2023/09/Porvoon-pyoraliikenteen-edistamisohjelma.pdf',
+    'hml.pdf': 'https://www.hameenlinna.fi/wp-content/uploads/2026/06/Hameenlinnan-pyorailyn-tavoiteverkko.pdf',
+    'pori.pdf': 'https://cms.pori.fi/uploads/sites/2/2022/11/diplomityo_jalankulku_ja_pyorailyolosuhteiden_kehittaminen_porissa_lopullinen.pdf',
+    'sjk.pdf': 'https://www.traficom.fi/sites/default/files/media/file/Seinajoki_loppuraportti_2019.pdf',
+    'lahti.pdf': 'https://lahti-prod.oncloudos.com/kokous/20251075-7-342735.PDF',
     'lpr.geojson': 'https://avoindata.suomi.fi/data/dataset/e13d0ddd-3b77-4ce2-954c-9ca06508470e/resource/58597085-afcf-407e-8a3a-6b1cdfa743d1/download/pyorailyreitit_lpr.geojson',
 }
 
@@ -319,8 +337,188 @@ def vaasa_osm(pbf):
         yield ls, 'paareitti', 'olemassa', f"{t.get('ref')} {t.get('name')}", f'osm_r{rid}'
 
 
+def jyvaskyla():
+    import glob as _glob
+    import rasteri
+    d = f'{RAW}/jkl_z16'
+    tiilet = {tuple(int(v) for v in os.path.basename(f)[:-4].split('_')): f
+              for f in _glob.glob(f'{d}/*.png')}
+    if not tiilet:
+        sys.exit(f'Jyväskylän tiilet puuttuvat: {d}/ (ks. ohje tiedoston alussa)')
+    # 8 x 8 tiilen lohkoissa: koko kunnan mosaiikki olisi ~1 GB. Viiva katkeaa
+    # lohkon rajalla, mikä ei haittaa sovitusta (näytteet, ei topologia).
+    lohkot = {}
+    for (tx, ty), f in tiilet.items():
+        lohkot.setdefault((tx // 8, ty // 8), {})[(tx, ty)] = f
+    for lohko in lohkot.values():
+        A, x0, y1, res = rasteri.mosaiikki(lohko, 512)
+        if not (A[..., 3] > 0).any():
+            continue
+        for rgb, luokka, nimi in (((254, 1, 1), 'paareitti', 'Pääreitti (punainen)'),
+                                  ((1, 1, 254), 'aluereitti', 'Aluereitti (sininen)')):
+            for c in rasteri.viivat(rasteri.maski(A, rgb), x0, y1, res):
+                yield proj([c], GK26_ILMAN_KAISTAA), luokka, 'olemassa', nimi, 'jkl_ims_tiilet'
+
+
+def kuopio():
+    # Verkostotarkastelu 2019: vain pääreitit (aluereittitaso poistettiin).
+    for p, ls in lue_geojson(hae('kuo.geojson'), 3067):
+        t = p.get('taso')
+        if t in (2, 22):
+            yield ls, 'paareitti', 'suunniteltu' if t == 22 else 'olemassa', \
+                'Suunniteltu pääreitti' if t == 22 else 'Pääreitti', 'kuo_tavoiteverkko_2019'
+
+
+# ---- karttakuvat ----------------------------------------------------------
+# Kaupungit, joiden pääverkko on vain kuvana PDF:ssä. Jokainen kuva
+# georeferoidaan automaattisesti Digiroadia vasten (tools/georef.py) ja värit
+# erotellaan sävyn mukaan (tools/rasteri.py). Katkoviiva = uusi / puuttuva
+# yhteys -> suunniteltu. 'peita' = selite, mittakaava ym. kuvan osuuksina
+# (x0, y0, x1, y1) ALKUPERÄISESSÄ asennossa; 'kierto' = myötäpäivään asteina.
+# 'varit': (h0, h1, s0, v0, v1, luokka, alkuperäinen luokka).
+PUNA = (345, 15, 0.55, 0.45, 1.0)
+SINI = (210, 248, 0.55, 0.35, 1.0)
+RASTERIT = {
+    698: [dict(pdf='rov.pdf', sivu=13, kuva=0, katko=60, nimi='Rovaniemi KäPy 2030 (2023)',
+               peita=[(0, 0, 0.24, 0.16), (0, 0.9, 0.24, 1), (0.88, 0.94, 1, 1)],
+               varit=[(*PUNA, 'paareitti', 'Pääreitti'), (*SINI, 'aluereitti', 'Aluereitti')])],
+    491: [dict(pdf='mik.pdf', sivu=62, kuva=0, katko=60, nimi='Mikkelin seudun KäPy (2024), liite 4',
+               peita=[(0, 0, 0.21, 0.26), (0, 0.93, 0.25, 1), (0.85, 0.93, 1, 1)],
+               varit=[(*PUNA, 'paareitti', 'Pääreitti'), (*SINI, 'aluereitti', 'Aluereitti')])],
+    734: [dict(pdf='salo.pdf', sivu=43, kuva=0, katko=40, nimi='Salon KäPy-ohjelma 2016, tavoiteverkko 2030',
+               peita=[],
+               varit=[(340, 12, 0.5, 0.25, 0.68, 'paareitti', 'Pääreitti'),
+                      (215, 250, 0.55, 0.35, 1.0, 'aluereitti', 'Paikallisreitti')])],
+    # Kuva 13 (sivun suurin) on kolmen eri karttaotteen kooste -> vain kuva 12.
+    286: [dict(pdf='kou.pdf', sivu=16, kuva=1, katko=60, nimi='Kouvolan KäPy 2021, kuva 12',
+               peita=[], varit=[(*SINI, 'paareitti', 'Pääreitti')])],
+    638: [dict(pdf='porvoo.pdf', sivu=28, kuva=0, katko=60, nimi='Porvoon pyöräliikenteen edistämisohjelma 2020',
+               peita=[],
+               varit=[(350, 12, 0.55, 0.45, 1.0, 'paareitti', 'Pääpyöräreitti'),
+                      (195, 222, 0.4, 0.35, 1.0, 'aluereitti', 'Muu pyöräreitti')])],
+    109: [dict(pdf='hml.pdf', sivu=1, dpi=200, katko=150, nimi='Hämeenlinnan pyöräilyn tavoiteverkko 2021',
+               peita=[(0, 0, 0.18, 0.15), (0, 0.28, 0.175, 1), (0, 0.82, 0.48, 1), (0.9, 0.85, 1, 1)],
+               varit=[(0, 45, 0.6, 0.5, 1.0, 'paareitti', 'Pääreitti'),
+                      (228, 250, 0.7, 0.4, 1.0, 'aluereitti', 'Aluereitti')])],
+    # GeoPDF (ArcMap): sivun /VP/Measure antaa kulmien koordinaatit -> ei hakua.
+    609: [dict(pdf='pori.pdf', sivu=s, dpi=200, geopdf=True, katko=120, nimi=f'Porin tavoiteverkko, DI-työ 2017 s. {s}',
+               varit=[(10, 30, 0.7, 0.5, 1.0, 'paareitti', 'Pääreitti'),
+                      (200, 225, 0.7, 0.35, 1.0, 'aluereitti', 'Pitkän matkan aluereitti'),
+                      (270, 300, 0.7, 0.4, 1.0, 'aluereitti', 'Aluereitti')])
+          for s in range(155, 161)],
+    743: [dict(pdf='sjk.pdf', sivu=33, dpi=200, katko=60, nimi='Seinäjoki, kestävä liikkuminen 2019 s. 33',
+               peita=[(0, 0, 0.2, 1), (0, 0, 1, 0.09), (0.2, 0.09, 0.35, 0.21)],
+               varit=[(355, 12, 0.55, 0.5, 1.0, 'baana', 'Baana'),
+                      (205, 228, 0.7, 0.5, 1.0, 'paareitti', 'Pääreitti'),
+                      (95, 145, 0.6, 0.3, 1.0, 'aluereitti', 'Aluereitti')])],
+    398: [dict(pdf='lahti.pdf', sivu=7, kuva=0, katko=40, nimi='Lahden tavoiteverkko 2030 (keskusta), Ramboll 2024',
+               peita=[(0, 0.6, 0.6, 1), (0.73, 0, 1, 0.13)],
+               varit=[(350, 10, 0.6, 0.45, 1.0, 'paareitti', 'Pääreitti'),
+                      (220, 248, 0.6, 0.35, 1.0, 'aluereitti', 'Aluereitti')])],
+}
+
+
+def _kuva(L):
+    import fitz
+    import numpy as np
+    from PIL import Image
+    d = fitz.open(hae(L['pdf']))
+    sivu = d[L['sivu'] - 1]
+    if L.get('geopdf'):
+        sivu.set_rotation(0)                 # kuva PDF:n omassa asennossa, kuten /VP
+    if 'dpi' in L:
+        pm = sivu.get_pixmap(dpi=L['dpi'], alpha=False)
+        A = np.frombuffer(pm.samples, np.uint8).reshape(pm.height, pm.width, pm.n)[..., :3].copy()
+    else:
+        kuvat = sorted(sivu.get_images(full=True), key=lambda t: -t[2] * t[3])
+        A = np.asarray(Image.open(io.BytesIO(d.extract_image(kuvat[L['kuva']][0])['image'])).convert('RGB')).copy()
+    h, w = A.shape[:2]
+    for x0, y0, x1, y1 in L.get('peita', []):
+        A[int(y0 * h):int(y1 * h), int(x0 * w):int(x1 * w)] = 255
+    k = L.get('kierto', 0)
+    A = np.rot90(A, -k // 90) if k else A
+    return (A, _geopdf(d, sivu, L['dpi'])) if L.get('geopdf') else A
+
+
+def _geopdf(d, sivu, dpi):
+    """GeoPDF:n /VP/Measure -> affiini kuvapikselistä EPSG:3067:ään."""
+    import numpy as np
+    vp = d.xref_get_key(sivu.xref, 'VP')[1]
+    bb = [float(v) for v in re.search(r'/BBox\s*\[([^\]]*)\]', vp).group(1).split()]
+    me = d.xref_object(int(re.search(r'/Measure\s+(\d+) 0 R', vp).group(1)))
+    g = [float(v) for v in re.search(r'/GPTS\s*\[([^\]]*)\]', me).group(1).split()]
+    lp = [float(v) for v in re.search(r'/LPTS\s*\[([^\]]*)\]', me).group(1).split()]
+    t = Transformer.from_crs(4326, 3067, always_xy=True)
+    H = sivu.mediabox.height
+    k = 72 / dpi
+    P, Q = [], []
+    for (lat, lon), (u, v) in zip(zip(g[::2], g[1::2]), zip(lp[::2], lp[1::2])):
+        x = bb[0] + u * (bb[2] - bb[0])
+        y = bb[1] + v * (bb[3] - bb[1])
+        P.append((x / k, (H - y) / k, 1.0))           # PDF (y ylös) -> kuvapikseli
+        Q.append(t.transform(lon, lat))
+    return np.linalg.lstsq(np.array(P), np.array(Q), rcond=None)[0].T
+
+
+_kaikki_etaisyys = {}
+
+
+def rasteri_kaupunki(koodi):
+    import numpy as np
+    from shapely import contains_xy
+    from shapely.geometry import shape
+    from skimage.morphology import skeletonize
+    import georef
+    import rasteri
+    dr = json.load(gzip.open(f'{JUURI}/data/kunnat/{koodi:03d}.geojson.gz'))['features']
+    rak = np.array(json.load(gzip.open(f'{JUURI}/data/rakennukset/{koodi:03d}.json.gz')), float)
+    taaj = [shape(f['geometry']) for f in json.load(gzip.open(f'{JUURI}/data/taajamat25.geojson.gz'))['features']]
+    kt = max(taaj, key=lambda g: rak[contains_xy(g, rak[:, 0], rak[:, 1]), 2].sum())
+    x0, y0, x1, y1 = kt.bounds
+    M_ = 8000
+    bbox = (x0 - M_, y0 - M_, x1 + M_, y1 + M_)
+    for L in RASTERIT[koodi]:
+        A = _kuva(L)
+        M0 = None
+        if L.get('geopdf'):
+            A, M0 = A
+        maskit = [(rasteri.hsv_maski(A, *v[:5]), v[5], v[6]) for v in L['varit']]
+        kaikki = np.zeros(A.shape[:2], bool)
+        for m, *_ in maskit:
+            kaikki |= m
+        ii, jj = np.nonzero(skeletonize(kaikki))
+        pix = np.column_stack([jj, ii]).astype(float)
+        if M0 is not None:
+            print(f'  GeoPDF-alku: {georef.jaannos(pix, dr, M0)}', flush=True)
+            M, j = georef.hieno(pix, dr, M0, (40, 25, 15, 15))
+        else:
+            M, j = georef.sovita(pix, dr, bbox)
+        res = float(np.hypot(*M[:, 0]))
+        print(f'  {L["nimi"]}: {len(pix)} px, {res:.2f} m/px, '
+              f'kierto {math.degrees(math.atan2(M[1, 0], M[0, 0])):.1f}°, '
+              f'Digiroadissa <5 m {j[5]} %  <15 m {j[15]} %  <25 m {j[25]} %', flush=True)
+        # Karkealla kuvalla (yli 6 m/px) viivan paikka on pikselin tarkkuudella,
+        # joten 15 metrin raja on liian tiukka: hyväksytään 25 metrillä ja
+        # sovitetaan linkkeihin samalla etäisyydellä.
+        etaisyys = 15.0 if res < 6 else 25.0
+        if j[15] < 80 and not (res >= 6 and j[25] >= 85):
+            print(f'  !! {L["nimi"]}: georeferointi epäonnistui, ohitetaan', flush=True)
+            continue
+        T = georef.kuvaan(M)
+        lahde = f'{koodi:03d}_{L["pdf"][:-4]}_s{L["sivu"]}'
+        _kaikki_etaisyys[koodi] = max(_kaikki_etaisyys.get(koodi, 0), etaisyys)
+        for m, luokka, alkup in maskit:
+            yht, katko = rasteri.jaa_katko(m, L['katko'])
+            for mm, tila in ((yht, 'olemassa'), (katko, 'suunniteltu')):
+                for c in rasteri.viivat(mm, 0, 0, 1):
+                    # viivat() palauttaa (sarake + 0.5, -(rivi + 0.5)) kun vasen = yla = 0, res = 1
+                    yield [T([(x, -y) for x, y in c])], luokka, tila, alkup, lahde
+
+
 KAUPUNGIT = {91: helsinki, 49: espoo, 92: vantaa, 837: tampere, 853: turku, 564: oulu,
-             167: joensuu, 405: lappeenranta}
+             167: joensuu, 405: lappeenranta, 179: jyvaskyla, 297: kuopio}
+for _k in RASTERIT:
+    KAUPUNGIT[_k] = (lambda k: lambda: rasteri_kaupunki(k))(_k)
 
 
 def km(ls):
@@ -337,6 +535,8 @@ def kirjoita(koodi, rivit, nimi=None, lisenssi=None):
          'crs': {'type': 'name', 'properties': {'name': 'urn:ogc:def:crs:EPSG::3067'}}, 'features': feats}
     if lisenssi:
         d['lisenssi'] = lisenssi
+    if koodi in _kaikki_etaisyys:
+        d['sovitusetaisyys'] = _kaikki_etaisyys[koodi]   # tools/reitit_linkit.py
     with gzip.open(polku, 'wt', encoding='utf-8') as f:
         json.dump(d, f, ensure_ascii=False)
     yht = {}
@@ -354,5 +554,7 @@ if __name__ == '__main__':
         kirjoita(905, list(vaasa_osm(pbf)), '905.osm.geojson.gz',
                  'ODbL 1.0, © OpenStreetMap contributors')
     else:
+        valitut = [int(a) for a in args if a.isdigit()]
         for koodi, f in KAUPUNGIT.items():
-            kirjoita(koodi, list(f()))
+            if not valitut or koodi in valitut:
+                kirjoita(koodi, list(f()))
