@@ -61,6 +61,31 @@ TAAJAMAT = ('https://paikkatiedot.ymparisto.fi/geoserver/liiteri_taajamat/wfs?se
             '&version=2.0.0&request=GetFeature&typeNames=liiteri_taajamat:taajamat25'
             '&outputFormat=application/json&srsName=EPSG:3067')
 RAJAUS = ('kunta', 'taajama', 'keskus')
+# Pääverkon lähde kaupungeittain: tyyppi kertoo luotettavuuden. 'kuva' = PDF:n
+# karttakuva, georeferoitu automaattisesti Digiroadia vasten (tools/georef.py);
+# 'osittainen' = lähde ei kata koko kaupunkia, joten luku on aliarvio.
+LAHDE = {
+    '091': ('vektori', 'Helsingin pyöräilykartta 2026 + baanaverkko (WFS)'),
+    '049': ('vektori', 'Espoon keskilinjat, pyöräreittihierarkia (WFS)'),
+    '092': ('vektori', 'Vantaan pyöräliikenteen tavoiteverkko (WFS)'),
+    '837': ('vektori', 'Tampereen pyöräilyn tavoiteverkko (WFS)'),
+    '853': ('vektori', 'Turun pyöräilyverkosto (WFS)'),
+    '564': ('vektori', 'Oulun baana-, pää- ja aluereitit (avoin data)'),
+    '167': ('vektori', 'Joensuun pääverkko 2023 (WFS)'),
+    '405': ('vektori', 'Lappeenrannan pyöräilyreitit (avoin data)'),
+    '297': ('vektori', 'Kuopion pyöräväylien verkostotarkastelu 2019 (ArcGIS)'),
+    '905': ('OSM', 'OpenStreetMap, Vaasan pääreitit 1-7 (ODbL)'),
+    '179': ('kuva', 'Jyväskylän karttapalvelun tiilet (georeferoitu, 2 m/px)'),
+    '609': ('kuva', 'DI-työ 2017, GeoPDF (ehdotus, ei hyväksytty verkko)'),
+    '698': ('kuva', 'KäPy-ohjelma 2030, päivitys 2023 (PDF-kartta)'),
+    '491': ('kuva', 'Mikkelin seudun KäPy-ohjelma 2024 (PDF-kartta)'),
+    '638': ('kuva', 'Pyöräliikenteen edistämisohjelma 2020 (PDF-kartta)'),
+    '109': ('kuva', 'Pyöräilyn tavoiteverkko 2021 (PDF-kartta)'),
+    '743': ('kuva', 'Kestävän liikkumisen raportti 2019 (käsin piirretty PDF-kartta)'),
+    '734': ('kuva', 'KäPy-ohjelma 2016, keskustan kartta (karkea PDF-kuva)'),
+    '286': ('kuva', 'KäPy-suunnitelma 2021, keskustaajaman kartta, vain pääreitit'),
+    '398': ('osittainen', 'Ramboll 2024, vain keskustan kartta: reunat puuttuvat, luku aliarvio'),
+}
 TASOT = {'baana': {'baana'}, 'paa': {'baana', 'paareitti'},
          'alue': {'baana', 'paareitti', 'aluereitti'}}
 
@@ -229,6 +254,7 @@ if __name__ == '__main__':
         k['lahiKiinni'] = q and q['kiinni']
         k['lahiYli2'] = q and q['yli2km']
         k['lahiRak'] = r and r['rakennuksia']
+        k['lahiLahde'] = LAHDE.get(f"{int(k['koodi']):03d}") if r else None
         k['lahiRuudut'] = ruutu[f"{int(k['koodi']):03d}"] if r else []
     json.dump(K, open(kpol, 'w'), ensure_ascii=False, separators=(',', ':'))
     print(f'\nliitetty viz/kaupungit.json ({len(json.dumps(K)) / 1e6:.1f} MB)')

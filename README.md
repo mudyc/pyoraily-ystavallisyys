@@ -15,7 +15,7 @@ siitä mihin kannattaa mennä katsomaan.
 | **Näkemät** | Matka alikulun suuaukolta ensimmäiseen risteykseen **ulostulosuunnassa**. Ohje: 20 m suositeltava, 15 m tyydyttävä, 12 m minimi. | 6 054 suuaukkoa, 32 % alle 20 m |
 | **Pysäkkisijainti** | Kulkeeko pyörätie katoksen ja ajoradan välistä. | 3 497 arvioitavaa, 27 % väärin, 15 kaupunkia |
 | **Matkavastus** | *S = H² / L*, tavoite alle 0,2. Laskettu Z-koordinaateista. | 9 986 km verkkoa, 12,9 % yli 4 %:n kaltevuudessa |
-| **Lähibaana** | Asuinrakennuksesta (Ryhti) verkkoa pitkin lähimmälle baanalle tai pääreitille (kaupungin oma aineisto, sovitettu Digiroadiin): 100 % reitin varrella, 0 % 2 km:ssä, lineaarinen. Kaupungin luku huoneistoalalla painotettu keskiarvo. `tools/ryhti.py`, `tools/reitit.py`, `tools/reitit_linkit.py`, `tools/lahibaana.py`. | 9 kaupunkia, 47–89 % |
+| **Lähibaana** | Asuinrakennuksesta (Ryhti) verkkoa pitkin lähimmälle baanalle tai pääreitille (kaupungin oma aineisto, sovitettu Digiroadiin): 100 % reitin varrella, 0 % 2 km:ssä, lineaarinen. Kaupungin luku huoneistoalalla painotettu keskiarvo. `tools/ryhti.py`, `tools/reitit.py`, `tools/reitit_linkit.py`, `tools/lahibaana.py`. | 20 kaupunkia, 37–89 %. 10 kaupungilla pääverkko on vain kuvana: georeferoitu automaattisesti Digiroadia vasten (`tools/georef.py`, `tools/rasteri.py`). Lahdelta vain keskustan kartta → aliarvio. |
 | **Kokonaisarvio** | Edellisten keskiarvo. Puuttuva osa jätetään huomiotta. | |
 
 ## Mikä tässä on opittavaa muille kuin pyöräilijöille

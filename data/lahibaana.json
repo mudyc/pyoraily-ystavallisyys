@@ -254,6 +254,73 @@
   "liitosMed": 22.0,
   "liitosYli50": 5.9
  },
+ "109": {
+  "nimi": "Hämeenlinna",
+  "rakennuksia": 17476,
+  "ala": 3399309,
+  "keskustaajama": "Hämeenlinnan kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 17476,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 40.4,
+     "rakennukset": 22.1,
+     "mediaaniM": 2000,
+     "kiinni": 0.4,
+     "yli2km": 61.7
+    },
+    "alue": {
+     "painotettu": 61.8,
+     "rakennukset": 45.3,
+     "mediaaniM": 848,
+     "kiinni": 2.5,
+     "yli2km": 46.3
+    }
+   },
+   "taajama": {
+    "rakennuksia": 12161,
+    "alaOsuus": 83.3,
+    "baana": null,
+    "paa": {
+     "painotettu": 48.5,
+     "rakennukset": 31.8,
+     "mediaaniM": 1750,
+     "kiinni": 0.6,
+     "yli2km": 45.1
+    },
+    "alue": {
+     "painotettu": 74.0,
+     "rakennukset": 64.7,
+     "mediaaniM": 307,
+     "kiinni": 3.6,
+     "yli2km": 24.0
+    }
+   },
+   "keskus": {
+    "rakennuksia": 9268,
+    "alaOsuus": 70.2,
+    "baana": null,
+    "paa": {
+     "painotettu": 57.6,
+     "rakennukset": 41.7,
+     "mediaaniM": 1149,
+     "kiinni": 0.8,
+     "yli2km": 28.0
+    },
+    "alue": {
+     "painotettu": 87.8,
+     "rakennukset": 84.8,
+     "mediaaniM": 219,
+     "kiinni": 4.7,
+     "yli2km": 0.4
+    }
+   }
+  },
+  "liitosMed": 20.9,
+  "liitosYli50": 6.1
+ },
  "167": {
   "nimi": "Joensuu",
   "rakennuksia": 18208,
@@ -321,6 +388,274 @@
   "liitosMed": 19.3,
   "liitosYli50": 4.1
  },
+ "179": {
+  "nimi": "Jyväskylä",
+  "rakennuksia": 23558,
+  "ala": 6532713,
+  "keskustaajama": "Jyväskylän kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 23558,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 56.7,
+     "rakennukset": 37.5,
+     "mediaaniM": 1345,
+     "kiinni": 1.2,
+     "yli2km": 41.0
+    },
+    "alue": {
+     "painotettu": 78.6,
+     "rakennukset": 65.0,
+     "mediaaniM": 434,
+     "kiinni": 3.5,
+     "yli2km": 16.5
+    }
+   },
+   "taajama": {
+    "rakennuksia": 19906,
+    "alaOsuus": 93.8,
+    "baana": null,
+    "paa": {
+     "painotettu": 60.2,
+     "rakennukset": 44.0,
+     "mediaaniM": 1004,
+     "kiinni": 1.4,
+     "yli2km": 31.0
+    },
+    "alue": {
+     "painotettu": 83.5,
+     "rakennukset": 76.3,
+     "mediaaniM": 345,
+     "kiinni": 4.1,
+     "yli2km": 2.6
+    }
+   },
+   "keskus": {
+    "rakennuksia": 17893,
+    "alaOsuus": 88.9,
+    "baana": null,
+    "paa": {
+     "painotettu": 61.4,
+     "rakennukset": 44.9,
+     "mediaaniM": 974,
+     "kiinni": 1.5,
+     "yli2km": 29.2
+    },
+    "alue": {
+     "painotettu": 84.3,
+     "rakennukset": 78.0,
+     "mediaaniM": 326,
+     "kiinni": 4.4,
+     "yli2km": 1.8
+    }
+   }
+  },
+  "liitosMed": 20.1,
+  "liitosYli50": 3.7
+ },
+ "286": {
+  "nimi": "Kouvola",
+  "rakennuksia": 26334,
+  "ala": 4213275,
+  "keskustaajama": "Kouvolan kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 26334,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 53.3,
+     "rakennukset": 41.6,
+     "mediaaniM": 1095,
+     "kiinni": 0.8,
+     "yli2km": 44.9
+    },
+    "alue": {
+     "painotettu": 53.3,
+     "rakennukset": 41.6,
+     "mediaaniM": 1095,
+     "kiinni": 0.8,
+     "yli2km": 44.9
+    }
+   },
+   "taajama": {
+    "rakennuksia": 18836,
+    "alaOsuus": 81.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 65.2,
+     "rakennukset": 57.1,
+     "mediaaniM": 520,
+     "kiinni": 1.1,
+     "yli2km": 25.5
+    },
+    "alue": {
+     "painotettu": 65.2,
+     "rakennukset": 57.1,
+     "mediaaniM": 520,
+     "kiinni": 1.1,
+     "yli2km": 25.5
+    }
+   },
+   "keskus": {
+    "rakennuksia": 11245,
+    "alaOsuus": 54.3,
+    "baana": null,
+    "paa": {
+     "painotettu": 82.0,
+     "rakennukset": 76.5,
+     "mediaaniM": 360,
+     "kiinni": 1.6,
+     "yli2km": 1.8
+    },
+    "alue": {
+     "painotettu": 82.0,
+     "rakennukset": 76.5,
+     "mediaaniM": 360,
+     "kiinni": 1.6,
+     "yli2km": 1.8
+    }
+   }
+  },
+  "liitosMed": 19.3,
+  "liitosYli50": 3.0
+ },
+ "297": {
+  "nimi": "Kuopio",
+  "rakennuksia": 24286,
+  "ala": 5761320,
+  "keskustaajama": "Kuopion kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 24286,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 63.8,
+     "rakennukset": 37.2,
+     "mediaaniM": 2000,
+     "kiinni": 2.4,
+     "yli2km": 54.5
+    },
+    "alue": {
+     "painotettu": 63.8,
+     "rakennukset": 37.2,
+     "mediaaniM": 2000,
+     "kiinni": 2.4,
+     "yli2km": 54.5
+    }
+   },
+   "taajama": {
+    "rakennuksia": 14777,
+    "alaOsuus": 82.5,
+    "baana": null,
+    "paa": {
+     "painotettu": 77.1,
+     "rakennukset": 60.7,
+     "mediaaniM": 389,
+     "kiinni": 4.0,
+     "yli2km": 26.4
+    },
+    "alue": {
+     "painotettu": 77.1,
+     "rakennukset": 60.7,
+     "mediaaniM": 389,
+     "kiinni": 4.0,
+     "yli2km": 26.4
+    }
+   },
+   "keskus": {
+    "rakennuksia": 10885,
+    "alaOsuus": 73.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 87.1,
+     "rakennukset": 82.2,
+     "mediaaniM": 268,
+     "kiinni": 5.4,
+     "yli2km": 0.5
+    },
+    "alue": {
+     "painotettu": 87.1,
+     "rakennukset": 82.2,
+     "mediaaniM": 268,
+     "kiinni": 5.4,
+     "yli2km": 0.5
+    }
+   }
+  },
+  "liitosMed": 21.7,
+  "liitosYli50": 5.4
+ },
+ "398": {
+  "nimi": "Lahti",
+  "rakennuksia": 19605,
+  "ala": 5588627,
+  "keskustaajama": "Lahden kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 19605,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 43.0,
+     "rakennukset": 21.0,
+     "mediaaniM": 2000,
+     "kiinni": 0.9,
+     "yli2km": 60.8
+    },
+    "alue": {
+     "painotettu": 46.3,
+     "rakennukset": 22.8,
+     "mediaaniM": 2000,
+     "kiinni": 1.2,
+     "yli2km": 60.2
+    }
+   },
+   "taajama": {
+    "rakennuksia": 18064,
+    "alaOsuus": 96.7,
+    "baana": null,
+    "paa": {
+     "painotettu": 44.5,
+     "rakennukset": 22.7,
+     "mediaaniM": 2000,
+     "kiinni": 0.9,
+     "yli2km": 57.5
+    },
+    "alue": {
+     "painotettu": 47.9,
+     "rakennukset": 24.8,
+     "mediaaniM": 2000,
+     "kiinni": 1.3,
+     "yli2km": 56.8
+    }
+   },
+   "keskus": {
+    "rakennuksia": 14958,
+    "alaOsuus": 86.3,
+    "baana": null,
+    "paa": {
+     "painotettu": 49.8,
+     "rakennukset": 27.5,
+     "mediaaniM": 1942,
+     "kiinni": 1.1,
+     "yli2km": 48.7
+    },
+    "alue": {
+     "painotettu": 53.7,
+     "rakennukset": 29.9,
+     "mediaaniM": 1903,
+     "kiinni": 1.6,
+     "yli2km": 47.8
+    }
+   }
+  },
+  "liitosMed": 19.6,
+  "liitosYli50": 3.2
+ },
  "405": {
   "nimi": "Lappeenranta",
   "rakennuksia": 17370,
@@ -387,6 +722,73 @@
   },
   "liitosMed": 18.2,
   "liitosYli50": 2.6
+ },
+ "491": {
+  "nimi": "Mikkeli",
+  "rakennuksia": 15609,
+  "ala": 2757866,
+  "keskustaajama": "Mikkelin kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 15609,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 37.0,
+     "rakennukset": 20.6,
+     "mediaaniM": 2000,
+     "kiinni": 0.4,
+     "yli2km": 67.7
+    },
+    "alue": {
+     "painotettu": 57.8,
+     "rakennukset": 40.3,
+     "mediaaniM": 2000,
+     "kiinni": 1.5,
+     "yli2km": 50.9
+    }
+   },
+   "taajama": {
+    "rakennuksia": 8959,
+    "alaOsuus": 74.5,
+    "baana": null,
+    "paa": {
+     "painotettu": 49.7,
+     "rakennukset": 35.8,
+     "mediaaniM": 1507,
+     "kiinni": 0.7,
+     "yli2km": 43.9
+    },
+    "alue": {
+     "painotettu": 77.2,
+     "rakennukset": 69.3,
+     "mediaaniM": 313,
+     "kiinni": 2.7,
+     "yli2km": 17.1
+    }
+   },
+   "keskus": {
+    "rakennuksia": 6983,
+    "alaOsuus": 64.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 57.8,
+     "rakennukset": 45.9,
+     "mediaaniM": 928,
+     "kiinni": 0.9,
+     "yli2km": 28.1
+    },
+    "alue": {
+     "painotettu": 86.8,
+     "rakennukset": 83.6,
+     "mediaaniM": 246,
+     "kiinni": 3.1,
+     "yli2km": 0.7
+    }
+   }
+  },
+  "liitosMed": 19.5,
+  "liitosYli50": 4.4
  },
  "564": {
   "nimi": "Oulu",
@@ -472,6 +874,359 @@
   },
   "liitosMed": 20.5,
   "liitosYli50": 3.7
+ },
+ "609": {
+  "nimi": "Pori",
+  "rakennuksia": 23294,
+  "ala": 4336486,
+  "keskustaajama": "Porin kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 23294,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 43.9,
+     "rakennukset": 29.3,
+     "mediaaniM": 2000,
+     "kiinni": 0.5,
+     "yli2km": 53.9
+    },
+    "alue": {
+     "painotettu": 63.8,
+     "rakennukset": 50.2,
+     "mediaaniM": 678,
+     "kiinni": 2.1,
+     "yli2km": 32.9
+    }
+   },
+   "taajama": {
+    "rakennuksia": 19628,
+    "alaOsuus": 91.7,
+    "baana": null,
+    "paa": {
+     "painotettu": 47.9,
+     "rakennukset": 34.7,
+     "mediaaniM": 1570,
+     "kiinni": 0.6,
+     "yli2km": 45.4
+    },
+    "alue": {
+     "painotettu": 69.4,
+     "rakennukset": 59.1,
+     "mediaaniM": 498,
+     "kiinni": 2.5,
+     "yli2km": 21.4
+    }
+   },
+   "keskus": {
+    "rakennuksia": 13794,
+    "alaOsuus": 72.9,
+    "baana": null,
+    "paa": {
+     "painotettu": 60.2,
+     "rakennukset": 49.4,
+     "mediaaniM": 805,
+     "kiinni": 0.9,
+     "yli2km": 22.3
+    },
+    "alue": {
+     "painotettu": 82.9,
+     "rakennukset": 77.7,
+     "mediaaniM": 321,
+     "kiinni": 3.5,
+     "yli2km": 1.4
+    }
+   }
+  },
+  "liitosMed": 18.0,
+  "liitosYli50": 2.9
+ },
+ "638": {
+  "nimi": "Porvoo",
+  "rakennuksia": 13706,
+  "ala": 2464920,
+  "keskustaajama": "Porvoon kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 13706,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 54.2,
+     "rakennukset": 39.4,
+     "mediaaniM": 1484,
+     "kiinni": 1.5,
+     "yli2km": 47.4
+    },
+    "alue": {
+     "painotettu": 60.4,
+     "rakennukset": 44.9,
+     "mediaaniM": 1222,
+     "kiinni": 4.1,
+     "yli2km": 47.3
+    }
+   },
+   "taajama": {
+    "rakennuksia": 9869,
+    "alaOsuus": 81.8,
+    "baana": null,
+    "paa": {
+     "painotettu": 66.1,
+     "rakennukset": 54.5,
+     "mediaaniM": 585,
+     "kiinni": 2.0,
+     "yli2km": 27.6
+    },
+    "alue": {
+     "painotettu": 73.7,
+     "rakennukset": 62.0,
+     "mediaaniM": 248,
+     "kiinni": 5.7,
+     "yli2km": 27.6
+    }
+   },
+   "keskus": {
+    "rakennuksia": 8347,
+    "alaOsuus": 74.3,
+    "baana": null,
+    "paa": {
+     "painotettu": 72.8,
+     "rakennukset": 64.4,
+     "mediaaniM": 424,
+     "kiinni": 2.4,
+     "yli2km": 14.4
+    },
+    "alue": {
+     "painotettu": 81.1,
+     "rakennukset": 73.4,
+     "mediaaniM": 189,
+     "kiinni": 6.7,
+     "yli2km": 14.4
+    }
+   }
+  },
+  "liitosMed": 19.7,
+  "liitosYli50": 4.5
+ },
+ "698": {
+  "nimi": "Rovaniemi",
+  "rakennuksia": 15886,
+  "ala": 3161330,
+  "keskustaajama": "Rovaniemen kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 15886,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 49.9,
+     "rakennukset": 30.2,
+     "mediaaniM": 2000,
+     "kiinni": 0.7,
+     "yli2km": 51.0
+    },
+    "alue": {
+     "painotettu": 67.8,
+     "rakennukset": 50.6,
+     "mediaaniM": 585,
+     "kiinni": 2.5,
+     "yli2km": 37.4
+    }
+   },
+   "taajama": {
+    "rakennuksia": 11996,
+    "alaOsuus": 87.2,
+    "baana": null,
+    "paa": {
+     "painotettu": 57.2,
+     "rakennukset": 40.0,
+     "mediaaniM": 1253,
+     "kiinni": 0.9,
+     "yli2km": 35.1
+    },
+    "alue": {
+     "painotettu": 77.8,
+     "rakennukset": 66.9,
+     "mediaaniM": 331,
+     "kiinni": 3.3,
+     "yli2km": 17.2
+    }
+   },
+   "keskus": {
+    "rakennuksia": 10911,
+    "alaOsuus": 82.7,
+    "baana": null,
+    "paa": {
+     "painotettu": 60.3,
+     "rakennukset": 44.0,
+     "mediaaniM": 1052,
+     "kiinni": 1.0,
+     "yli2km": 28.7
+    },
+    "alue": {
+     "painotettu": 82.0,
+     "rakennukset": 73.5,
+     "mediaaniM": 292,
+     "kiinni": 3.7,
+     "yli2km": 8.9
+    }
+   }
+  },
+  "liitosMed": 21.1,
+  "liitosYli50": 2.8
+ },
+ "734": {
+  "nimi": "Salo",
+  "rakennuksia": 18132,
+  "ala": 2822940,
+  "keskustaajama": "Salon kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 18132,
+    "alaOsuus": 100.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 44.0,
+     "rakennukset": 30.0,
+     "mediaaniM": 2000,
+     "kiinni": 4.0,
+     "yli2km": 65.6
+    },
+    "alue": {
+     "painotettu": 44.6,
+     "rakennukset": 30.5,
+     "mediaaniM": 2000,
+     "kiinni": 5.2,
+     "yli2km": 65.6
+    }
+   },
+   "taajama": {
+    "rakennuksia": 9587,
+    "alaOsuus": 67.0,
+    "baana": null,
+    "paa": {
+     "painotettu": 64.7,
+     "rakennukset": 55.2,
+     "mediaaniM": 306,
+     "kiinni": 7.4,
+     "yli2km": 38.0
+    },
+    "alue": {
+     "painotettu": 65.6,
+     "rakennukset": 56.2,
+     "mediaaniM": 252,
+     "kiinni": 9.7,
+     "yli2km": 38.0
+    }
+   },
+   "keskus": {
+    "rakennuksia": 6186,
+    "alaOsuus": 48.7,
+    "baana": null,
+    "paa": {
+     "painotettu": 88.9,
+     "rakennukset": 85.4,
+     "mediaaniM": 155,
+     "kiinni": 11.5,
+     "yli2km": 4.7
+    },
+    "alue": {
+     "painotettu": 90.2,
+     "rakennukset": 86.8,
+     "mediaaniM": 119,
+     "kiinni": 15.1,
+     "yli2km": 4.7
+    }
+   }
+  },
+  "liitosMed": 22.1,
+  "liitosYli50": 3.8
+ },
+ "743": {
+  "nimi": "Seinäjoki",
+  "rakennuksia": 16817,
+  "ala": 3197602,
+  "keskustaajama": "Seinäjoen kt.",
+  "rajaus": {
+   "kunta": {
+    "rakennuksia": 16817,
+    "alaOsuus": 100.0,
+    "baana": {
+     "painotettu": 39.7,
+     "rakennukset": 26.3,
+     "mediaaniM": 2000,
+     "kiinni": 0.5,
+     "yli2km": 54.3
+    },
+    "paa": {
+     "painotettu": 55.4,
+     "rakennukset": 41.8,
+     "mediaaniM": 1219,
+     "kiinni": 1.1,
+     "yli2km": 40.0
+    },
+    "alue": {
+     "painotettu": 60.3,
+     "rakennukset": 46.3,
+     "mediaaniM": 833,
+     "kiinni": 1.7,
+     "yli2km": 39.5
+    }
+   },
+   "taajama": {
+    "rakennuksia": 13292,
+    "alaOsuus": 88.4,
+    "baana": {
+     "painotettu": 44.9,
+     "rakennukset": 33.3,
+     "mediaaniM": 1560,
+     "kiinni": 0.6,
+     "yli2km": 42.2
+    },
+    "paa": {
+     "painotettu": 62.5,
+     "rakennukset": 52.7,
+     "mediaaniM": 639,
+     "kiinni": 1.5,
+     "yli2km": 24.6
+    },
+    "alue": {
+     "painotettu": 68.1,
+     "rakennukset": 58.3,
+     "mediaaniM": 433,
+     "kiinni": 2.2,
+     "yli2km": 24.0
+    }
+   },
+   "keskus": {
+    "rakennuksia": 10837,
+    "alaOsuus": 77.4,
+    "baana": {
+     "painotettu": 51.3,
+     "rakennukset": 40.9,
+     "mediaaniM": 1131,
+     "kiinni": 0.8,
+     "yli2km": 29.1
+    },
+    "paa": {
+     "painotettu": 70.5,
+     "rakennukset": 63.3,
+     "mediaaniM": 450,
+     "kiinni": 1.7,
+     "yli2km": 10.4
+    },
+    "alue": {
+     "painotettu": 76.9,
+     "rakennukset": 70.2,
+     "mediaaniM": 330,
+     "kiinni": 2.7,
+     "yli2km": 9.6
+    }
+   }
+  },
+  "liitosMed": 23.6,
+  "liitosYli50": 4.3
  },
  "837": {
   "nimi": "Tampere",
