@@ -376,7 +376,9 @@ const TALVI_K = {
   K7: 'Polanteen maksimikorkeus, kiristyy kevättä kohti',
   K8: 'Pyöräilyagentit arvioivat reittejä',
   K9: 'Urakoitsijan bonus / sanktio laadun mukaan',
+  K10: 'Liukkaudentorjunta ei puhko renkaita (ei teräväsärmäistä mursketta)',
 };
+const TALVI_N = Object.keys(TALVI_K).length;
 const TALVI_MAARITELMA = `<b>Talvihoito: kuinka lähellä kaupungin julkiset pyöräväylien
   talvihoidon ohjeet ovat Oulun mallia.</b> Kriteerit tulevat Oulusta, mutta myös Oulu
   pisteytetään omista julkisista asiakirjoistaan: hyvän käytännön pitää olla myös julkinen.
@@ -384,11 +386,11 @@ const TALVI_MAARITELMA = `<b>Talvihoito: kuinka lähellä kaupungin julkiset py�
   ${Object.entries(TALVI_K).map(([k, t]) => `<li><b>${k}</b> ${t}</li>`).join('')}
   </ol>
   <b>Laskenta:</b> jokainen kriteeri kyllä = 1, osittain = ½, ei = 0, <b>ei tietoa = 0</b>;
-  prosentti = summa / 9. Arvio perustuu kaupungin julkisiin asiakirjoihin (laatuvaatimukset,
+  prosentti = summa / ${TALVI_N}. Arvio perustuu kaupungin julkisiin asiakirjoihin (laatuvaatimukset,
   urakan tehtäväkortit, hoitoluokitus, päätökset): mittari kertoo mihin kaupunki on julkisesti
   sitoutunut, ei toteutunutta talvikuntoa. Julkaisematon laatuvaatimus ei sido ketään eikä
-  sitä voi tarkistaa, joten se on 0. Oulun omia urakka-asiakirjoja ei löytynyt verkosta,
-  joten Vaasa, jonka urakka-asiakirjat ovat julkisia, menee Oulun ohi.
+  sitä voi tarkistaa, joten se on 0. Oulun omia urakka-asiakirjoja ei löytynyt verkosta;
+  Vaasan urakka-asiakirjat ovat julkisia, ja Vaasa on Oulun tasolla.
   <br><br>Kriteerit kaupungeittain perusteluineen ja kaikki viitteet:
   <a href="talvi.html">talvihoidon kriteerivertailu</a>. Haettu 12.11.2026.`;
 
@@ -611,13 +613,14 @@ const JOHDANNOT = {
   talvi: {
     teksti: `Kuinka hyvin kaupungin <b>julkiset ohjeet</b> pyöräväylien talvihoidolle vastaavat
       Oulun mallia: oma hoitoluokka pääreiteille, tiukka lumiraja, karhea jälki, polanneraja,
-      pyöräilyagentit ja urakoitsijan bonus laadusta. Yhdeksän kriteeriä, sama arvio myös Oululle.
+      pyöräilyagentit, urakoitsijan bonus laadusta ja hiekoitus joka ei puhko renkaita. ${TALVI_N} kriteeriä, sama arvio myös Oululle.
       <a href="talvi.html">Kriteerivertailu ja viitteet</a>.`,
     luvut: () => { const m = D.filter(k => k.talvi != null);
       const n = kr => D.filter(k => k.talviK?.[kr] === 'kyllä').length;
       return [[m.length + '/' + D.length, 'kaupunkia arvioitu'],
               [n('K1'), 'oma luokka pääreiteille'], [n('K3'), 'vaatii karhean jäljen'],
-              [n('K8'), 'pyöräilyagentit'], [n('K9'), 'bonus / sanktio']]; },
+              [n('K8'), 'pyöräilyagentit'], [n('K9'), 'bonus / sanktio'],
+              [n('K10'), 'renkaita puhkomaton hiekoitus']]; },
   },
   lahibaana: {
     teksti: `Kuinka lähellä asuinrakennuksia kaupungin pyöräilyn pääverkko on <b>verkkoa
@@ -750,7 +753,7 @@ const OSATIEDOT = {
   matkavastus: { mittari: 'matkavastus',
     tiedot: k => `${fi.format(k.verkkoKm)} km, ${k.raskasOsuus} % raskaissa nousuissa` },
   talvi:       { mittari: 'talvi',
-    tiedot: k => k.talviK ? `${Object.values(k.talviK).filter(v => v === 'kyllä').length}/9 kriteeriä täyttyy` : 'ei arvioitu' },
+    tiedot: k => k.talviK ? `${Object.values(k.talviK).filter(v => v === 'kyllä').length}/${TALVI_N} kriteeriä täyttyy` : 'ei arvioitu' },
   lahibaana:   { mittari: 'lahibaana',
     tiedot: k => k.lahibaana == null ? 'ei koneluettavaa pääverkkoa'
       : `mediaani ${fi.format(k.lahiMed)} m pääverkolle` },

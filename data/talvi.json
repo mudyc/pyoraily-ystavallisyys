@@ -1,5 +1,5 @@
 {
- "kuvaus": "Pyöräväylien talvikunnossapidon julkiset ohjeet verrattuna Oulun malliin. Malli antaa kriteerit, ei pisteitä: myös Oulu pisteytetään julkisista asiakirjoistaan. Haettu 2026-11-12. Kriteerejä 9. Pisteet: kyllä 1, osittain 0,5, ei / ei tietoa 0. Arvio perustuu julkisiin asiakirjoihin; jos kaupunki ei julkaise laatuvaatimuksiaan, niitä ei voi arvioida.",
+ "kuvaus": "Pyöräväylien talvikunnossapidon julkiset ohjeet verrattuna Oulun malliin. Malli antaa kriteerit, ei pisteitä: myös Oulu pisteytetään julkisista asiakirjoistaan. Haettu 2026-11-12. Kriteerejä 10. Pisteet: kyllä 1, osittain 0,5, ei / ei tietoa 0. Arvio perustuu julkisiin asiakirjoihin; jos kaupunki ei julkaise laatuvaatimuksiaan, niitä ei voi arvioida.",
  "kriteerit": {
   "K1": "Oma, korkein hoitoluokka baanoille / pääreiteille (vähintään pääkatujen tasolla)",
   "K2": "Lumen maksimisyvyys ennen toimenpidettä ja toimenpideaika määritelty",
@@ -9,7 +9,8 @@
   "K6": "Säännölliset käyttäjien ja kuljettajien palautetapahtumat (yleinen palautelomake = osittain)",
   "K7": "Polanteen maksimikorkeus / epätasaisuus määritelty, kiristyy kevättä kohti",
   "K8": "Pyöräilyagentit: järjestelmällinen käyttäjäarviointi reiteistä (esim. viikoittain), joka menee urakoitsijalle",
-  "K9": "Bonus/sanktio: urakoitsijan palkkio sidottu laatuun (käyttäjäarviot tai laatumittaukset)"
+  "K9": "Bonus/sanktio: urakoitsijan palkkio sidottu laatuun (käyttäjäarviot tai laatumittaukset)",
+  "K10": "Liukkaudentorjunta ei puhko renkaita: pyöräväylillä pyöristetty / murskaamaton hiekka tai ei hiekoitusta (harjasuolaus). Osittain = rengasvaatimus kirjattu tai turvallinen menetelmä vain osalla verkkoa"
  },
  "kaupungit": {
   "Turku": {
@@ -72,10 +73,18 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "osittain",
+     "Harjasuola- ja harjahiekoitusreitillä suolaliuos / pesty hiekka; muualla määritelty kalliomurske",
+     [
+      "tku3",
+      "tku2"
+     ]
     ]
    },
-   "pisteet": 44,
-   "raaka": 4.0
+   "pisteet": 45,
+   "raaka": 4.5
   },
   "Jyväskylä": {
    "K": {
@@ -136,9 +145,14 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei tietoa",
+     "Materiaalivaatimusta ei löytynyt",
+     []
     ]
    },
-   "pisteet": 11,
+   "pisteet": 10,
    "raaka": 1.0
   },
   "Lahti": {
@@ -200,9 +214,14 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei tietoa",
+     "Materiaalivaatimusta ei löytynyt",
+     []
     ]
    },
-   "pisteet": 50,
+   "pisteet": 45,
    "raaka": 4.5
   },
   "Kuopio": {
@@ -264,9 +283,16 @@
      [
       "kk2024"
      ]
+    ],
+    "K10": [
+     "ei",
+     "Kevytväylillä neitseellinen sepeli",
+     [
+      "kuo2"
+     ]
     ]
    },
-   "pisteet": 28,
+   "pisteet": 25,
    "raaka": 2.5
   },
   "Pori": {
@@ -330,9 +356,14 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei tietoa",
+     "Materiaalivaatimusta ei löytynyt",
+     []
     ]
    },
-   "pisteet": 28,
+   "pisteet": 25,
    "raaka": 2.5
   },
   "Hämeenlinna": {
@@ -397,10 +428,17 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "osittain",
+     "Edistämisohjelma: hiekoitusmateriaalit eivät saa aiheuttaa rengasrikkoja (periaate, ei urakkavaatimus)",
+     [
+      "hml6"
+     ]
     ]
    },
-   "pisteet": 44,
-   "raaka": 4.0
+   "pisteet": 45,
+   "raaka": 4.5
   },
   "Kouvola": {
    "K": {
@@ -461,9 +499,16 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei",
+     "Hiekoitussepeli 3–6 mm",
+     [
+      "kou1"
+     ]
     ]
    },
-   "pisteet": 22,
+   "pisteet": 20,
    "raaka": 2.0
   },
   "Porvoo": {
@@ -522,9 +567,14 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei tietoa",
+     "Materiaalivaatimusta ei löytynyt",
+     []
     ]
    },
-   "pisteet": 22,
+   "pisteet": 20,
    "raaka": 2.0
   },
   "Mikkeli": {
@@ -579,9 +629,14 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei tietoa",
+     "Materiaalivaatimusta ei löytynyt",
+     []
     ]
    },
-   "pisteet": 11,
+   "pisteet": 10,
    "raaka": 1.0
   },
   "Salo": {
@@ -648,9 +703,16 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei",
+     "Hiekka ja sora- tai kalliomurske 4–6 mm; ei muotovaatimusta",
+     [
+      "salo3"
+     ]
     ]
    },
-   "pisteet": 39,
+   "pisteet": 35,
    "raaka": 3.5
   },
   "Joensuu": {
@@ -718,9 +780,16 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei",
+     "Hiekoitussepeli 3–8 mm, myös jalankulku- ja pyöräväylillä",
+     [
+      "joe1"
+     ]
     ]
    },
-   "pisteet": 61,
+   "pisteet": 55,
    "raaka": 5.5
   },
   "Lappeenranta": {
@@ -784,9 +853,16 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei",
+     "Ajoradoilla luonnonhiekka, kevytväylillä hiekoitussepeli",
+     [
+      "lpr3"
+     ]
     ]
    },
-   "pisteet": 28,
+   "pisteet": 25,
    "raaka": 2.5
   },
   "Vaasa": {
@@ -861,10 +937,17 @@
       "vaa5",
       "vaa3"
      ]
+    ],
+    "K10": [
+     "osittain",
+     "Urakassa: materiaali ei saa vahingoittaa polkupyörän renkaita, muotoarvo < 25; silti kalliomurske 0–6 mm sallittu",
+     [
+      "vaa1"
+     ]
     ]
    },
-   "pisteet": 89,
-   "raaka": 8.0
+   "pisteet": 85,
+   "raaka": 8.5
   },
   "Seinäjoki": {
    "K": {
@@ -919,9 +1002,14 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei tietoa",
+     "Materiaalivaatimusta ei löytynyt",
+     []
     ]
    },
-   "pisteet": 11,
+   "pisteet": 10,
    "raaka": 1.0
   },
   "Rovaniemi": {
@@ -984,10 +1072,17 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "osittain",
+     "Urakassa: hiekka ei saa vahingoittaa renkaita; sepeli sallittu sileällä ja märällä jäällä",
+     [
+      "rov1"
+     ]
     ]
    },
-   "pisteet": 61,
-   "raaka": 5.5
+   "pisteet": 60,
+   "raaka": 6.0
   },
   "Oulu": {
    "K": {
@@ -1058,10 +1153,19 @@
       "oulu2",
       "oulu4"
      ]
+    ],
+    "K10": [
+     "kyllä",
+     "Seulottu luonnonsora, joka ei riko kumeja kuten kalliomurske; kumeja puhkovasta sorasta sanktio (lehtilähteet)",
+     [
+      "oulu5",
+      "oulu6",
+      "oulu4"
+     ]
     ]
    },
-   "pisteet": 83,
-   "raaka": 7.5,
+   "pisteet": 85,
+   "raaka": 8.5,
    "mallin_lahde": true
   },
   "Helsinki": {
@@ -1127,10 +1231,18 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "osittain",
+     "Harjasuolausreitit (~70 km) hiekoittamatta; muualla kalliosta murskattu sepeli 1/5,6–3/5,6 mm",
+     [
+      "hel1",
+      "tt2022"
+     ]
     ]
    },
    "pisteet": 50,
-   "raaka": 4.5
+   "raaka": 5.0
   },
   "Espoo": {
    "K": {
@@ -1197,10 +1309,18 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "osittain",
+     "~24 km harjasuolataan; muualla pesuseulottu kalliomurske",
+     [
+      "esp4",
+      "tt2022"
+     ]
     ]
    },
-   "pisteet": 39,
-   "raaka": 3.5
+   "pisteet": 40,
+   "raaka": 4.0
   },
   "Vantaa": {
    "K": {
@@ -1265,10 +1385,17 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "kyllä",
+     "Turvahiekka, murskaamaton ja pesty, 1–6 mm: \"murskattu kiviaines voi puhkoa pyöränkumeja\"",
+     [
+      "van3"
+     ]
     ]
    },
-   "pisteet": 39,
-   "raaka": 3.5
+   "pisteet": 45,
+   "raaka": 4.5
   },
   "Tampere": {
    "K": {
@@ -1334,9 +1461,17 @@
      "ei tietoa",
      "",
      []
+    ],
+    "K10": [
+     "ei",
+     "Murskattu kalliosepeli 2–6 / 3–8 mm myös kevytväylillä",
+     [
+      "tre7",
+      "tre4"
+     ]
     ]
    },
-   "pisteet": 56,
+   "pisteet": 50,
    "raaka": 5.0
   }
  },
@@ -1725,6 +1860,41 @@
    "Tampere, valtuustoaloite palautejärjestelmästä",
    2023,
    "https://tampere.cloudnc.fi/download/noname/{e54528bc-3ab5-4d8b-8b6e-19df964a55fa}/7302263"
+  ],
+  "van3": [
+   "Vantaa: Katujen kunnossapito (turvahiekka)",
+   2026,
+   "https://www.vantaa.fi/fi/kadut-ja-liikenne/katujen-kunnossapito"
+  ],
+  "oulu5": [
+   "Kaleva 30.10.2024: Oulussa alkoi hiekoituskausi",
+   2024,
+   "https://www.kaleva.fi/oulussa-alkoi-hiekoituskausi-jonka-aikana-soraa-sa/11383635"
+  ],
+  "oulu6": [
+   "Kaleva 26.10.2020: Kumeja puhkovaa tappajasoraa levittävää urakoitsijaa odottaa rangaistus",
+   2020,
+   "https://www.kaleva.fi/oulu-vetaa-tiukkaa-linjaa-hiekoituksessa-kumeja-pu/3043423"
+  ],
+  "esp4": [
+   "Espoo: Pyöräilyn tehostetun talvikunnossapidon reitit 2025–2028 (uutinen 26.9.2025)",
+   2025,
+   ""
+  ],
+  "tre7": [
+   "Tampere: Hiekoitussepeli ei enää jätettä -hakemus",
+   2024,
+   "https://tampere.fi/sites/default/files/2024-06/Hiekoitussepeli-ei-enaa-jatetta-hakemus.pdf"
+  ],
+  "kuo2": [
+   "Kuopio: Liukkaudentorjunnan kehittämishanke LiKeKi",
+   2026,
+   "https://www.kuopio.fi/asuminen-ja-ymparisto/katualueet/liukkaudentorjunnan-kehittamishanke-likeki/"
+  ],
+  "hml6": [
+   "Hämeenlinnan kävelyn ja pyöräilyn edistämisohjelma 2022–2026 (s. 34)",
+   2022,
+   "https://www.traficom.fi/sites/default/files/media/file/H%C3%A4meenlinna_K%C3%A4velyn%20ja%20py%C3%B6r%C3%A4ilyn%20edist%C3%A4misohjelma%202022-2026%20liitteineen.pdf"
   ]
  }
 }
