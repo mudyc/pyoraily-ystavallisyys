@@ -115,10 +115,18 @@ def taajamat():
             for f in json.load(gzip.open(polku))['features']]
 
 
+def painotettu_mediaani(x, w):
+    o = np.argsort(x)
+    c = np.cumsum(w[o])
+    return round(float(x[o][np.searchsorted(c, c[-1] / 2)]))
+
+
 def tunnusluvut(p, m, w):
     return {'painotettu': round(float((p * w).sum() / w.sum()) * 100, 1),
             'rakennukset': round(float(p.mean()) * 100, 1),
-            'mediaaniM': round(float(np.median(np.minimum(m, MAKS)))),
+            # Painotettu kuten prosentti: painottamattomana maaseudun pientalot
+            # vievät mediaanin 2 km:iin (Kuopio 64 % mutta mediaani >= 2 km).
+            'mediaaniM': painotettu_mediaani(np.minimum(m, MAKS), w),
             'kiinni': round(float((m == 0).mean()) * 100, 1),
             'yli2km': round(float((m >= MAKS).mean()) * 100, 1)}
 

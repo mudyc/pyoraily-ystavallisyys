@@ -349,6 +349,8 @@ const LAHIBAANA_MAARITELMA = `<b>Lähibaanaprosentti: kuinka lähellä asuinrake
     1 km:n päässä 50 %, 2 km tai kauempana 0 %.</li>
   <li><b>Kaupungin luku:</b> rakennusten arvojen keskiarvo <b>huoneistoalalla painotettuna</b>, jotta
     kerrostalo painaa asuntojensa verran eikä yhden pientalon verran.</li>
+  <li><b>Mediaanimatka:</b> matkan d mediaani huoneistoalalla painotettuna: puolet asuinalasta on
+    tätä lähempänä pääverkkoa. Näkyy palkin vieressä.</li>
   </ol>
   <b>Varaukset.</b> Mikä on "pääreitti", on kaupungin oma päätös: Turku luokittelee pääreitiksi lähes
   koko kevytverkkonsa, Espoo vain osan. Luku mittaa siis myös luokittelutapaa. Kuntaliitosten
@@ -491,6 +493,9 @@ const MITTARIT = {
   */
 
   lahibaana: { nimi: 'Lähibaana', arvo: k => k.lahibaana, muoto: v => v.toFixed(0) + ' %',
+             // Mediaanimatka on konkreettisempi kuin prosentti: puolet asuinrakennuksista
+             // on tätä lähempänä pääverkkoa (verkkoa pitkin, 2 km:iin katkaistuna).
+             lisa: k => k.lahiMed == null ? '' : `mediaani ${k.lahiMed >= 2000 ? '≥ 2 km' : fi.format(k.lahiMed) + ' m'}`,
              selite: LAHIBAANA_MAARITELMA },
 };
 
@@ -579,7 +584,9 @@ const JOHDANNOT = {
       return [[m.length + '/' + D.length, 'kaupunkia kattaa'],
               [fi.format(m.reduce((a, k) => a + k.lahiRak, 0)), 'asuinrakennusta'],
               [Math.max(...m.map(k => k.lahibaana)).toFixed(0) + ' %', 'paras'],
-              [Math.min(...m.map(k => k.lahibaana)).toFixed(0) + ' %', 'huonoin']]; },
+              [Math.min(...m.map(k => k.lahibaana)).toFixed(0) + ' %', 'huonoin'],
+              [fi.format(Math.min(...m.map(k => k.lahiMed))) + '–' +
+               fi.format(Math.max(...m.map(k => k.lahiMed))) + ' m', 'mediaanimatka pääverkolle']]; },
   },
   matkavastus: {
     teksti: `Paljonko verkosta kuluu raskaisiin nousuihin. Ohje määrittelee matkavastuksen
@@ -656,7 +663,9 @@ function piirraVertailu() {
     } else {
       palkki = `<div class="bar"><i style="width:${lev(r.v).toFixed(1)}%"></i></div>`;
     }
-    d.innerHTML = `<div class="nm">${r.k.nimi}</div>${palkki}<div class="v">${M.muoto(r.v)}</div>`;
+    const lisa = M.lisa ? M.lisa(r.k) : '';
+    d.innerHTML = `<div class="nm">${r.k.nimi}</div>${palkki}<div class="v">${M.muoto(r.v)}` +
+      (lisa ? `<br><small style="color:var(--ink-3);white-space:nowrap">${lisa}</small>` : '') + `</div>`;
     d.onclick = () => avaaKaupunki(r.k.nimi);
     el.append(n, d);
   });

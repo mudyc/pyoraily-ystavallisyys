@@ -18,14 +18,14 @@
     "paa": {
      "painotettu": 80.7,
      "rakennukset": 75.3,
-     "mediaaniM": 390,
+     "mediaaniM": 309,
      "kiinni": 3.3,
      "yli2km": 3.0
     },
     "alue": {
      "painotettu": 88.6,
      "rakennukset": 85.1,
-     "mediaaniM": 228,
+     "mediaaniM": 177,
      "kiinni": 7.6,
      "yli2km": 0.9
     }
@@ -43,14 +43,14 @@
     "paa": {
      "painotettu": 81.1,
      "rakennukset": 76.3,
-     "mediaaniM": 385,
+     "mediaaniM": 306,
      "kiinni": 3.4,
      "yli2km": 2.0
     },
     "alue": {
      "painotettu": 88.9,
      "rakennukset": 85.9,
-     "mediaaniM": 225,
+     "mediaaniM": 176,
      "kiinni": 7.6,
      "yli2km": 0.4
     }
@@ -68,14 +68,14 @@
     "paa": {
      "painotettu": 81.4,
      "rakennukset": 77.0,
-     "mediaaniM": 381,
+     "mediaaniM": 304,
      "kiinni": 3.4,
      "yli2km": 1.3
     },
     "alue": {
      "painotettu": 89.0,
      "rakennukset": 86.0,
-     "mediaaniM": 225,
+     "mediaaniM": 175,
      "kiinni": 7.6,
      "yli2km": 0.4
     }
@@ -96,21 +96,21 @@
     "baana": {
      "painotettu": 66.3,
      "rakennukset": 63.5,
-     "mediaaniM": 629,
+     "mediaaniM": 570,
      "kiinni": 0.9,
      "yli2km": 4.6
     },
     "paa": {
      "painotettu": 89.2,
      "rakennukset": 85.9,
-     "mediaaniM": 204,
+     "mediaaniM": 161,
      "kiinni": 9.0,
      "yli2km": 1.7
     },
     "alue": {
      "painotettu": 93.0,
      "rakennukset": 90.5,
-     "mediaaniM": 139,
+     "mediaaniM": 105,
      "kiinni": 15.3,
      "yli2km": 1.1
     }
@@ -121,21 +121,21 @@
     "baana": {
      "painotettu": 66.3,
      "rakennukset": 63.7,
-     "mediaaniM": 627,
+     "mediaaniM": 570,
      "kiinni": 0.9,
      "yli2km": 4.2
     },
     "paa": {
      "painotettu": 89.2,
      "rakennukset": 86.2,
-     "mediaaniM": 203,
+     "mediaaniM": 160,
      "kiinni": 9.0,
      "yli2km": 1.5
     },
     "alue": {
      "painotettu": 93.1,
      "rakennukset": 90.8,
-     "mediaaniM": 138,
+     "mediaaniM": 105,
      "kiinni": 15.4,
      "yli2km": 0.9
     }
@@ -146,21 +146,21 @@
     "baana": {
      "painotettu": 66.6,
      "rakennukset": 64.7,
-     "mediaaniM": 617,
+     "mediaaniM": 568,
      "kiinni": 0.9,
      "yli2km": 2.8
     },
     "paa": {
      "painotettu": 89.6,
      "rakennukset": 87.3,
-     "mediaaniM": 200,
+     "mediaaniM": 159,
      "kiinni": 9.1,
      "yli2km": 0.6
     },
     "alue": {
      "painotettu": 93.5,
      "rakennukset": 92.0,
-     "mediaaniM": 135,
+     "mediaaniM": 104,
      "kiinni": 15.6,
      "yli2km": 0.0
     }
@@ -181,21 +181,21 @@
     "baana": {
      "painotettu": 37.9,
      "rakennukset": 24.2,
-     "mediaaniM": 2000,
+     "mediaaniM": 1296,
      "kiinni": 0.2,
      "yli2km": 51.2
     },
     "paa": {
      "painotettu": 86.8,
      "rakennukset": 80.6,
-     "mediaaniM": 270,
+     "mediaaniM": 191,
      "kiinni": 5.0,
      "yli2km": 3.2
     },
     "alue": {
      "painotettu": 86.8,
      "rakennukset": 80.6,
-     "mediaaniM": 270,
+     "mediaaniM": 191,
      "kiinni": 5.0,
      "yli2km": 3.2
     }
@@ -206,21 +206,21 @@
     "baana": {
      "painotettu": 38.0,
      "rakennukset": 24.4,
-     "mediaaniM": 2000,
+     "mediaaniM": 1290,
      "kiinni": 0.2,
      "yli2km": 50.9
     },
     "paa": {
      "painotettu": 87.0,
      "rakennukset": 81.2,
-     "mediaaniM": 268,
+     "mediaaniM": 191,
      "kiinni": 5.0,
      "yli2km": 2.7
     },
     "alue": {
      "painotettu": 87.0,
      "rakennukset": 81.2,
-     "mediaaniM": 268,
+     "mediaaniM": 191,
      "kiinni": 5.0,
      "yli2km": 2.7
     }
@@ -231,21 +231,21 @@
     "baana": {
      "painotettu": 38.1,
      "rakennukset": 24.5,
-     "mediaaniM": 2000,
+     "mediaaniM": 1286,
      "kiinni": 0.2,
      "yli2km": 50.7
     },
     "paa": {
      "painotettu": 87.2,
      "rakennukset": 81.6,
-     "mediaaniM": 266,
+     "mediaaniM": 191,
      "kiinni": 5.1,
      "yli2km": 2.4
     },
     "alue": {
      "painotettu": 87.2,
      "rakennukset": 81.6,
-     "mediaaniM": 266,
+     "mediaaniM": 191,
      "kiinni": 5.1,
      "yli2km": 2.4
     }
@@ -267,14 +267,14 @@
     "paa": {
      "painotettu": 40.4,
      "rakennukset": 22.1,
-     "mediaaniM": 2000,
+     "mediaaniM": 1306,
      "kiinni": 0.4,
      "yli2km": 61.7
     },
     "alue": {
      "painotettu": 61.8,
      "rakennukset": 45.3,
-     "mediaaniM": 848,
+     "mediaaniM": 274,
      "kiinni": 2.5,
      "yli2km": 46.3
     }
@@ -286,14 +286,14 @@
     "paa": {
      "painotettu": 48.5,
      "rakennukset": 31.8,
-     "mediaaniM": 1750,
+     "mediaaniM": 841,
      "kiinni": 0.6,
      "yli2km": 45.1
     },
     "alue": {
      "painotettu": 74.0,
      "rakennukset": 64.7,
-     "mediaaniM": 307,
+     "mediaaniM": 208,
      "kiinni": 3.6,
      "yli2km": 24.0
     }
@@ -305,14 +305,14 @@
     "paa": {
      "painotettu": 57.6,
      "rakennukset": 41.7,
-     "mediaaniM": 1149,
+     "mediaaniM": 596,
      "kiinni": 0.8,
      "yli2km": 28.0
     },
     "alue": {
      "painotettu": 87.8,
      "rakennukset": 84.8,
-     "mediaaniM": 219,
+     "mediaaniM": 166,
      "kiinni": 4.7,
      "yli2km": 0.4
     }
@@ -334,14 +334,14 @@
     "paa": {
      "painotettu": 62.6,
      "rakennukset": 45.0,
-     "mediaaniM": 885,
+     "mediaaniM": 450,
      "kiinni": 1.6,
      "yli2km": 37.6
     },
     "alue": {
      "painotettu": 79.8,
      "rakennukset": 65.0,
-     "mediaaniM": 261,
+     "mediaaniM": 162,
      "kiinni": 5.5,
      "yli2km": 24.5
     }
@@ -353,14 +353,14 @@
     "paa": {
      "painotettu": 71.3,
      "rakennukset": 61.2,
-     "mediaaniM": 573,
+     "mediaaniM": 362,
      "kiinni": 2.1,
      "yli2km": 16.3
     },
     "alue": {
      "painotettu": 90.4,
      "rakennukset": 87.0,
-     "mediaaniM": 176,
+     "mediaaniM": 139,
      "kiinni": 7.6,
      "yli2km": 2.0
     }
@@ -372,14 +372,14 @@
     "paa": {
      "painotettu": 77.7,
      "rakennukset": 71.0,
-     "mediaaniM": 474,
+     "mediaaniM": 323,
      "kiinni": 2.5,
      "yli2km": 2.7
     },
     "alue": {
      "painotettu": 91.7,
      "rakennukset": 89.3,
-     "mediaaniM": 162,
+     "mediaaniM": 131,
      "kiinni": 8.4,
      "yli2km": 0.8
     }
@@ -401,14 +401,14 @@
     "paa": {
      "painotettu": 56.7,
      "rakennukset": 37.5,
-     "mediaaniM": 1345,
+     "mediaaniM": 606,
      "kiinni": 1.2,
      "yli2km": 41.0
     },
     "alue": {
      "painotettu": 78.6,
      "rakennukset": 65.0,
-     "mediaaniM": 434,
+     "mediaaniM": 239,
      "kiinni": 3.5,
      "yli2km": 16.5
     }
@@ -420,14 +420,14 @@
     "paa": {
      "painotettu": 60.2,
      "rakennukset": 44.0,
-     "mediaaniM": 1004,
+     "mediaaniM": 543,
      "kiinni": 1.4,
      "yli2km": 31.0
     },
     "alue": {
      "painotettu": 83.5,
      "rakennukset": 76.3,
-     "mediaaniM": 345,
+     "mediaaniM": 223,
      "kiinni": 4.1,
      "yli2km": 2.6
     }
@@ -439,14 +439,14 @@
     "paa": {
      "painotettu": 61.4,
      "rakennukset": 44.9,
-     "mediaaniM": 974,
+     "mediaaniM": 517,
      "kiinni": 1.5,
      "yli2km": 29.2
     },
     "alue": {
      "painotettu": 84.3,
      "rakennukset": 78.0,
-     "mediaaniM": 326,
+     "mediaaniM": 216,
      "kiinni": 4.4,
      "yli2km": 1.8
     }
@@ -468,14 +468,14 @@
     "paa": {
      "painotettu": 53.3,
      "rakennukset": 41.6,
-     "mediaaniM": 1095,
+     "mediaaniM": 520,
      "kiinni": 0.8,
      "yli2km": 44.9
     },
     "alue": {
      "painotettu": 53.3,
      "rakennukset": 41.6,
-     "mediaaniM": 1095,
+     "mediaaniM": 520,
      "kiinni": 0.8,
      "yli2km": 44.9
     }
@@ -487,14 +487,14 @@
     "paa": {
      "painotettu": 65.2,
      "rakennukset": 57.1,
-     "mediaaniM": 520,
+     "mediaaniM": 370,
      "kiinni": 1.1,
      "yli2km": 25.5
     },
     "alue": {
      "painotettu": 65.2,
      "rakennukset": 57.1,
-     "mediaaniM": 520,
+     "mediaaniM": 370,
      "kiinni": 1.1,
      "yli2km": 25.5
     }
@@ -506,14 +506,14 @@
     "paa": {
      "painotettu": 82.0,
      "rakennukset": 76.5,
-     "mediaaniM": 360,
+     "mediaaniM": 271,
      "kiinni": 1.6,
      "yli2km": 1.8
     },
     "alue": {
      "painotettu": 82.0,
      "rakennukset": 76.5,
-     "mediaaniM": 360,
+     "mediaaniM": 271,
      "kiinni": 1.6,
      "yli2km": 1.8
     }
@@ -535,14 +535,14 @@
     "paa": {
      "painotettu": 63.8,
      "rakennukset": 37.2,
-     "mediaaniM": 2000,
+     "mediaaniM": 291,
      "kiinni": 2.4,
      "yli2km": 54.5
     },
     "alue": {
      "painotettu": 63.8,
      "rakennukset": 37.2,
-     "mediaaniM": 2000,
+     "mediaaniM": 291,
      "kiinni": 2.4,
      "yli2km": 54.5
     }
@@ -554,14 +554,14 @@
     "paa": {
      "painotettu": 77.1,
      "rakennukset": 60.7,
-     "mediaaniM": 389,
+     "mediaaniM": 223,
      "kiinni": 4.0,
      "yli2km": 26.4
     },
     "alue": {
      "painotettu": 77.1,
      "rakennukset": 60.7,
-     "mediaaniM": 389,
+     "mediaaniM": 223,
      "kiinni": 4.0,
      "yli2km": 26.4
     }
@@ -573,14 +573,14 @@
     "paa": {
      "painotettu": 87.1,
      "rakennukset": 82.2,
-     "mediaaniM": 268,
+     "mediaaniM": 188,
      "kiinni": 5.4,
      "yli2km": 0.5
     },
     "alue": {
      "painotettu": 87.1,
      "rakennukset": 82.2,
-     "mediaaniM": 268,
+     "mediaaniM": 188,
      "kiinni": 5.4,
      "yli2km": 0.5
     }
@@ -602,14 +602,14 @@
     "paa": {
      "painotettu": 43.0,
      "rakennukset": 21.0,
-     "mediaaniM": 2000,
+     "mediaaniM": 1170,
      "kiinni": 0.9,
      "yli2km": 60.8
     },
     "alue": {
      "painotettu": 46.3,
      "rakennukset": 22.8,
-     "mediaaniM": 2000,
+     "mediaaniM": 938,
      "kiinni": 1.2,
      "yli2km": 60.2
     }
@@ -621,14 +621,14 @@
     "paa": {
      "painotettu": 44.5,
      "rakennukset": 22.7,
-     "mediaaniM": 2000,
+     "mediaaniM": 1071,
      "kiinni": 0.9,
      "yli2km": 57.5
     },
     "alue": {
      "painotettu": 47.9,
      "rakennukset": 24.8,
-     "mediaaniM": 2000,
+     "mediaaniM": 814,
      "kiinni": 1.3,
      "yli2km": 56.8
     }
@@ -640,14 +640,14 @@
     "paa": {
      "painotettu": 49.8,
      "rakennukset": 27.5,
-     "mediaaniM": 1942,
+     "mediaaniM": 779,
      "kiinni": 1.1,
      "yli2km": 48.7
     },
     "alue": {
      "painotettu": 53.7,
      "rakennukset": 29.9,
-     "mediaaniM": 1903,
+     "mediaaniM": 599,
      "kiinni": 1.6,
      "yli2km": 47.8
     }
@@ -669,14 +669,14 @@
     "paa": {
      "painotettu": 47.0,
      "rakennukset": 28.7,
-     "mediaaniM": 1884,
+     "mediaaniM": 910,
      "kiinni": 0.4,
      "yli2km": 48.8
     },
     "alue": {
      "painotettu": 64.8,
      "rakennukset": 49.9,
-     "mediaaniM": 539,
+     "mediaaniM": 260,
      "kiinni": 4.0,
      "yli2km": 40.3
     }
@@ -688,14 +688,14 @@
     "paa": {
      "painotettu": 54.3,
      "rakennukset": 37.5,
-     "mediaaniM": 1250,
+     "mediaaniM": 698,
      "kiinni": 0.5,
      "yli2km": 33.1
     },
     "alue": {
      "painotettu": 74.8,
      "rakennukset": 65.0,
-     "mediaaniM": 316,
+     "mediaaniM": 209,
      "kiinni": 5.2,
      "yli2km": 22.9
     }
@@ -707,14 +707,14 @@
     "paa": {
      "painotettu": 64.2,
      "rakennukset": 49.3,
-     "mediaaniM": 942,
+     "mediaaniM": 529,
      "kiinni": 0.6,
      "yli2km": 12.2
     },
     "alue": {
      "painotettu": 88.0,
      "rakennukset": 84.5,
-     "mediaaniM": 229,
+     "mediaaniM": 173,
      "kiinni": 6.9,
      "yli2km": 0.2
     }
@@ -736,14 +736,14 @@
     "paa": {
      "painotettu": 37.0,
      "rakennukset": 20.6,
-     "mediaaniM": 2000,
+     "mediaaniM": 1594,
      "kiinni": 0.4,
      "yli2km": 67.7
     },
     "alue": {
      "painotettu": 57.8,
      "rakennukset": 40.3,
-     "mediaaniM": 2000,
+     "mediaaniM": 356,
      "kiinni": 1.5,
      "yli2km": 50.9
     }
@@ -755,14 +755,14 @@
     "paa": {
      "painotettu": 49.7,
      "rakennukset": 35.8,
-     "mediaaniM": 1507,
+     "mediaaniM": 852,
      "kiinni": 0.7,
      "yli2km": 43.9
     },
     "alue": {
      "painotettu": 77.2,
      "rakennukset": 69.3,
-     "mediaaniM": 313,
+     "mediaaniM": 224,
      "kiinni": 2.7,
      "yli2km": 17.1
     }
@@ -774,14 +774,14 @@
     "paa": {
      "painotettu": 57.8,
      "rakennukset": 45.9,
-     "mediaaniM": 928,
+     "mediaaniM": 629,
      "kiinni": 0.9,
      "yli2km": 28.1
     },
     "alue": {
      "painotettu": 86.8,
      "rakennukset": 83.6,
-     "mediaaniM": 246,
+     "mediaaniM": 184,
      "kiinni": 3.1,
      "yli2km": 0.7
     }
@@ -809,14 +809,14 @@
     "paa": {
      "painotettu": 63.2,
      "rakennukset": 48.6,
-     "mediaaniM": 843,
+     "mediaaniM": 509,
      "kiinni": 1.7,
      "yli2km": 24.9
     },
     "alue": {
      "painotettu": 83.3,
      "rakennukset": 75.2,
-     "mediaaniM": 294,
+     "mediaaniM": 200,
      "kiinni": 5.0,
      "yli2km": 8.7
     }
@@ -834,14 +834,14 @@
     "paa": {
      "painotettu": 65.7,
      "rakennukset": 52.9,
-     "mediaaniM": 757,
+     "mediaaniM": 482,
      "kiinni": 1.9,
      "yli2km": 18.3
     },
     "alue": {
      "painotettu": 86.0,
      "rakennukset": 80.8,
-     "mediaaniM": 269,
+     "mediaaniM": 192,
      "kiinni": 5.4,
      "yli2km": 2.5
     }
@@ -859,14 +859,14 @@
     "paa": {
      "painotettu": 67.6,
      "rakennukset": 55.7,
-     "mediaaniM": 705,
+     "mediaaniM": 458,
      "kiinni": 2.0,
      "yli2km": 14.7
     },
     "alue": {
      "painotettu": 87.1,
      "rakennukset": 82.7,
-     "mediaaniM": 257,
+     "mediaaniM": 186,
      "kiinni": 5.7,
      "yli2km": 1.3
     }
@@ -888,14 +888,14 @@
     "paa": {
      "painotettu": 43.9,
      "rakennukset": 29.3,
-     "mediaaniM": 2000,
+     "mediaaniM": 978,
      "kiinni": 0.5,
      "yli2km": 53.9
     },
     "alue": {
      "painotettu": 63.8,
      "rakennukset": 50.2,
-     "mediaaniM": 678,
+     "mediaaniM": 348,
      "kiinni": 2.1,
      "yli2km": 32.9
     }
@@ -907,14 +907,14 @@
     "paa": {
      "painotettu": 47.9,
      "rakennukset": 34.7,
-     "mediaaniM": 1570,
+     "mediaaniM": 824,
      "kiinni": 0.6,
      "yli2km": 45.4
     },
     "alue": {
      "painotettu": 69.4,
      "rakennukset": 59.1,
-     "mediaaniM": 498,
+     "mediaaniM": 307,
      "kiinni": 2.5,
      "yli2km": 21.4
     }
@@ -926,14 +926,14 @@
     "paa": {
      "painotettu": 60.2,
      "rakennukset": 49.4,
-     "mediaaniM": 805,
+     "mediaaniM": 573,
      "kiinni": 0.9,
      "yli2km": 22.3
     },
     "alue": {
      "painotettu": 82.9,
      "rakennukset": 77.7,
-     "mediaaniM": 321,
+     "mediaaniM": 236,
      "kiinni": 3.5,
      "yli2km": 1.4
     }
@@ -955,14 +955,14 @@
     "paa": {
      "painotettu": 54.2,
      "rakennukset": 39.4,
-     "mediaaniM": 1484,
+     "mediaaniM": 524,
      "kiinni": 1.5,
      "yli2km": 47.4
     },
     "alue": {
      "painotettu": 60.4,
      "rakennukset": 44.9,
-     "mediaaniM": 1222,
+     "mediaaniM": 215,
      "kiinni": 4.1,
      "yli2km": 47.3
     }
@@ -974,14 +974,14 @@
     "paa": {
      "painotettu": 66.1,
      "rakennukset": 54.5,
-     "mediaaniM": 585,
+     "mediaaniM": 361,
      "kiinni": 2.0,
      "yli2km": 27.6
     },
     "alue": {
      "painotettu": 73.7,
      "rakennukset": 62.0,
-     "mediaaniM": 248,
+     "mediaaniM": 155,
      "kiinni": 5.7,
      "yli2km": 27.6
     }
@@ -993,14 +993,14 @@
     "paa": {
      "painotettu": 72.8,
      "rakennukset": 64.4,
-     "mediaaniM": 424,
+     "mediaaniM": 311,
      "kiinni": 2.4,
      "yli2km": 14.4
     },
     "alue": {
      "painotettu": 81.1,
      "rakennukset": 73.4,
-     "mediaaniM": 189,
+     "mediaaniM": 132,
      "kiinni": 6.7,
      "yli2km": 14.4
     }
@@ -1022,14 +1022,14 @@
     "paa": {
      "painotettu": 49.9,
      "rakennukset": 30.2,
-     "mediaaniM": 2000,
+     "mediaaniM": 778,
      "kiinni": 0.7,
      "yli2km": 51.0
     },
     "alue": {
      "painotettu": 67.8,
      "rakennukset": 50.6,
-     "mediaaniM": 585,
+     "mediaaniM": 240,
      "kiinni": 2.5,
      "yli2km": 37.4
     }
@@ -1041,14 +1041,14 @@
     "paa": {
      "painotettu": 57.2,
      "rakennukset": 40.0,
-     "mediaaniM": 1253,
+     "mediaaniM": 592,
      "kiinni": 0.9,
      "yli2km": 35.1
     },
     "alue": {
      "painotettu": 77.8,
      "rakennukset": 66.9,
-     "mediaaniM": 331,
+     "mediaaniM": 196,
      "kiinni": 3.3,
      "yli2km": 17.2
     }
@@ -1060,14 +1060,14 @@
     "paa": {
      "painotettu": 60.3,
      "rakennukset": 44.0,
-     "mediaaniM": 1052,
+     "mediaaniM": 531,
      "kiinni": 1.0,
      "yli2km": 28.7
     },
     "alue": {
      "painotettu": 82.0,
      "rakennukset": 73.5,
-     "mediaaniM": 292,
+     "mediaaniM": 178,
      "kiinni": 3.7,
      "yli2km": 8.9
     }
@@ -1108,14 +1108,14 @@
     "paa": {
      "painotettu": 64.7,
      "rakennukset": 55.2,
-     "mediaaniM": 306,
+     "mediaaniM": 190,
      "kiinni": 7.4,
      "yli2km": 38.0
     },
     "alue": {
      "painotettu": 65.6,
      "rakennukset": 56.2,
-     "mediaaniM": 252,
+     "mediaaniM": 151,
      "kiinni": 9.7,
      "yli2km": 38.0
     }
@@ -1127,14 +1127,14 @@
     "paa": {
      "painotettu": 88.9,
      "rakennukset": 85.4,
-     "mediaaniM": 155,
+     "mediaaniM": 116,
      "kiinni": 11.5,
      "yli2km": 4.7
     },
     "alue": {
      "painotettu": 90.2,
      "rakennukset": 86.8,
-     "mediaaniM": 119,
+     "mediaaniM": 85,
      "kiinni": 15.1,
      "yli2km": 4.7
     }
@@ -1155,21 +1155,21 @@
     "baana": {
      "painotettu": 39.7,
      "rakennukset": 26.3,
-     "mediaaniM": 2000,
+     "mediaaniM": 1202,
      "kiinni": 0.5,
      "yli2km": 54.3
     },
     "paa": {
      "painotettu": 55.4,
      "rakennukset": 41.8,
-     "mediaaniM": 1219,
+     "mediaaniM": 507,
      "kiinni": 1.1,
      "yli2km": 40.0
     },
     "alue": {
      "painotettu": 60.3,
      "rakennukset": 46.3,
-     "mediaaniM": 833,
+     "mediaaniM": 355,
      "kiinni": 1.7,
      "yli2km": 39.5
     }
@@ -1180,21 +1180,21 @@
     "baana": {
      "painotettu": 44.9,
      "rakennukset": 33.3,
-     "mediaaniM": 1560,
+     "mediaaniM": 958,
      "kiinni": 0.6,
      "yli2km": 42.2
     },
     "paa": {
      "painotettu": 62.5,
      "rakennukset": 52.7,
-     "mediaaniM": 639,
+     "mediaaniM": 405,
      "kiinni": 1.5,
      "yli2km": 24.6
     },
     "alue": {
      "painotettu": 68.1,
      "rakennukset": 58.3,
-     "mediaaniM": 433,
+     "mediaaniM": 285,
      "kiinni": 2.2,
      "yli2km": 24.0
     }
@@ -1205,21 +1205,21 @@
     "baana": {
      "painotettu": 51.3,
      "rakennukset": 40.9,
-     "mediaaniM": 1131,
+     "mediaaniM": 781,
      "kiinni": 0.8,
      "yli2km": 29.1
     },
     "paa": {
      "painotettu": 70.5,
      "rakennukset": 63.3,
-     "mediaaniM": 450,
+     "mediaaniM": 338,
      "kiinni": 1.7,
      "yli2km": 10.4
     },
     "alue": {
      "painotettu": 76.9,
      "rakennukset": 70.2,
-     "mediaaniM": 330,
+     "mediaaniM": 236,
      "kiinni": 2.7,
      "yli2km": 9.6
     }
@@ -1241,14 +1241,14 @@
     "paa": {
      "painotettu": 83.3,
      "rakennukset": 74.0,
-     "mediaaniM": 346,
+     "mediaaniM": 230,
      "kiinni": 3.8,
      "yli2km": 8.4
     },
     "alue": {
      "painotettu": 91.2,
      "rakennukset": 84.5,
-     "mediaaniM": 146,
+     "mediaaniM": 100,
      "kiinni": 13.8,
      "yli2km": 7.8
     }
@@ -1260,14 +1260,14 @@
     "paa": {
      "painotettu": 84.8,
      "rakennukset": 79.3,
-     "mediaaniM": 319,
+     "mediaaniM": 226,
      "kiinni": 4.1,
      "yli2km": 1.8
     },
     "alue": {
      "painotettu": 92.9,
      "rakennukset": 90.5,
-     "mediaaniM": 133,
+     "mediaaniM": 98,
      "kiinni": 14.8,
      "yli2km": 1.4
     }
@@ -1279,14 +1279,14 @@
     "paa": {
      "painotettu": 85.2,
      "rakennukset": 80.3,
-     "mediaaniM": 311,
+     "mediaaniM": 223,
      "kiinni": 4.2,
      "yli2km": 0.8
     },
     "alue": {
      "painotettu": 93.2,
      "rakennukset": 91.5,
-     "mediaaniM": 131,
+     "mediaaniM": 98,
      "kiinni": 15.1,
      "yli2km": 0.3
     }
@@ -1308,14 +1308,14 @@
     "paa": {
      "painotettu": 85.0,
      "rakennukset": 78.0,
-     "mediaaniM": 285,
+     "mediaaniM": 200,
      "kiinni": 6.8,
      "yli2km": 5.3
     },
     "alue": {
      "painotettu": 94.7,
      "rakennukset": 89.3,
-     "mediaaniM": 97,
+     "mediaaniM": 45,
      "kiinni": 19.9,
      "yli2km": 3.1
     }
@@ -1327,14 +1327,14 @@
     "paa": {
      "painotettu": 85.9,
      "rakennukset": 81.0,
-     "mediaaniM": 271,
+     "mediaaniM": 197,
      "kiinni": 7.1,
      "yli2km": 2.3
     },
     "alue": {
      "painotettu": 95.6,
      "rakennukset": 92.1,
-     "mediaaniM": 90,
+     "mediaaniM": 44,
      "kiinni": 20.8,
      "yli2km": 1.2
     }
@@ -1346,14 +1346,14 @@
     "paa": {
      "painotettu": 86.6,
      "rakennukset": 82.7,
-     "mediaaniM": 258,
+     "mediaaniM": 193,
      "kiinni": 7.4,
      "yli2km": 1.8
     },
     "alue": {
      "painotettu": 95.7,
      "rakennukset": 92.5,
-     "mediaaniM": 86,
+     "mediaaniM": 42,
      "kiinni": 21.5,
      "yli2km": 1.2
     }
@@ -1375,14 +1375,14 @@
     "paa": {
      "painotettu": 66.7,
      "rakennukset": 51.5,
-     "mediaaniM": 799,
+     "mediaaniM": 430,
      "kiinni": 1.6,
      "yli2km": 21.7
     },
     "alue": {
      "painotettu": 66.7,
      "rakennukset": 51.5,
-     "mediaaniM": 799,
+     "mediaaniM": 430,
      "kiinni": 1.6,
      "yli2km": 21.7
     }
@@ -1394,14 +1394,14 @@
     "paa": {
      "painotettu": 68.0,
      "rakennukset": 54.1,
-     "mediaaniM": 750,
+     "mediaaniM": 419,
      "kiinni": 1.6,
      "yli2km": 17.9
     },
     "alue": {
      "painotettu": 68.0,
      "rakennukset": 54.1,
-     "mediaaniM": 750,
+     "mediaaniM": 419,
      "kiinni": 1.6,
      "yli2km": 17.9
     }
@@ -1413,14 +1413,14 @@
     "paa": {
      "painotettu": 73.9,
      "rakennukset": 64.2,
-     "mediaaniM": 618,
+     "mediaaniM": 373,
      "kiinni": 2.0,
      "yli2km": 2.9
     },
     "alue": {
      "painotettu": 73.9,
      "rakennukset": 64.2,
-     "mediaaniM": 618,
+     "mediaaniM": 373,
      "kiinni": 2.0,
      "yli2km": 2.9
     }
