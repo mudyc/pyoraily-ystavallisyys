@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="fi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lähibaanaprosentti</title>
+<style>
+:root{--surface-0:#faf9f6;--surface-1:#fff;--surface-2:#f3f1ec;
+  --ink-1:#0b0b0b;--ink-2:#52514e;--ink-3:#85837c;--rule:#dedbd4;
+  --tie:#dcd9d2;--kevyt:#c9c6bd;--baana:#6a1b9a;--paa:#1f1f1f;--alue:#8a8780;
+  --ulko:#d6d3cc;--p0:#d7301f;--p1:#fc8d59;--p2:#fdcc8a;--p3:#91bfdb;--p4:#4575b4}
+@media (prefers-color-scheme:dark){:root{--surface-0:#15150f;--surface-1:#1c1c17;--surface-2:#232320;
+  --ink-1:#fff;--ink-2:#c3c2b7;--ink-3:#8f8e85;--rule:#33332f;
+  --tie:#2e2e2a;--kevyt:#3a3934;--ulko:#3e3d38;--baana:#ce93d8;--paa:#f2f2f2;--alue:#9d9b92}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--ink-1);
+  font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 50px}
+h1{font-size:22px;margin:0 0 6px}
+p.sub{color:var(--ink-2);margin:0 0 14px;max-width:76ch;font-size:14px}
+.ohj{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+select,button{font:inherit;font-size:14px;padding:5px 10px;border:1px solid var(--rule);
+  border-radius:8px;background:var(--surface-1);color:var(--ink-1)}
+button[aria-pressed=true]{background:var(--ink-1);color:var(--surface-1)}
+.stats{display:flex;gap:26px;flex-wrap:wrap;margin:14px 0}
+.stats div b{display:block;font-size:20px}.stats div span{font-size:12px;color:var(--ink-3)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--ink-2);margin:10px 0}
+.legend i{width:26px;height:3px;display:inline-block;vertical-align:3px;margin-right:6px;border-radius:2px}
+.legend i.d{width:10px;height:10px;border-radius:50%;vertical-align:-1px}
+canvas{width:100%;height:680px;display:block;background:var(--surface-1);
+  border:1px solid var(--rule);border-radius:12px;cursor:grab;touch-action:none}
+table{border-collapse:collapse;font-size:13.5px;margin:12px 0;width:100%;max-width:760px}
+td,th{padding:4px 10px;border-bottom:1px solid var(--rule);text-align:right}
+td:first-child,th:first-child{text-align:left}
+th{color:var(--ink-3);font-weight:500}
+.note{background:var(--surface-2);border-radius:10px;padding:14px 16px;font-size:13.5px;
+  line-height:1.62;color:var(--ink-2);margin:16px 0}.note b{color:var(--ink-1)}
+#tip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--rule);
+  border-radius:8px;padding:6px 9px;font-size:12.5px;display:none}
+</style>
+<div class="wrap">
+  <h1>Lähibaanaprosentti</h1>
+  <p class="sub">Asuinrakennuksesta (Ryhti) verkkoa pitkin lähimmälle pyöräilyn pääverkon linkille.
+    100 % = rakennuksen lähin katu on itse reitti, 0 % = reitille on 2 km tai enemmän.
+    Kaupungin luku on rakennusten keskiarvo huoneistoalalla painotettuna.
+    Rajaus <i>taajamat</i> jättää pois taajamien ulkopuoliset rakennukset (SYKE YKR 2025),
+    <i>keskustaajama</i> myös kunnan pienet taajamat.</p>
+  <div class="ohj" id="rajaukset"></div>
+  <table id="taulu"></table>
+  <div class="ohj">
+    <select id="kaupunki"></select>
+    <span id="tasot"></span>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="legend" id="legend"></div>
+  <canvas id="c"></canvas>
+  <div class="note" id="note"></div>
+</div>
+<div id="tip"></div>
+<script type="module">
+const $ = s => document.querySelector(s);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fi = new Intl.NumberFormat('fi-FI');
+const TASO = { baana: 'baana', paa: 'pääreitti tai parempi', alue: 'mikä tahansa reitti' };
+const TI = { baana: 4, paa: 5, alue: 6 };
+const RAJ = { kunta: 'koko kunta', taajama: 'taajamat', keskus: 'keskustaajama' };
+const SISALLA = { kunta: () => true, taajama: b => b[7] >= 1, keskus: b => b[7] === 2 };
+let rajaus = 'taajama';
+const S = await (await fetch('../data/lahibaana.json')).json();
+
+const pr = v => v == null ? '–' : v.painotettu.toFixed(0) + ' %';
+function taulu() {
+  $('#rajaukset').innerHTML = Object.keys(RAJ).map(r =>
+    `<button data-r="${r}" aria-pressed="${r === rajaus}">${RAJ[r]}</button>`).join(' ');
+  for (const b of $('#rajaukset').querySelectorAll('button'))
+    b.onclick = () => { rajaus = b.dataset.r; taulu(); if (D) { tilastot(); piirra(); } };
+  const q = r => r.rajaus[rajaus];
+  $('#taulu').innerHTML = `<tr><th>kaupunki</th><th>rajaus</th><th>asuinalasta</th><th>baana</th>
+    <th>pääreitti+</th><th>mikä tahansa reitti</th><th>mediaani pääreitille+</th></tr>` +
+    Object.entries(S).sort((a, b) => q(b[1]).paa.painotettu - q(a[1]).paa.painotettu).map(([k, r]) =>
+      `<tr><td>${r.nimi}</td><td>${rajaus === 'kunta' ? '' : rajaus === 'keskus' ? r.keskustaajama : 'kaikki taajamat'}</td>
+       <td>${q(r).alaOsuus.toFixed(0)} %</td><td>${pr(q(r).baana)}</td>
+       <td><b>${pr(q(r).paa)}</b></td><td>${pr(q(r).alue)}</td><td>${fi.format(q(r).paa.mediaaniM)} m</td></tr>`).join('');
+}
+taulu();
+
+const sel = $('#kaupunki');
+sel.innerHTML = Object.entries(S).map(([k, r]) => `<option value="${k}">${r.nimi}</option>`).join('');
+let D = null, taso = 'paa';
+const C = $('#c');
+const W = () => C.clientWidth, H = () => C.clientHeight;
+let cx = 0, cy = 0, mpp = 1, drag = null;
+const sx = x => (x - cx) / mpp + W() / 2;
+const sy = y => H() / 2 - (y - cy) / mpp;
+const inv = (px, py) => [cx + (px - W() / 2) * mpp, cy - (py - H() / 2) * mpp];
+const luokka = p => Math.min(4, Math.floor(p / 20));
+
+async function lataa(k) {
+  const r = await fetch(`../data/lahibaana/${k}.json.gz`);
+  D = await new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).json();
+  if (!D.tasot.includes(taso)) taso = D.tasot.includes('paa') ? 'paa' : D.tasot[0];
+  // Rajaus rakennuksista: maaseudun tieverkko ei saa venyttää näkymää.
+  const xs = D.rak.map(b => b[0]).sort((a, b) => a - b), ys = D.rak.map(b => b[1]).sort((a, b) => a - b);
+  const q = (a, f) => a[Math.floor(f * (a.length - 1))];
+  const [x0, x1, y0, y1] = [q(xs, .02), q(xs, .98), q(ys, .02), q(ys, .98)];
+  cx = (x0 + x1) / 2; cy = (y0 + y1) / 2;
+  mpp = Math.max((x1 - x0) / (W() - 40), (y1 - y0) / (H() - 40));
+  // #koodi/taso/x/y/mpp: jaettava näkymä
+  const h = location.hash.slice(1).split('/');
+  if (h[0] === k && h.length === 5) { if (D.tasot.includes(h[1])) taso = h[1]; [cx, cy, mpp] = h.slice(2).map(Number); }
+  napit(); tilastot(); piirra();
+}
+
+function napit() {
+  $('#tasot').innerHTML = Object.keys(TASO).map(t =>
+    `<button data-t="${t}" aria-pressed="${t === taso}" ${D.tasot.includes(t) ? '' : 'disabled'}>${TASO[t]}</button>`).join(' ');
+  for (const b of $('#tasot').querySelectorAll('button'))
+    b.onclick = () => { taso = b.dataset.t; napit(); tilastot(); piirra(); };
+}
+
+function tilastot() {
+  const r = S[sel.value].rajaus[rajaus][taso];
+  $('#stats').innerHTML = [
+    [r.painotettu.toFixed(1) + ' %', 'huoneistoalalla painotettu'],
+    [r.rakennukset.toFixed(1) + ' %', 'rakennusten keskiarvo'],
+    [fi.format(r.mediaaniM) + ' m', 'mediaanimatka reitille'],
+    [r.kiinni.toFixed(1) + ' %', 'rakennuksista suoraan reitin varrella'],
+    [r.yli2km.toFixed(1) + ' %', 'yli 2 km'],
+  ].map(([b, s]) => `<div><b>${b}</b><span>${s}</span></div>`).join('');
+  const nimet = ['0–20 %', '20–40 %', '40–60 %', '60–80 %', '80–100 %'];
+  $('#legend').innerHTML = nimet.map((n, i) => `<span><i class="d" style="background:${css('--p' + i)}"></i>${n}</span>`).join('') +
+    `<span><i style="background:${css('--baana')};height:4px"></i>baana</span>` +
+    `<span><i style="background:${css('--paa')};height:3px"></i>pääreitti</span>` +
+    `<span><i style="background:${css('--alue')};height:2px"></i>aluereitti</span>` +
+    `<span><i style="background:repeating-linear-gradient(90deg,${css('--paa')} 0 4px,transparent 4px 7px)"></i>suunniteltu (ei laskettu)</span>` +
+    `<span><i class="d" style="background:${css('--ulko')}"></i>rajauksen ulkopuolella</span>` +
+    `<span style="color:var(--ink-3)">· pisteen koko = huoneistoala</span>`;
+}
+
+function piirra() {
+  if (!D) return;
+  const dpr = devicePixelRatio || 1;
+  if (C.width !== W() * dpr) { C.width = W() * dpr; C.height = H() * dpr; }
+  const g = C.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W(), H());
+  const k = Math.max(0.4, Math.min(2.4, 6 / mpp));
+  const veda = (lista, vari, lev, alfa = 1, viiva = []) => {
+    g.globalAlpha = alfa; g.strokeStyle = vari; g.lineWidth = lev * k; g.setLineDash(viiva);
+    g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath();
+    for (const c of lista) {
+      const px = sx(c[0][0]), py = sy(c[0][1]);
+      if (px < -2000 || px > W() + 2000 || py < -2000 || py > H() + 2000) continue;
+      g.moveTo(px, py);
+      for (let i = 1; i < c.length; i++) g.lineTo(sx(c[i][0]), sy(c[i][1]));
+    }
+    g.stroke(); g.globalAlpha = 1; g.setLineDash([]);
+  };
+  veda(D.verkko.filter(v => !v[0]).map(v => v[1]), css('--tie'), 1.4, 0.8);
+  veda(D.verkko.filter(v => v[0]).map(v => v[1]), css('--kevyt'), 1.0, 0.8);
+  const R = l => D.reitit.filter(r => r[0] === l).map(r => r[1]);
+  veda(R(5), css('--alue'), 1.4, 0.9, [4, 3]); veda(R(4), css('--paa'), 1.6, 0.9, [4, 3]);
+  veda(R(3), css('--baana'), 2.2, 0.9, [4, 3]);
+  veda(R(2), css('--alue'), 1.6); veda(R(1), css('--paa'), 2.0); veda(R(0), css('--baana'), 3.0);
+  const ti = TI[taso], vari = [0, 1, 2, 3, 4].map(i => css('--p' + i));
+  const kerta = Math.max(0.6, Math.min(2.2, 4 / mpp));
+  const sis = SISALLA[rajaus];
+  for (let l = -1; l < 5; l++) {
+    g.fillStyle = l < 0 ? css('--ulko') : vari[l]; g.beginPath();
+    for (const b of D.rak) {
+      if (l < 0 ? sis(b) : !sis(b) || luokka(b[ti]) !== l) continue;
+      const px = sx(b[0]), py = sy(b[1]);
+      if (px < -5 || px > W() + 5 || py < -5 || py > H() + 5) continue;
+      const r = kerta * (1.3 + Math.min(4, Math.sqrt(b[2]) / 12));
+      g.moveTo(px + r, py); g.arc(px, py, r, 0, 2 * Math.PI);
+    }
+    g.fill();
+  }
+}
+
+C.onpointerdown = e => { C.setPointerCapture(e.pointerId); const b = C.getBoundingClientRect();
+  drag = { x: e.clientX - b.left, y: e.clientY - b.top, cx, cy }; C.style.cursor = 'grabbing'; };
+C.onpointerup = () => { drag = null; C.style.cursor = ''; };
+C.onpointermove = e => {
+  const b = C.getBoundingClientRect(), mx = e.clientX - b.left, my = e.clientY - b.top;
+  if (drag) { cx = drag.cx - (mx - drag.x) * mpp; cy = drag.cy + (my - drag.y) * mpp; piirra(); return; }
+  const [wx, wy] = inv(mx, my), tip = $('#tip');
+  let paras = null, pd = (8 * mpp) ** 2;
+  for (const r of D?.rak ?? []) { const d = (r[0] - wx) ** 2 + (r[1] - wy) ** 2; if (d < pd) { pd = d; paras = r; } }
+  if (!paras) { tip.style.display = 'none'; return; }
+  const m = p => p >= 100 ? 'reitin varrella' : p <= 0 ? '≥ 2 km' : `≈ ${fi.format(Math.round((100 - p) * 20))} m`;
+  tip.innerHTML = `<b>${paras[3] ? 'kerrostalo' : 'pientalo'}</b>, ${fi.format(paras[2])} m² · ` +
+    `${['taajaman ulkopuolella', 'taajamassa', 'keskustaajamassa'][paras[7]]}<br>` +
+    D.tasot.map(t => `${TASO[t]}: <b>${paras[TI[t]]} %</b> (${m(paras[TI[t]])})`).join('<br>');
+  tip.style.display = 'block'; tip.style.left = e.clientX + 14 + 'px'; tip.style.top = e.clientY + 14 + 'px';
+};
+C.onpointerleave = () => { $('#tip').style.display = 'none'; };
+C.onwheel = e => { e.preventDefault();
+  const b = C.getBoundingClientRect(), mx = e.clientX - b.left, my = e.clientY - b.top;
+  const [wx, wy] = inv(mx, my);
+  const yks = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1;
+  const perPx = e.ctrlKey ? 0.010 : Math.log(1.3) / 100;
+  let kk = Math.min(1.4, Math.max(1 / 1.4, Math.exp(e.deltaY * yks * perPx)));
+  mpp = Math.max(0.2, Math.min(200, mpp * kk));
+  cx = wx - (mx - W() / 2) * mpp; cy = wy + (my - H() / 2) * mpp; piirra(); };
+addEventListener('resize', piirra);
+sel.onchange = () => { history.replaceState(null, '', '#'); lataa(sel.value); };
+const muista = () => history.replaceState(null, '', `#${sel.value}/${taso}/${Math.round(cx)}/${Math.round(cy)}/${mpp.toFixed(2)}`);
+C.addEventListener('pointerup', muista); C.addEventListener('wheel', muista);
+const alku = location.hash.slice(1).split('/')[0];
+if (S[alku]) sel.value = alku;
+
+$('#note').innerHTML =
+  `<b>Mitä katsoa.</b> Punaiset ja oranssit pisteet ovat asuinalueita, joilta on yli kilometri
+   reitille. Ovatko ne aitoja aukkoja verkossa vai sovituksen virheitä (reitti, joka ei osunut
+   Digiroadin linkkiin, näkyy katkona)? Katkoviiva on suunniteltu verkko: se ei kelpaa laskussa,
+   mutta näyttää mihin kaupunki itse aikoo aukon paikata.
+   <br><br><b>Varaukset.</b> Reittiluokat ovat kaupunkien omia eivätkä keskenään vertailukelpoisia,
+   joten "pääreitti" on kaupungin oma päätös. Helsingin baana on tavoiteverkkoa, josta osa on
+   rakentamatta. Turun ja Oulun lähteet kattavat koko seudun, mutta lasku tehdään kuntarajan sisällä.
+   Rakennus liitetään lähimpään pyöräiltävään linkkiin; liitosmatkaa ei lasketa.
+   <br><br>Rakennukset: Ryhti, SYKE (CC BY 4.0). Taajamat: YKR 2025, SYKE (CC BY 4.0). Tieverkko: Digiroad, Väylävirasto (CC BY 4.0).
+   Vaasan reitit: © OpenStreetMap contributors (ODbL).`;
+await lataa(sel.value);
+</script>
