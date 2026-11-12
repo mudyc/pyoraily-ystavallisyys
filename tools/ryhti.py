@@ -3,11 +3,13 @@
 Hae Ryhdistä (SYKE, CC BY 4.0) kaupunkien asuinrakennukset.
 
 Lähde: OGC API Features, kokoelma avoimet_rakennukset (valmiit rakennukset).
-Mukaan otetaan käytössä olevat Pientalot ja Kerrostalot; vapaa-ajan
-asunnot jäävät pois. Paino on huoneistoala (m²); jos se puuttuu, kerrosala.
+Mukaan otetaan käytössä olevat Pientalot ja Kerrostalot sekä julkiset
+rakennukset, joissa on asuntoja (palvelutalot ym., huoneistojen_lukumaara > 0).
+Toimisto-, tuotanto- ja muut rakennukset jäävät pois, vaikka niissä olisi
+asunto, samoin vapaa-ajan asunnot. Paino on huoneistoala (m²); jos se puuttuu, kerrosala.
 
   tools/ryhti.py [koodi ...] -> data/rakennukset/<koodi>.json.gz
-    [[x, y, ala, k], ...]  EPSG:3067, k = 1 kerrostalo, 0 pientalo
+    [[x, y, ala, k], ...]  EPSG:3067, k = 1 kerrostalo, 0 pientalo, 2 julkinen, jossa asuntoja
 """
 import glob
 import gzip
@@ -28,7 +30,8 @@ TR = Transformer.from_crs(4326, 3067, always_xy=True)
 
 def hae(nimi):
     suodin = (f"kunta='{nimi}' AND elinkaaren_tila='Käytössä' AND "
-              "paaasiallinen_kayttotarkoitus IN ('Pientalo','Kerrostalo')")
+              "(paaasiallinen_kayttotarkoitus IN ('Pientalo','Kerrostalo') OR "
+              "(huoneistojen_lukumaara > 0 AND paaasiallinen_kayttotarkoitus = 'Julkinen rakennus'))")
     out, alku = [], 0
     while True:
         q = urllib.parse.urlencode({'f': 'json', 'limit': SIVU, 'startIndex': alku,
@@ -40,8 +43,9 @@ def hae(nimi):
                 continue
             ala = p.get('huoneistoala') or p.get('kerrosala') or 0
             x, y = TR.transform(*g['coordinates'][:2])
+            kt = p['paaasiallinen_kayttotarkoitus']
             out.append([round(x, 1), round(y, 1), round(ala),
-                        int(p['paaasiallinen_kayttotarkoitus'] == 'Kerrostalo')])
+                        1 if kt == 'Kerrostalo' else 0 if kt == 'Pientalo' else 2])
         alku += len(d['features'])
         if len(d['features']) < SIVU:
             return out
