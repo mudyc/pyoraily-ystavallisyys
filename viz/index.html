@@ -378,7 +378,8 @@ const TALVI_K = {
   K9: 'Urakoitsijan bonus / sanktio laadun mukaan',
 };
 const TALVI_MAARITELMA = `<b>Talvihoito: kuinka lähellä kaupungin julkiset pyöräväylien
-  talvihoidon ohjeet ovat Oulun mallia.</b> Oulu = 100 %.
+  talvihoidon ohjeet ovat Oulun mallia.</b> Kriteerit tulevat Oulusta, mutta myös Oulu
+  pisteytetään omista julkisista asiakirjoistaan: hyvän käytännön pitää olla myös julkinen.
   <ol style="margin:8px 0 8px 18px;padding:0">
   ${Object.entries(TALVI_K).map(([k, t]) => `<li><b>${k}</b> ${t}</li>`).join('')}
   </ol>
@@ -386,7 +387,8 @@ const TALVI_MAARITELMA = `<b>Talvihoito: kuinka lähellä kaupungin julkiset py�
   prosentti = summa / 9. Arvio perustuu kaupungin julkisiin asiakirjoihin (laatuvaatimukset,
   urakan tehtäväkortit, hoitoluokitus, päätökset): mittari kertoo mihin kaupunki on julkisesti
   sitoutunut, ei toteutunutta talvikuntoa. Julkaisematon laatuvaatimus ei sido ketään eikä
-  sitä voi tarkistaa, joten se on 0. Oulun omista julkisista lähteistä löytyy 83 %.
+  sitä voi tarkistaa, joten se on 0. Oulun omia urakka-asiakirjoja ei löytynyt verkosta,
+  joten Vaasa, jonka urakka-asiakirjat ovat julkisia, menee Oulun ohi.
   <br><br>Kriteerit kaupungeittain perusteluineen ja kaikki viitteet:
   <a href="talvi.html">talvihoidon kriteerivertailu</a>. Haettu 12.11.2026.`;
 
@@ -609,11 +611,11 @@ const JOHDANNOT = {
   talvi: {
     teksti: `Kuinka hyvin kaupungin <b>julkiset ohjeet</b> pyöräväylien talvihoidolle vastaavat
       Oulun mallia: oma hoitoluokka pääreiteille, tiukka lumiraja, karhea jälki, polanneraja,
-      pyöräilyagentit ja urakoitsijan bonus laadusta. Yhdeksän kriteeriä, Oulu = 100 %.
+      pyöräilyagentit ja urakoitsijan bonus laadusta. Yhdeksän kriteeriä, sama arvio myös Oululle.
       <a href="talvi.html">Kriteerivertailu ja viitteet</a>.`,
-    luvut: () => { const m = D.filter(k => k.talvi != null && k.nimi !== 'Oulu');
+    luvut: () => { const m = D.filter(k => k.talvi != null);
       const n = kr => D.filter(k => k.talviK?.[kr] === 'kyllä').length;
-      return [[m.length + 1 + '/' + D.length, 'kaupunkia arvioitu'],
+      return [[m.length + '/' + D.length, 'kaupunkia arvioitu'],
               [n('K1'), 'oma luokka pääreiteille'], [n('K3'), 'vaatii karhean jäljen'],
               [n('K8'), 'pyöräilyagentit'], [n('K9'), 'bonus / sanktio']]; },
   },

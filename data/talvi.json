@@ -1,5 +1,5 @@
 {
- "kuvaus": "Pyöräväylien talvikunnossapidon julkiset ohjeet verrattuna Oulun malliin (Oulu = 100 %). Haettu 2026-11-12. Kriteerejä 9. Pisteet: kyllä 1, osittain 0,5, ei / ei tietoa 0. Arvio perustuu julkisiin asiakirjoihin; jos kaupunki ei julkaise laatuvaatimuksiaan, niitä ei voi arvioida.",
+ "kuvaus": "Pyöräväylien talvikunnossapidon julkiset ohjeet verrattuna Oulun malliin. Malli antaa kriteerit, ei pisteitä: myös Oulu pisteytetään julkisista asiakirjoistaan. Haettu 2026-11-12. Kriteerejä 9. Pisteet: kyllä 1, osittain 0,5, ei / ei tietoa 0. Arvio perustuu julkisiin asiakirjoihin; jos kaupunki ei julkaise laatuvaatimuksiaan, niitä ei voi arvioida.",
  "kriteerit": {
   "K1": "Oma, korkein hoitoluokka baanoille / pääreiteille (vähintään pääkatujen tasolla)",
   "K2": "Lumen maksimisyvyys ennen toimenpidettä ja toimenpideaika määritelty",
@@ -990,7 +990,6 @@
    "raaka": 5.5
   },
   "Oulu": {
-   "vertailukohta": true,
    "K": {
     "K1": [
      "kyllä",
@@ -1061,8 +1060,9 @@
      ]
     ]
    },
-   "pisteet": 100.0,
-   "raaka": 7.5
+   "pisteet": 83,
+   "raaka": 7.5,
+   "mallin_lahde": true
   },
   "Helsinki": {
    "K": {
