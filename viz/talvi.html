@@ -82,7 +82,8 @@ const D = await (await fetch('../data/talvi.json')).json();
 const P = { 'kyllä': 1, 'osittain': 0.5, 'ei': 0, 'ei tietoa': 0 };
 const M = Object.fromEntries([['kyllä', 'kylla'], ['osittain', 'osittain'], ['ei', 'ei'], ['ei tietoa', 'eitieto']]
   .map(([t, c]) => [t, [`<i class="mk ${c}"></i>`, c]]));
-const KR = Object.keys(D.kriteerit).sort();
+// Numeerinen järjestys: merkkijonona K10 osuisi K1:n ja K2:n väliin.
+const KR = Object.keys(D.kriteerit).sort((a, b) => +a.slice(1) - +b.slice(1));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 const kaup = Object.entries(D.kaupungit).map(([nimi, c]) => {

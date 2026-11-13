@@ -31,6 +31,6 @@ if __name__ == '__main__':
             continue
         s = sum(PISTE[v[0]] for v in c['K'].values())
         k['talvi'] = round(s / n * 100, 1)
-        k['talviK'] = {kr: v[0] for kr, v in sorted(c['K'].items())}
+        k['talviK'] = {kr: v[0] for kr, v in sorted(c['K'].items(), key=lambda kv: int(kv[0][1:]))}
         print(f"{k['nimi']:<14}{k['talvi']:>6.1f} %")
     json.dump(K, open(kpol, 'w'), ensure_ascii=False, separators=(',', ':'))
