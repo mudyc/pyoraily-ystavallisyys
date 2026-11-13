@@ -4,7 +4,7 @@
   "K1": "Oma, korkein hoitoluokka baanoille / pääreiteille (vähintään pääkatujen tasolla)",
   "K2": "Lumen maksimisyvyys ennen toimenpidettä ja toimenpideaika määritelty",
   "K3": "Karhea, ei-liukas jälki vaaditaan (karhentava terä, karhennus, harjasuolaus)",
-  "K4": "Lumi linkotaan / poistetaan väylän reunoilta, ei valleja",
+  "K4": "Väylä puhdistetaan irtolumesta (linkous, harjaus tai vaatimus puhtaasta pinnasta aurauksen jälkeen), jotta kitkaa ja vierintävastusta on vähemmän",
   "K5": "Väylälle lunta puskenut auraaja kunnostaa väylän, tai aurausjärjestys turvaa sen",
   "K6": "Säännölliset käyttäjien ja kuljettajien palautetapahtumat (yleinen palautelomake = osittain)",
   "K7": "Polanteen maksimikorkeus / epätasaisuus määritelty, kiristyy kevättä kohti",
@@ -39,10 +39,11 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Lumi poistetaan koko leveydeltä tai väh. 3 m; ei linkousta",
+     "kyllä",
+     "Tehostettu reitti (~80 km) hoidetaan harjasuolauksella ja harjahiekoituksella",
      [
-      "tku3"
+      "tku3",
+      "tku1"
      ]
     ],
     "K5": [
@@ -83,8 +84,8 @@
      ]
     ]
    },
-   "pisteet": 45,
-   "raaka": 4.5
+   "pisteet": 50,
+   "raaka": 5.0
   },
   "Jyväskylä": {
    "K": {
@@ -112,10 +113,8 @@
     ],
     "K4": [
      "ei tietoa",
-     "",
-     [
-      "jkl4"
-     ]
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "ei tietoa",
@@ -180,11 +179,9 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Aurausvallit poistetaan tai madalletaan, kun haittaavat",
-     [
-      "lah5"
-     ]
+     "ei tietoa",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "osittain",
@@ -221,8 +218,8 @@
      []
     ]
    },
-   "pisteet": 45,
-   "raaka": 4.5
+   "pisteet": 40,
+   "raaka": 4.0
   },
   "Kuopio": {
    "K": {
@@ -249,7 +246,7 @@
     ],
     "K4": [
      "ei",
-     "Lumilinkoja ei käytössä",
+     "Lumilinkoja ei käytössä; harjasuolauskokeilu lopetettu",
      [
       "kk2024"
      ]
@@ -321,10 +318,8 @@
     ],
     "K4": [
      "ei tietoa",
-     "",
-     [
-      "por2"
-     ]
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "osittain",
@@ -391,11 +386,9 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Urakkaan kuuluu lumen lähisiirto",
-     [
-      "hml1"
-     ]
+     "ei tietoa",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "ei tietoa",
@@ -437,8 +430,8 @@
      ]
     ]
    },
-   "pisteet": 45,
-   "raaka": 4.5
+   "pisteet": 40,
+   "raaka": 4.0
   },
   "Kouvola": {
    "K": {
@@ -466,12 +459,9 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Lumivallien poiskuljetus kaupungin vastuulla; lumen poisvientiä vähennetty 2023",
-     [
-      "kou2",
-      "kou5"
-     ]
+     "ei tietoa",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "ei tietoa",
@@ -508,8 +498,8 @@
      ]
     ]
    },
-   "pisteet": 20,
-   "raaka": 2.0
+   "pisteet": 15,
+   "raaka": 1.5
   },
   "Porvoo": {
    "K": {
@@ -536,7 +526,7 @@
     ],
     "K4": [
      "ei tietoa",
-     "",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
      []
     ],
     "K5": [
@@ -600,7 +590,7 @@
     ],
     "K4": [
      "ei tietoa",
-     "",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
      []
     ],
     "K5": [
@@ -665,11 +655,10 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Väylä puhdas irtolumesta heti aurauksen jälkeen; vallit näkemäalueilla rajattu",
+     "kyllä",
+     "\"Välittömästi aurauksen jälkeen kevyen liikenteen väylän tulee olla puhdas irtolumesta\"",
      [
-      "salo1",
-      "salo5"
+      "salo1"
      ]
     ],
     "K5": [
@@ -712,8 +701,8 @@
      ]
     ]
    },
-   "pisteet": 35,
-   "raaka": 3.5
+   "pisteet": 40,
+   "raaka": 4.0
   },
   "Joensuu": {
    "K": {
@@ -742,12 +731,9 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Haittaavat vallit siirrettävä 2 työpäivässä; ei linkousta",
-     [
-      "joe1",
-      "joe4"
-     ]
+     "ei tietoa",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "kyllä",
@@ -789,8 +775,8 @@
      ]
     ]
    },
-   "pisteet": 55,
-   "raaka": 5.5
+   "pisteet": 50,
+   "raaka": 5.0
   },
   "Lappeenranta": {
    "K": {
@@ -818,10 +804,8 @@
     ],
     "K4": [
      "ei tietoa",
-     "",
-     [
-      "lpr1"
-     ]
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "osittain",
@@ -891,10 +875,10 @@
     ],
     "K4": [
      "osittain",
-     "Kaventavia valleja ei sallita, lumi ajetaan pois; linko lisäpisteenä, ei vaatimus",
+     "Linko vähintään puolessa koneista on tarjouksen lisäpiste, ei vaatimus",
      [
-      "vaa1",
-      "vaa3"
+      "vaa3",
+      "vaa1"
      ]
     ],
     "K5": [
@@ -973,7 +957,7 @@
     ],
     "K4": [
      "ei tietoa",
-     "",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
      []
     ],
     "K5": [
@@ -1036,11 +1020,9 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Kaventavia aurausvalleja ei sallita; ei linkousta",
-     [
-      "rov1"
-     ]
+     "ei tietoa",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "kyllä",
@@ -1081,8 +1063,8 @@
      ]
     ]
    },
-   "pisteet": 60,
-   "raaka": 6.0
+   "pisteet": 55,
+   "raaka": 5.5
   },
   "Oulu": {
    "K": {
@@ -1194,9 +1176,9 @@
     ],
     "K4": [
      "osittain",
-     "Lumen siirto valleista lähisijoituspaikkaan; ei linkousvaatimusta",
+     "A++-reiteillä (~70 km) lumi poistetaan harjaamalla; A+-reiteillä auraus",
      [
-      "hel3"
+      "hel1"
      ]
     ],
     "K5": [
@@ -1270,10 +1252,11 @@
      ]
     ],
     "K4": [
-     "ei tietoa",
-     "",
+     "osittain",
+     "Harjasuolaus ~24 km; muuten auraus",
      [
-      "esp3"
+      "esp4",
+      "esp1"
      ]
     ],
     "K5": [
@@ -1319,8 +1302,8 @@
      ]
     ]
    },
-   "pisteet": 40,
-   "raaka": 4.0
+   "pisteet": 45,
+   "raaka": 4.5
   },
   "Vantaa": {
    "K": {
@@ -1349,9 +1332,9 @@
     ],
     "K4": [
      "osittain",
-     "Haittaavat vallit poistetaan, voi kestää viikkoja",
+     "Harjasuolauskokeilu Tikkurila–Korso",
      [
-      "van1"
+      "van2"
      ]
     ],
     "K5": [
@@ -1421,11 +1404,9 @@
      ]
     ],
     "K4": [
-     "osittain",
-     "Ei kulkuleveyttä kaventavia valleja; ei linkousta",
-     [
-      "tre4"
-     ]
+     "ei tietoa",
+     "Linkousta, harjausta tai irtolumen puhtausvaatimusta ei löytynyt",
+     []
     ],
     "K5": [
      "ei tietoa",
@@ -1471,8 +1452,8 @@
      ]
     ]
    },
-   "pisteet": 50,
-   "raaka": 5.0
+   "pisteet": 45,
+   "raaka": 4.5
   }
  },
  "viitteet": {
