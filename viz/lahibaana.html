@@ -6,11 +6,11 @@
 <style>
 :root{--surface-0:#faf9f6;--surface-1:#fff;--surface-2:#f3f1ec;
   --ink-1:#0b0b0b;--ink-2:#52514e;--ink-3:#85837c;--rule:#dedbd4;
-  --tie:#dcd9d2;--kevyt:#c9c6bd;--baana:#f07d1a;--paa:#f5b32a;--alue:#f3e08a;
+  --tie:#dcd9d2;--kevyt:#c9c6bd;--baana:#1b7a3a;--paa:#4caf50;--alue:#b5dd9c;
   --ulko:#d6d3cc;--p0:#d7301f;--p1:#fc8d59;--p2:#fdcc8a;--p3:#91bfdb;--p4:#4575b4}
 @media (prefers-color-scheme:dark){:root{--surface-0:#15150f;--surface-1:#1c1c17;--surface-2:#232320;
   --ink-1:#fff;--ink-2:#c3c2b7;--ink-3:#8f8e85;--rule:#33332f;
-  --tie:#2e2e2a;--kevyt:#3a3934;--ulko:#3e3d38;--baana:#f28a2e;--paa:#f2be45;--alue:#e9d98a}}
+  --tie:#2e2e2a;--kevyt:#3a3934;--ulko:#3e3d38;--baana:#3fa35f;--paa:#7bc77e;--alue:#a8d394}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface-0);color:var(--ink-1);
   font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -157,8 +157,8 @@ function piirra() {
   veda(D.verkko.filter(v => !v[0]).map(v => v[1]), css('--tie'), 1.4, 0.8);
   veda(D.verkko.filter(v => v[0]).map(v => v[1]), css('--kevyt'), 1.0, 0.8);
   const R = l => D.reitit.filter(r => r[0] === l).map(r => r[1]);
-  // Reitit leveinä 60 % peittävinä nauhoina rakennusten alla: oranssi baana,
-  // oranssinkeltainen pääreitti, haalea keltainen aluereitti. Ylin luokka päällimmäiseksi.
+  // Reitit leveinä 60 % peittävinä nauhoina rakennusten alla: tummanvihreä baana,
+  // keskivihreä pääreitti, haalea vihreä aluereitti. Ylin luokka päällimmäiseksi.
   veda(R(5), css('--alue'), 4, 0.6, [6, 5]); veda(R(4), css('--paa'), 5, 0.6, [6, 5]);
   veda(R(3), css('--baana'), 6, 0.6, [6, 5]);
   veda(R(2), css('--alue'), 4, 0.6); veda(R(1), css('--paa'), 5, 0.6); veda(R(0), css('--baana'), 6, 0.6);

@@ -18,20 +18,22 @@
   /* lähibaana: sama 5-portainen asteikko kuin lahibaana.html:ssä (punainen
      = kaukana pääverkosta, sininen = lähellä), molemmissa teemoissa */
   --p0:#d7301f; --p1:#fc8d59; --p2:#fdcc8a; --p3:#91bfdb; --p4:#4575b4;
+  /* lähibaanan reitit vihreinä, kuten lahibaana.html: 60 % peittävät nauhat */
+  --r-baana:#1b7a3a; --r-paa:#4caf50; --r-alue:#b5dd9c;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --surface-0:#15150f; --surface-1:#1c1c17; --surface-2:#232320;
   --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
   --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
   --tie:#8d8a81; --kevyt:#c9c6bb;
-  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf; --o5:#5cc0d4;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf; --o5:#5cc0d4; --r-baana:#3fa35f; --r-paa:#7bc77e; --r-alue:#a8d394;
 }}
 :root[data-theme="dark"]{
   --surface-0:#15150f; --surface-1:#1c1c17; --surface-2:#232320;
   --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#8f8e85; --rule:#33332f;
   --l1:#4a3426; --l2:#8a5430; --l3:#d1702f; --l4:#f0813c; --acc:#3987e5;
   --tie:#8d8a81; --kevyt:#c9c6bb;
-  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf; --o5:#5cc0d4;
+  --o1:#4a90e2; --o2:#f0945a; --o3:#5aa88c; --o4:#a682cf; --o5:#5cc0d4; --r-baana:#3fa35f; --r-paa:#7bc77e; --r-alue:#a8d394;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface-0);color:var(--ink-1);
@@ -833,6 +835,7 @@ async function lataaRakennukset(k) {
   const r = await fetch(`../data/lahibaana/${String(k.koodi).padStart(3, '0')}.rak.json.gz`);
   const c = await new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).json();
   k._rak = c.x.map((x, i) => ({ x, y: c.y[i], a: c.a[i], k: c.k[i], p: c.p[i] }));
+  k._reitit = c.reitit ?? [];
 }
 
 let kohdeIndeksi = null;
@@ -854,6 +857,10 @@ async function avaaKaupunki(nimi) {
     `<span><i class="v raita" style="background:${css('--kevyt')}"></i>kevyen liikenteen väylä</span>` +
     `<span><i class="v" style="background:${css('--acc')};height:4px"></i>` +
       `${N.patkaSelite ?? 'alikulku'}</span>` +
+    (mittari === 'lahibaana' ?
+      [['--r-baana', 7, 'baana'], ['--r-paa', 6, 'pääreitti'], ['--r-alue', 5, 'aluereitti']].map(([v, h, t]) =>
+        `<span><i class="v" style="background:${css(v)};height:${h}px;opacity:.6"></i>${t}</span>`).join('') +
+      `<span><i class="v" style="background:repeating-linear-gradient(90deg,${css('--r-paa')} 0 5px,transparent 5px 9px);height:5px;opacity:.6"></i>suunniteltu (ei laskettu)</span>` : '') +
     `<span style="color:var(--ink-3)">· rulla tai nipistys zoomaa, raahaus siirtää</span>`;
 
   // Kokonaisarvio: oma yhteenvetosivu kartan ja listan sijaan
@@ -1051,6 +1058,24 @@ function piirra() {
 
   const r = N.pisteet ? o => Math.max(1.2, Math.min(8, N.koko(o) * Math.min(2, 5 / mpp)))
                       : o => Math.max(3, Math.min(13, N.koko(o) * Math.min(2.2, 6 / mpp)));
+  if (mittari === 'lahibaana' && K?._reitit) {
+    // Reitit leveinä 60 % nauhoina rakennusten alla: tummanvihreä baana, keskivihreä
+    // pääreitti, haalea vihreä aluereitti; suunniteltu katkoviivana.
+    const kk = Math.max(0.4, Math.min(2.4, 6 / mpp));
+    const nauha = (luokka, vari, lev, katko) => {
+      g.globalAlpha = 0.6; g.strokeStyle = css(vari); g.lineWidth = lev * kk;
+      g.lineCap = 'round'; g.lineJoin = 'round'; g.setLineDash(katko ? [6, 5] : []);
+      g.beginPath();
+      for (const [l, c] of K._reitit) {
+        if (l !== luokka) continue;
+        g.moveTo(sx(c[0][0]), sy(c[0][1]));
+        for (let i = 1; i < c.length; i++) g.lineTo(sx(c[i][0]), sy(c[i][1]));
+      }
+      g.stroke(); g.setLineDash([]); g.globalAlpha = 1;
+    };
+    nauha(5, '--r-alue', 4, 1); nauha(4, '--r-paa', 5, 1); nauha(3, '--r-baana', 6, 1);
+    nauha(2, '--r-alue', 4); nauha(1, '--r-paa', 5); nauha(0, '--r-baana', 6);
+  }
   if (N.pisteet) {
     // Tuhansia rakennuksia: luokittain yhteen polkuun, ei rakoa, värit kerran.
     const vari = N.luokat.map(l => css(l.v));

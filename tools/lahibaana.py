@@ -238,7 +238,9 @@ def kunta(koodi, luokitus, taaj):
     o = np.lexsort((-rak[:, 2], et))
     json.dump({'x': rak[o, 0].astype(int).tolist(), 'y': rak[o, 1].astype(int).tolist(),
                'a': rak[o, 2].astype(int).tolist(), 'k': rak[o, 3].astype(int).tolist(),
-               'p': np.round(et[o] * 100).astype(int).tolist()},
+               'p': np.round(et[o] * 100).astype(int).tolist(),
+               # reittilinkit: 0 baana, 1 pää, 2 alue, +3 suunniteltu (kuten lahibaana.html)
+               'reitit': reitit},
               gzip.open(f'{JUURI}/data/lahibaana/{koodi}.rak.json.gz', 'wt'), separators=(',', ':'))
     return dr['nimi'], tulos
 
