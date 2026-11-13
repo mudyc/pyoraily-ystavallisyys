@@ -75,7 +75,7 @@ LAHDE = {
     '405': ('vektori', 'Lappeenrannan pyöräilyreitit (avoin data)'),
     '297': ('vektori', 'Kuopion pyöräväylien verkostotarkastelu 2019 (ArcGIS)'),
     '905': ('OSM', 'OpenStreetMap, Vaasan pääreitit 1-7 (ODbL)'),
-    '179': ('kuva', 'Jyväskylän karttapalvelun tiilet (georeferoitu, 2 m/px)'),
+    '179': ('kuva', 'Jyväskylän karttapalvelun tiilet (georeferoitu, 2 m/px); pää- ja aluereitit'),
     '609': ('kuva', 'DI-työ 2017, GeoPDF (ehdotus, ei hyväksytty verkko)'),
     '698': ('kuva', 'KäPy-ohjelma 2030, päivitys 2023 (PDF-kartta)'),
     '491': ('kuva', 'Mikkelin seudun KäPy-ohjelma 2024 (PDF-kartta)'),
@@ -85,6 +85,13 @@ LAHDE = {
     '734': ('kuva', 'KäPy-ohjelma 2016, keskustan kartta (karkea PDF-kuva)'),
     '286': ('kuva', 'KäPy-suunnitelma 2021, keskustaajaman kartta, vain pääreitit'),
     '398': ('osittainen', 'Ramboll 2024, vain keskustan kartta: reunat puuttuvat, luku aliarvio'),
+}
+# Etusivun taso on 'paa' (baana + pääreitti), paitsi kun kaupungin pää- ja
+# aluereitin ero on lähinnä talvihoidon luokka eikä verkon hierarkia: silloin
+# aluereitti on yhtä lailla pääverkkoa ja sen pois jättäminen aliarvioisi.
+ETUSIVU_TASO = {
+    '179': 'alue',   # Jyväskylä: luokat eroavat lähinnä talvihoidon perusteella (käyttäjän arvio 13.11.2026)
+    '405': 'alue',   # Lappeenranta: aineisto on kunnossapitoluokitus (I pääreitti / aluereitti)
 }
 TASOT = {'baana': {'baana'}, 'paa': {'baana', 'paareitti'},
          'alue': {'baana', 'paareitti', 'aluereitti'}}
@@ -227,10 +234,11 @@ def kunta(koodi, luokitus, taaj):
                'verkko': verkko, 'reitit': reitit, 'rak': rivit},
               gzip.open(f'{JUURI}/data/lahibaana/{koodi}.json.gz', 'wt'), separators=(',', ':'))
     # Etusivulle kevyt rakennustiedosto: sarakkeittain, huonoin ensin.
-    o = np.lexsort((-rak[:, 2], pros['paa']))
+    et = pros[ETUSIVU_TASO.get(koodi, 'paa')]
+    o = np.lexsort((-rak[:, 2], et))
     json.dump({'x': rak[o, 0].astype(int).tolist(), 'y': rak[o, 1].astype(int).tolist(),
                'a': rak[o, 2].astype(int).tolist(), 'k': rak[o, 3].astype(int).tolist(),
-               'p': np.round(pros['paa'][o] * 100).astype(int).tolist()},
+               'p': np.round(et[o] * 100).astype(int).tolist()},
               gzip.open(f'{JUURI}/data/lahibaana/{koodi}.rak.json.gz', 'wt'), separators=(',', ':'))
     return dr['nimi'], tulos
 
@@ -249,7 +257,9 @@ if __name__ == '__main__':
     K = json.load(open(kpol))
     for k in K:
         r = kaikki.get(f"{int(k['koodi']):03d}")
-        q = r and r['rajaus']['kunta']['paa']
+        taso = ETUSIVU_TASO.get(f"{int(k['koodi']):03d}", 'paa')
+        q = r and r['rajaus']['kunta'][taso]
+        k['lahiTaso'] = taso if r else None
         k['lahibaana'] = q and q['painotettu']
         k['lahiMed'] = q and q['mediaaniM']
         k['lahiKiinni'] = q and q['kiinni']

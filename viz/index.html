@@ -327,6 +327,8 @@ const NAKYMAT = {
       `${fi.format(k.lahiRak)} asuinrakennusta. Matka verkkoa pitkin lähimmälle pääreitille: ` +
       `mediaani <b>${fi.format(k.lahiMed)} m</b>, reitin varrella ${k.lahiKiinni} %, yli 2 km ${k.lahiYli2} %. ` +
       `Rakennustason kartta reitteineen: <a href="lahibaana.html#${String(k.koodi).padStart(3, '0')}">lähibaanakartta</a>.` +
+      (k.lahiTaso === 'alue' ? `<br><b>Pääverkkoon on laskettu myös aluereitit:</b> ${k.nimi}n pää- ja ` +
+        `aluereitti eroavat lähinnä talvihoidon luokan perusteella, eivät verkon hierarkian.` : '') +
       (k.lahiLahde ? `<br><span style="color:var(--ink-3)">Pääverkon lähde: ${k.lahiLahde[1]}` +
         (k.lahiLahde[0] === 'kuva' ? ' — karttakuva sovitettu Digiroadiin automaattisesti' : '') + `.</span>` : ''),
   },
@@ -359,7 +361,9 @@ const LAHIBAANA_MAARITELMA = `<b>Lähibaanaprosentti: kuinka lähellä asuinrake
   </ol>
   <b>Varaukset.</b> Mikä on "pääreitti", on kaupungin oma päätös: Turku luokittelee pääreitiksi lähes
   koko kevytverkkonsa, Espoo vain osan. Luku mittaa siis myös luokittelutapaa. Kuntaliitosten
-  maaseutu laskee lukua (Joensuu, Lappeenranta).
+  maaseutu laskee lukua (Joensuu, Lappeenranta). <b>Jyväskylässä ja Lappeenrannassa aluereitit
+  lasketaan pääverkkoon</b>, koska pää- ja aluereitti eroavat niissä lähinnä talvihoidon luokan
+  perusteella eivätkä verkon hierarkian.
   <br><br><b>Lähteen laatu vaihtelee.</b> Kymmenellä kaupungilla pääverkko on koneluettavaa
   aineistoa. Kymmenellä muulla se on vain kuvana PDF:ssä tai karttapalvelussa: kuva on
   georeferoitu automaattisesti sovittamalla reittiviivat Digiroadin verkkoon (mittakaava,
